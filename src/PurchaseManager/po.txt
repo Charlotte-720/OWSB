@@ -1,2 +1,2 @@
-PO_ID: 01, Supplier Name: dsdasdas, Item: monitor, Quantity: 100000, Date: 2208-5-5, Status: Pending
-PO_ID: 02, Supplier Name: dwad, Item: asda, Quantity: dasd, Date: asda, Status: Pending
+PO_ID: 02, Supplier Name: ccc, Item: asda, Quantity: dasd, Date: asda, Status: Pending
+PO_ID: 02, Supplier Name: xs, Item: xsx, Quantity: xsxxsx, Date: xsx, Status: Pending
