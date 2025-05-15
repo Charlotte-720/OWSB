@@ -116,7 +116,7 @@ public class viewrequisition extends javax.swing.JPanel {
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose(); 
-        PM pmFrame = new PM(); 
+        PM pmFrame = new PM("exampleFinanceManager"); 
         pmFrame.setVisible(true);
         pmFrame.setLocationRelativeTo(null); 
     }//GEN-LAST:event_cancelMouseClicked
@@ -124,7 +124,7 @@ public class viewrequisition extends javax.swing.JPanel {
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose();
-        PM pmFrame = new PM();
+        PM pmFrame = new PM("exampleFinanceManager");
         pmFrame.setVisible(true);
         pmFrame.setLocationRelativeTo(null);
     }//GEN-LAST:event_backActionPerformed

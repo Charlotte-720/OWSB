@@ -5,6 +5,7 @@
 package Admin;
 
 import FinanceManager.FinanceManagerPanel;
+import PurchaseManager.PM;
 import SalesManager.SalesManagerDashboard;
 import java.awt.Color;
 import java.awt.HeadlessException;
@@ -386,7 +387,7 @@ public class Loginpage1 extends javax.swing.JFrame {
                 openPage(salesPage);
                 break;
             case "Purchase Manager":
-                PurchaseManager purchasePage = new PurchaseManager(loggedInIdentifier);
+                PM purchasePage = new PM(loggedInIdentifier);
                 openPage(purchasePage);
                 break;
             case "Inventory Manager":

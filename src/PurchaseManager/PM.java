@@ -1,11 +1,26 @@
 package PurchaseManager;
 
+import Admin.Loginpage1;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 
-public class PM extends javax.swing.JFrame {    
-    public PM() {
+public class PM extends javax.swing.JFrame {  
+    private String employeeID;
+    private String position;
+    public PM(String identifier) {
+        String[] parts = identifier.split(":");
+        if (parts.length == 2) {
+            this.employeeID = parts[0];
+            this.position = parts[1];
+        } else {
+            this.employeeID = "Unknown";
+            this.position = "Unknown";
+            System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
+        }
+        System.out.println("EmployeeID: " + employeeID);
+        System.out.println("Position: " + position);
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -36,6 +51,11 @@ public class PM extends javax.swing.JFrame {
         logout.setForeground(new java.awt.Color(255, 255, 255));
         logout.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         logout.setText("Logout");
+        logout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutMouseClicked(evt);
+            }
+        });
 
         home.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         home.setForeground(new java.awt.Color(255, 255, 255));
@@ -210,9 +230,32 @@ public class PM extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_GenerateViewPOActionPerformed
 
+    private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        // TODO add your handling code here:
+            int response = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to log out?", 
+        "Logout Confirmation", 
+        JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE);
+
+        // Check the user's response
+        if (response == JOptionPane.YES_OPTION) {
+            // Dispose the AdminTest frame
+            this.dispose();
+
+            // Open Loginpage1 frame
+            Loginpage1 loginPage = new Loginpage1();
+            loginPage.setVisible(true);
+            loginPage.pack();
+            loginPage.setLocationRelativeTo(null);
+            loginPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+
+    }//GEN-LAST:event_logoutMouseClicked
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new PM().setVisible(true);
+            //new PM().setVisible(true);
         });
     }
 
