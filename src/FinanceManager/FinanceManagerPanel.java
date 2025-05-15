@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import Admin.Loginpage1;
+import PurchaseManager.viewrequisition;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -322,6 +323,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
     private void btnManagePurchaseOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrder1ActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+//        viewrequisition viewrequisition = new viewrequisition();
+//        viewrequisition.setVisible(true);
     }//GEN-LAST:event_btnManagePurchaseOrder1ActionPerformed
 
     private void btnManagePurchaseOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderMouseClicked

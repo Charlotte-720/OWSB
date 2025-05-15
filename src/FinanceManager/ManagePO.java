@@ -4,6 +4,14 @@
  */
 package FinanceManager;
 
+import PurchaseManager.PurchaseOrder;
+import PurchaseManager.addPO;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,32 +32,87 @@ public class ManagePO extends javax.swing.JFrame {
      */
     public ManagePO() {
         initComponents();
-        
-        loadDummyData();
+        loadPOData();
+    }
+    
+    public ArrayList<PurchaseOrder> readPOFile() {
+        ArrayList<PurchaseOrder> poList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(", ");
+                String poID = fields[0].split(": ")[1];
+                String supplierName = fields[1].split(": ")[1];
+                String item = fields[2].split(": ")[1];
+                String quantity = fields[3].split(": ")[1];
+                String date = fields[4].split(": ")[1];
+                String status = fields[5].split(": ")[1];
+
+                PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, date, status);
+                poList.add(po);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return poList;
+    }
+    
+    public void loadPOData() {
+        DefaultTableModel model = (DefaultTableModel) poTable.getModel(); // Replace jTable1 with your table name
+        model.setRowCount(0); // Clear old data
+
+        ArrayList<PurchaseOrder> poList = readPOFile();
+        for (PurchaseOrder po : poList) {
+            model.addRow(new Object[] {
+                po.getPoID(),
+                po.getSupplierName(),
+                po.getItem(),
+                po.getQuantity(),
+                po.getDate(),
+                po.getStatus()
+            });
+        }
+    }
+    
+    private void saveTableToFile() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/PurchaseManager/po.txt"))) {
+            for (int i = 0; i < poTable.getRowCount(); i++) {
+                String poID = poTable.getValueAt(i, 0).toString();
+                String supplierName = poTable.getValueAt(i, 1).toString();
+                String item = poTable.getValueAt(i, 2).toString();
+                String quantity = poTable.getValueAt(i, 3).toString();
+                String date = poTable.getValueAt(i, 4).toString();
+                String status = poTable.getValueAt(i, 5).toString();
+
+                String line = "PO_ID: " + poID + ", Supplier Name: " + supplierName + ", Item: " + item +
+                              ", Quantity: " + quantity + ", Date: " + date + ", Status: " + status;
+
+                bw.write(line);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error saving changes to file!");
+        }
     }
 
-    private void loadDummyData() {
-    String[] columnNames = {"Item", "Quantity", "Supplier", "Status"};
-    Object[][] data = {
-        {"Watermelon", 15, "Supplier A", "Pending"},
-        {"Papaya", 10, "Supplier B", "Pending"},
-        {"Apple", 8, "Supplier C", "Pending"}
-    };
-
-    DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
+    public String[] loadSupplierNames() {
+        ArrayList<String> supplierNames = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("suppliers.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields.length >= 4 && fields[3].equalsIgnoreCase("true")) {
+                    supplierNames.add(fields[1]); 
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
+        return supplierNames.toArray(new String[0]);
+    }
 
-    poTable.setModel(model);
 
-    // Optional: Set dropdown (combo box) for Supplier column
-    TableColumn supplierColumn = poTable.getColumnModel().getColumn(2);
-    JComboBox<String> supplierDropdown = new JComboBox<>(new String[]{"Supplier A", "Supplier B", "Supplier C"});
-    supplierColumn.setCellEditor(new DefaultCellEditor(supplierDropdown));
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,19 +153,19 @@ public class ManagePO extends javax.swing.JFrame {
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Purchase Item", "Quantity", "Supplier", "Status"
+                "PO_ID", "Supplier Name", "Item", "Quantity", "Date", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -115,6 +178,10 @@ public class ManagePO extends javax.swing.JFrame {
         });
         poTable.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         jScrollPane1.setViewportView(poTable);
+        if (poTable.getColumnModel().getColumnCount() > 0) {
+            poTable.getColumnModel().getColumn(0).setResizable(false);
+            poTable.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         btnApprove.setBackground(new java.awt.Color(134, 167, 136));
         btnApprove.setForeground(new java.awt.Color(255, 255, 255));
@@ -218,22 +285,27 @@ public class ManagePO extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a row.");
             return;
         }
+        
+        String currentStatus = poTable.getValueAt(row, 5).toString();
+        if (currentStatus.equalsIgnoreCase("Approved") || currentStatus.equalsIgnoreCase("Rejected")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been " + currentStatus + ", so you cannot edit it.");
+            return;
+        }
 
-        String item = poTable.getValueAt(row, 0).toString();
-        String qty = poTable.getValueAt(row, 1).toString();
-        String supplier = poTable.getValueAt(row, 2).toString();
-        String[] suppliers = {"Supplier A", "Supplier B", "Supplier C"}; // or from model
+        String item = poTable.getValueAt(row, 2).toString();
+        String quantity = poTable.getValueAt(row, 3).toString();
+        String supplier = poTable.getValueAt(row, 1).toString(); 
+        String[] suppliers = loadSupplierNames();
 
-        // Create and open the dialog
-        EditPOForm dialog = new EditPOForm(this, true); // true = modal
-        dialog.setPOData(item, qty, supplier, suppliers);
-        dialog.setLocationRelativeTo(this); // center relative to parent
-        dialog.setVisible(true); // show popup
+        EditPOForm dialog = new EditPOForm(this, true); 
+        dialog.setPOData(item, quantity, supplier, suppliers);
+        dialog.setLocationRelativeTo(this); 
+        dialog.setVisible(true); 
 
-        // After popup is closed (on Confirm or Cancel)
-        if (dialog.getUpdatedQuantity() != null) {
-            poTable.setValueAt(dialog.getUpdatedQuantity(), row, 1);
-            poTable.setValueAt(dialog.getSelectedSupplier(), row, 2);
+        if (dialog.isConfirmed()) {
+            poTable.setValueAt(dialog.getSelectedSupplier(), row, 1);
+            poTable.setValueAt(dialog.getUpdatedQuantity(), row, 3);
+            saveTableToFile();
         }
 
     }//GEN-LAST:event_btnEditActionPerformed
@@ -245,8 +317,26 @@ public class ManagePO extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a row to approve.");
             return;
         }
+        
+        String currentStatus = poTable.getValueAt(row, 5).toString(); 
+        if (currentStatus.equalsIgnoreCase("Approved")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order is already approved.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Rejected")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been rejected. Cannot approve.");
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to approve this Purchase Order?", 
+        "Confirm Approve", 
+        JOptionPane.YES_NO_OPTION);
 
-        poTable.setValueAt("Approved", row, 3); // Column 3 = Status
+        if (confirm == JOptionPane.YES_OPTION) {
+            poTable.setValueAt("Approved", row, 5);
+            saveTableToFile();
+        }
+    
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
@@ -256,8 +346,25 @@ public class ManagePO extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a row to reject.");
             return;
         }
+        
+        String currentStatus = poTable.getValueAt(row, 5).toString();
+        if (currentStatus.equalsIgnoreCase("Rejected")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order is already rejected.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Approved")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been approved. Cannot reject.");
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to reject this Purchase Order?", 
+        "Confirm Reject", 
+        JOptionPane.YES_NO_OPTION);
 
-        poTable.setValueAt("Rejected", row, 3); // Column 3 = Status
+        if (confirm == JOptionPane.YES_OPTION) {
+            poTable.setValueAt("Rejected", row, 5);
+            saveTableToFile();
+        }
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed

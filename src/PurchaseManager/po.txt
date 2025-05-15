@@ -1,2 +1,2 @@
-PO_ID: 02, Supplier Name: ccc, Item: asda, Quantity: dasd, Date: asda, Status: Pending
-PO_ID: 02, Supplier Name: xs, Item: xsx, Quantity: xsxxsx, Date: xsx, Status: Pending
+PO_ID: 02, Supplier Name: How, Item: asda, Quantity: 100, Date: asda, Status: Approved
+PO_ID: 02, Supplier Name: Kitt, Item: xsx, Quantity: 250, Date: xsx, Status: Pending

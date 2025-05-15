@@ -136,9 +136,9 @@ public class addPO extends javax.swing.JPanel {
 
               // File path (save in project folder or specify your own path)
               String filePath = "po.txt";
-              java.io.File file = new java.io.File("C:/Users/User/Desktop/APU/Java/Netbean/OWSB/src/PurchaseManager/po.txt");
+              java.io.File file = new java.io.File("src/PurchaseManager/po.txt");
 
-              int poId = 1; // Start from 1
+              int poID = 1; // Start from 1
 
               // Check if file exists and calculate the next PO_ID
               if (file.exists()) {
@@ -146,7 +146,7 @@ public class addPO extends javax.swing.JPanel {
                   while (scanner.hasNextLine()) {
                       String line = scanner.nextLine();
                       if (line.startsWith("PO_ID:")) {
-                          poId++; // Increase PO_ID for each line
+                          poID++; // Increase PO_ID for each line
                       }
                   }
                   scanner.close();
@@ -157,7 +157,7 @@ public class addPO extends javax.swing.JPanel {
               java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
 
               // Format the PO_ID (example: 01, 02, 03, etc.)
-              String formattedPoId = String.format("%02d", poId);
+              String formattedPoId = String.format("%02d", poID);
 
               // Write the new data
               String newData = "PO_ID: " + formattedPoId + 

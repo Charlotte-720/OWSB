@@ -26,10 +26,6 @@ public class EditPOForm extends javax.swing.JDialog {
             comboSupplier.addItem(s);
         }
         comboSupplier.setSelectedItem(supplier);
-        
-        // 🔐 Backup original values
-        originalQuantity = quantity;
-        originalSupplier = supplier;
     }
 
     public String getUpdatedQuantity() {
@@ -39,11 +35,20 @@ public class EditPOForm extends javax.swing.JDialog {
     public String getSelectedSupplier() {
         return comboSupplier.getSelectedItem().toString();
     }
+    
+    private boolean isConfirmed = false;
 
-    private String originalQuantity;
-    private String originalSupplier;
+    public boolean isConfirmed() {
+        return isConfirmed;
+    }
+    
+    @Override
+    public void dispose() {
+        isConfirmed = false;
+        super.dispose();
+    }
 
-
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,6 +86,11 @@ public class EditPOForm extends javax.swing.JDialog {
         jLabel3.setText("Supplier");
 
         comboSupplier.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboSupplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboSupplierActionPerformed(evt);
+            }
+        });
 
         btnConfirm.setBackground(new java.awt.Color(255, 207, 207));
         btnConfirm.setText("Confirm");
@@ -186,24 +196,28 @@ public class EditPOForm extends javax.swing.JDialog {
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false); // hides dialog, but keeps values accessible
+        isConfirmed = true;
+        this.setVisible(false); 
 
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
-        txtQuantity.setText(originalQuantity);
-        comboSupplier.setSelectedItem(originalSupplier);
-
-        this.setVisible(false);  // Cancel: discard changes
+        isConfirmed = false;
+        this.setVisible(false); 
 
 
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
+        isConfirmed = false;
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void comboSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSupplierActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboSupplierActionPerformed
 
     /**
      * @param args the command line arguments
