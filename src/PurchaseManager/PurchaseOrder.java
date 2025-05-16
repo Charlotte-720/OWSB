@@ -13,14 +13,18 @@ public class PurchaseOrder {
     private String supplierName;
     private String item;
     private String quantity;
+    private String unitPrice;
+    private String totalPrice;
     private String date;
     private String status;
     
-    public PurchaseOrder(String poID, String supplierName, String item, String quantity, String date, String status) {
+    public PurchaseOrder(String poID, String supplierName, String item, String quantity, String unitPrice, String totalPrice, String date, String status) {
         this.poID = poID;
         this.supplierName = supplierName;
         this.item = item;
         this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
         this.date = date;
         this.status = status;
     }
@@ -41,6 +45,14 @@ public class PurchaseOrder {
         return quantity;
     }
 
+    public String getUnitPrice() {
+        return unitPrice;
+    }
+    
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+    
     public String getDate() {
         return date;
     }

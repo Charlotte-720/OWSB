@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class editPO {
     public static boolean editPO(JFrame parentFrame, String poId, String filePath) {
-        String supplierName = "", item = "", quantity = "", date = "";
+        String supplierName = "", item = "", quantity = "", unitPrice = "", date = "";
 
         // Read original values from file
         File file = new File(filePath);
@@ -28,6 +28,7 @@ public class editPO {
                         if (part.startsWith("Supplier Name: ")) supplierName = part.substring(15);
                         else if (part.startsWith("Item: ")) item = part.substring(6);
                         else if (part.startsWith("Quantity: ")) quantity = part.substring(10);
+                        else if (part.startsWith("Unit Price: ")) unitPrice = part.substring(12);
                         else if (part.startsWith("Date: ")) date = part.substring(6);
                     }
                     found = true;
@@ -48,6 +49,7 @@ public class editPO {
         JTextField supplierField = new JTextField(supplierName);
         JTextField itemField = new JTextField(item);
         JTextField quantityField = new JTextField(quantity);
+        JTextField unitPriceField = new JTextField(unitPrice);
         JTextField dateField = new JTextField(date);
 
         JPanel panel = new JPanel(new GridLayout(0, 1));
@@ -57,6 +59,8 @@ public class editPO {
         panel.add(itemField);
         panel.add(new JLabel("Quantity:"));
         panel.add(quantityField);
+        panel.add(new JLabel("Unit Price:"));
+        panel.add(unitPriceField);
         panel.add(new JLabel("Date:"));
         panel.add(dateField);
 
@@ -69,12 +73,26 @@ public class editPO {
         String newSupplier = supplierField.getText().trim();
         String newItem = itemField.getText().trim();
         String newQuantity = quantityField.getText().trim();
+        String newUnitPrice = unitPriceField.getText().trim();
         String newDate = dateField.getText().trim();
 
-        if (newSupplier.isEmpty() || newItem.isEmpty() || newQuantity.isEmpty() || newDate.isEmpty()) {
+        if (newSupplier.isEmpty() || newItem.isEmpty() || newQuantity.isEmpty() || newUnitPrice.isEmpty() || newDate.isEmpty()) {
             JOptionPane.showMessageDialog(parentFrame, "All fields must be filled.");
             return false;
         }
+        
+        int quantityInt;
+        double unitPriceDouble;
+        try {
+            quantityInt = Integer.parseInt(newQuantity);
+            unitPriceDouble = Double.parseDouble(newUnitPrice);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(parentFrame, "Quantity and Unit Price must be numeric.");
+            return false;
+        }
+        
+        double totalPrice = quantityInt * unitPriceDouble;
+        String totalPriceStr = String.format("%.2f", totalPrice);
 
         // Write back modified content
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -84,6 +102,8 @@ public class editPO {
                             ", Supplier Name: " + newSupplier +
                             ", Item: " + newItem +
                             ", Quantity: " + newQuantity +
+                            ", Unit Price: " + newUnitPrice +
+                            ", Total Price: " + totalPriceStr +
                             ", Date: " + newDate +
                             ", Status: Pending";
                 }

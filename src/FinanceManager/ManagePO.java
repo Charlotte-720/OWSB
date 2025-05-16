@@ -5,21 +5,14 @@
 package FinanceManager;
 
 import PurchaseManager.PurchaseOrder;
-import PurchaseManager.addPO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
@@ -45,10 +38,12 @@ public class ManagePO extends javax.swing.JFrame {
                 String supplierName = fields[1].split(": ")[1];
                 String item = fields[2].split(": ")[1];
                 String quantity = fields[3].split(": ")[1];
-                String date = fields[4].split(": ")[1];
-                String status = fields[5].split(": ")[1];
+                String unitPrice = fields[4].split(": ")[1];
+                String totalPrice = fields[5].split(": ")[1];
+                String date = fields[6].split(": ")[1];
+                String status = fields[7].split(": ")[1];
 
-                PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, date, status);
+                PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
                 poList.add(po);
             }
         } catch (IOException e) {
@@ -58,8 +53,8 @@ public class ManagePO extends javax.swing.JFrame {
     }
     
     public void loadPOData() {
-        DefaultTableModel model = (DefaultTableModel) poTable.getModel(); // Replace jTable1 with your table name
-        model.setRowCount(0); // Clear old data
+        DefaultTableModel model = (DefaultTableModel) poTable.getModel(); 
+        model.setRowCount(0); 
 
         ArrayList<PurchaseOrder> poList = readPOFile();
         for (PurchaseOrder po : poList) {
@@ -68,6 +63,8 @@ public class ManagePO extends javax.swing.JFrame {
                 po.getSupplierName(),
                 po.getItem(),
                 po.getQuantity(),
+                po.getUnitPrice(),
+                po.getTotalPrice(),
                 po.getDate(),
                 po.getStatus()
             });
@@ -81,11 +78,13 @@ public class ManagePO extends javax.swing.JFrame {
                 String supplierName = poTable.getValueAt(i, 1).toString();
                 String item = poTable.getValueAt(i, 2).toString();
                 String quantity = poTable.getValueAt(i, 3).toString();
-                String date = poTable.getValueAt(i, 4).toString();
-                String status = poTable.getValueAt(i, 5).toString();
+                String unitPrice = poTable.getValueAt(i, 4).toString();
+                String totalPrice = poTable.getValueAt(i, 5).toString();
+                String date = poTable.getValueAt(i, 6).toString();
+                String status = poTable.getValueAt(i, 7).toString();
 
                 String line = "PO_ID: " + poID + ", Supplier Name: " + supplierName + ", Item: " + item +
-                              ", Quantity: " + quantity + ", Date: " + date + ", Status: " + status;
+                              ", Quantity: " + quantity + ", Unit Price: " + unitPrice + ", Total Price: " + totalPrice + ", Date: " + date + ", Status: " + status;
 
                 bw.write(line);
                 bw.newLine();
@@ -153,19 +152,19 @@ public class ManagePO extends javax.swing.JFrame {
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO_ID", "Supplier Name", "Item", "Quantity", "Date", "Status"
+                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -178,10 +177,6 @@ public class ManagePO extends javax.swing.JFrame {
         });
         poTable.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         jScrollPane1.setViewportView(poTable);
-        if (poTable.getColumnModel().getColumnCount() > 0) {
-            poTable.getColumnModel().getColumn(0).setResizable(false);
-            poTable.getColumnModel().getColumn(1).setResizable(false);
-        }
 
         btnApprove.setBackground(new java.awt.Color(134, 167, 136));
         btnApprove.setForeground(new java.awt.Color(255, 255, 255));
