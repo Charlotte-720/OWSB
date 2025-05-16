@@ -153,7 +153,6 @@ public class ManagePO extends javax.swing.JFrame {
         poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
@@ -281,7 +280,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
         
-        String currentStatus = poTable.getValueAt(row, 5).toString();
+        String currentStatus = poTable.getValueAt(row, 7).toString();
         if (currentStatus.equalsIgnoreCase("Approved") || currentStatus.equalsIgnoreCase("Rejected")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been " + currentStatus + ", so you cannot edit it.");
             return;
@@ -289,17 +288,19 @@ public class ManagePO extends javax.swing.JFrame {
 
         String item = poTable.getValueAt(row, 2).toString();
         String quantity = poTable.getValueAt(row, 3).toString();
+        String unitPrice = poTable.getValueAt(row, 4).toString();
         String supplier = poTable.getValueAt(row, 1).toString(); 
         String[] suppliers = loadSupplierNames();
 
         EditPOForm dialog = new EditPOForm(this, true); 
-        dialog.setPOData(item, quantity, supplier, suppliers);
+        dialog.setPOData(item, quantity, unitPrice, supplier, suppliers);
         dialog.setLocationRelativeTo(this); 
         dialog.setVisible(true); 
 
         if (dialog.isConfirmed()) {
             poTable.setValueAt(dialog.getSelectedSupplier(), row, 1);
             poTable.setValueAt(dialog.getUpdatedQuantity(), row, 3);
+            poTable.setValueAt(dialog.getUpdatedTotalPrice(), row, 5);
             saveTableToFile();
         }
 
@@ -313,7 +314,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
         
-        String currentStatus = poTable.getValueAt(row, 5).toString(); 
+        String currentStatus = poTable.getValueAt(row, 7).toString(); 
         if (currentStatus.equalsIgnoreCase("Approved")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order is already approved.");
             return;
@@ -328,7 +329,7 @@ public class ManagePO extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            poTable.setValueAt("Approved", row, 5);
+            poTable.setValueAt("Approved", row, 7);
             saveTableToFile();
         }
     
@@ -342,7 +343,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
         
-        String currentStatus = poTable.getValueAt(row, 5).toString();
+        String currentStatus = poTable.getValueAt(row, 7).toString();
         if (currentStatus.equalsIgnoreCase("Rejected")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order is already rejected.");
             return;
@@ -357,7 +358,7 @@ public class ManagePO extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            poTable.setValueAt("Rejected", row, 5);
+            poTable.setValueAt("Rejected", row, 7);
             saveTableToFile();
         }
     }//GEN-LAST:event_btnRejectActionPerformed

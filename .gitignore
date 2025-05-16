@@ -1,1 +1,16 @@
+# Ignore compiled class files
+*.class
+
+# Ignore build folders
+/build/
+/dist/
+/nbbuild/
 /nbproject/private/
+
+# Ignore NetBeans-generated files
+/genfiles.properties
+/build.xml
+
+# OS-specific
+.DS_Store
+Thumbs.db

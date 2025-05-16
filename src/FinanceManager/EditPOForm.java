@@ -4,6 +4,8 @@
  */
 package FinanceManager;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author charl
@@ -13,14 +15,19 @@ public class EditPOForm extends javax.swing.JDialog {
     /**
      * Creates new form EditPOForm
      */
+    private boolean isConfirmed = false;
+    private String updatedTotalPrice;
+    private String originalUnitPrice;
+    
     public EditPOForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     
-    public void setPOData(String item, String quantity, String supplier, String[] supplierOptions) {
+    public void setPOData(String item, String quantity, String unitPrice, String supplier, String[] supplierOptions) {
         labelPurchaseItem.setText(item);
         txtQuantity.setText(quantity);
+        originalUnitPrice = unitPrice;
         comboSupplier.removeAllItems();
         for (String s : supplierOptions) {
             comboSupplier.addItem(s);
@@ -31,12 +38,14 @@ public class EditPOForm extends javax.swing.JDialog {
     public String getUpdatedQuantity() {
         return txtQuantity.getText();
     }
+    
+    public String getUpdatedTotalPrice() {
+    return updatedTotalPrice;
+}
 
     public String getSelectedSupplier() {
         return comboSupplier.getSelectedItem().toString();
     }
-    
-    private boolean isConfirmed = false;
 
     public boolean isConfirmed() {
         return isConfirmed;
@@ -196,8 +205,17 @@ public class EditPOForm extends javax.swing.JDialog {
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         // TODO add your handling code here:
-        isConfirmed = true;
-        this.setVisible(false); 
+        try {
+            isConfirmed = true;
+            int quantity = Integer.parseInt(txtQuantity.getText().trim());
+            double unitPrice = Double.parseDouble(originalUnitPrice);
+            double totalPrice = quantity * unitPrice;
+            updatedTotalPrice = String.format("%.2f", totalPrice); 
+
+            this.setVisible(false);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid quantity.");
+        }
 
     }//GEN-LAST:event_btnConfirmActionPerformed
 
@@ -205,7 +223,6 @@ public class EditPOForm extends javax.swing.JDialog {
         // TODO add your handling code here:
         isConfirmed = false;
         this.setVisible(false); 
-
 
     }//GEN-LAST:event_btnCancelActionPerformed
 
