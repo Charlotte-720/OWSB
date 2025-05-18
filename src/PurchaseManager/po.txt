@@ -1,5 +1,5 @@
 PO_ID: 01, Supplier Name: How, Item: Melon, Quantity: 50, Unit Price: 10.00, Total Price: 500.00, Date: 16-05-2025, Status: Pending
 PO_ID: 02, Supplier Name: Kit, Item: Banana, Quantity: 100, Unit Price: 10.00, Total Price: 1000.00, Date: 16-05-2025, Status: Pending
-PO_ID: 03, Supplier Name: JV, Item: Papaya, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Pending
-PO_ID: 04, Supplier Name: JVV, Item: Coconut, Quantity: 20, Unit Price: 10, Total Price: 200.00, Date: 16-05-2025, Status: Rejected
-PO_ID: 05, Supplier Name: jiaxuan, Item: Candy, Quantity: 500, Unit Price: 1, Total Price: 500.00, Date: 16-05-2025, Status: Paid
+PO_ID: 03, Supplier Name: JV, Item: Papaya, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Approved
+PO_ID: 04, Supplier Name: JVV, Item: Coconut, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Rejected
+PO_ID: 05, Supplier Name: jiaxuan, Item: Candy, Quantity: 500, Unit Price: 1.00, Total Price: 500.00, Date: 16-05-2025, Status: Paid

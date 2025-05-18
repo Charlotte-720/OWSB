@@ -11,13 +11,14 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -31,17 +32,72 @@ public class FinancialReport extends javax.swing.JFrame {
      */
     public FinancialReport() {
         initComponents();
-        
-        loadDummyData();
+        loadDataFromPOFile();
     }
     
-    private void loadDummyData() {
-    TotalPO.setText("12");
-    TotalPayment.setText("RM 4500");
-    OutstandingAmount.setText("RM 1200");
-    PendingApprovals.setText("3");
-    RejectedOrder.setText("2");
+    private void loadDataFromPOFile() {
+        int totalPO = 0;
+        int pendingApprovals = 0;
+        int rejectedOrders = 0;
+        double totalPayment = 0;
+        double outstandingAmount = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                totalPO++; 
+
+                String[] parts = line.split(",");
+                String status = "";
+                double totalPrice = 0;
+
+                for (String part : parts) {
+                    part = part.trim();
+
+                    if (part.startsWith("Total Price:")) {
+                        try {
+                            totalPrice = Double.parseDouble(part.split(":")[1].trim());
+                        } catch (NumberFormatException e) {
+                            totalPrice = 0;
+                        }
+                    } else if (part.startsWith("Status:")) {
+                        status = part.split(":")[1].trim();
+                    }
+                }
+
+                switch (status) {
+                    case "Paid":
+                        totalPayment += totalPrice;
+                        break;
+                    case "Approved":
+                        outstandingAmount += totalPrice;
+                        break;
+                    case "Pending":
+                        pendingApprovals++;
+                        break;
+                    case "Rejected":
+                        rejectedOrders++;
+                        break;
+                }
+            }
+
+            TotalPO.setText(String.valueOf(totalPO));
+            TotalPayment.setText("RM " + String.format("%.2f", totalPayment));
+            OutstandingAmount.setText("RM " + String.format("%.2f", outstandingAmount));
+            PendingApprovals.setText(String.valueOf(pendingApprovals));
+            RejectedOrder.setText(String.valueOf(rejectedOrders));
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
+            e.printStackTrace();
+        }
     }
+
+
+
+
     
     public void exportToPNG(Component panel) {
         JFileChooser fileChooser = new JFileChooser();

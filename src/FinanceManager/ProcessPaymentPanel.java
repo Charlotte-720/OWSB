@@ -256,7 +256,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         double unitPrice = Double.parseDouble(paymentTable.getValueAt(row, 4).toString());
         int quantity = Integer.parseInt(paymentTable.getValueAt(row, 3).toString());
         double totalAmount = quantity * unitPrice;
-
+        
         PaymentConfirmation dialog = new PaymentConfirmation(this, true);
         dialog.setPaymentDetails(supplier, totalAmount);
 
