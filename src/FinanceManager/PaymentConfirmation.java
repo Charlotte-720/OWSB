@@ -4,6 +4,11 @@
  */
 package FinanceManager;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author charl
@@ -20,17 +25,16 @@ public class PaymentConfirmation extends javax.swing.JDialog {
     }
     
     private boolean confirmed = false;
+    
+    public boolean isConfirmed() {
+        return confirmed;
+    }
 
     public void setPaymentDetails(String supplier, double amount) {
-    labelSupplier.setText(supplier);
-    labelAmount.setText("RM " + String.format("%.2f", amount));
-}
-
-    public boolean isConfirmed() {
-    return confirmed;
-}
-
-
+        labelSupplier.setText(supplier);
+        labelAmount.setText("RM " + String.format("%.2f", amount));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,7 +166,7 @@ public class PaymentConfirmation extends javax.swing.JDialog {
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         // TODO add your handling code here:
         confirmed = true;
-        this.dispose(); // close dialog
+        this.dispose(); 
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed

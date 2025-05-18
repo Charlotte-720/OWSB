@@ -4,6 +4,13 @@
  */
 package FinanceManager;
 
+import PurchaseManager.PurchaseOrder;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,30 +25,85 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
      */
     public ProcessPaymentPanel() {
         initComponents();
-        
-        loadDummyData();
+        loadPOData();
     }
     
-    private void loadDummyData() {
-    String[] columnNames = {"Purchase Item", "Quantity", "Supplier", "Status"};
-    Object[][] data = {
-        {"Watermelon", 15, "Supplier A", "Pending"},
-        {"Papaya", 10, "Supplier B", "Pending"},
-        {"Apple", 8, "Supplier C", "Paid"}
-    };
+    public ArrayList<PurchaseOrder> readPOFile() {
+        ArrayList<PurchaseOrder> poList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(", ");
+                String poID = fields[0].split(": ")[1];
+                String supplierName = fields[1].split(": ")[1];
+                String item = fields[2].split(": ")[1];
+                String quantity = fields[3].split(": ")[1];
+                String unitPrice = fields[4].split(": ")[1];
+                String totalPrice = fields[5].split(": ")[1];
+                String date = fields[6].split(": ")[1];
+                String status = fields[7].split(": ")[1];
 
-    DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false; // Table is read-only
+                if ("Approved".equals(status)) {
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
+                    poList.add(po);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
+        return poList;
+    }
+    
+    public void loadPOData() {
+        DefaultTableModel model = (DefaultTableModel) paymentTable.getModel(); 
+        model.setRowCount(0); 
 
-    paymentTable.setModel(model);
+        ArrayList<PurchaseOrder> poList = readPOFile();
+        for (PurchaseOrder po : poList) {
+            model.addRow(new Object[] {
+                po.getPoID(),
+                po.getSupplierName(),
+                po.getItem(),
+                po.getQuantity(),
+                po.getUnitPrice(),
+                po.getTotalPrice(),
+                po.getDate(),
+                po.getStatus()
+            });
+        }
+    }
+    
+    private void updatePOStatusInFile(String poIDToUpdate) {
+        ArrayList<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("PO_ID: " + poIDToUpdate)) {
+                    String[] parts = line.split(", ");
+                    if (parts.length >= 8) {
+                        parts[7] = "Status: Paid";  // ✅ Only change this field
+                        line = String.join(", ", parts);
+                    }
+                }
+                updatedLines.add(line);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/PurchaseManager/po.txt"))) {
+            for (String updatedLine : updatedLines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to write to po.txt.");
+        }
     }
 
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -79,17 +141,17 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
 
         paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Purchase Item", "Quantity", "Supplier", "Status"
+                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -117,23 +179,23 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(270, 270, 270)
-                .addComponent(btnProcessPayment)
-                .addGap(61, 61, 61)
-                .addComponent(btnCancel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(213, 213, 213)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(213, 213, 213)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(59, 59, 59))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(btnProcessPayment)
+                        .addGap(61, 61, 61)
+                        .addComponent(btnCancel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 685, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,9 +207,9 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
                         .addGap(497, 497, 497))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(labelTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)))
+                        .addGap(16, 16, 16)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel)
                     .addComponent(btnProcessPayment))
@@ -184,26 +246,29 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             return;
         }
 
-        String status = paymentTable.getValueAt(row, 3).toString();
+        String status = paymentTable.getValueAt(row, 7).toString();
         if (status.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This PO has already been paid.");
             return;
         }
 
-        String supplier = paymentTable.getValueAt(row, 2).toString();
-        int quantity = Integer.parseInt(paymentTable.getValueAt(row, 1).toString());
-        double unitPrice = 100.0; // 🧪 dummy unit price
+        String supplier = paymentTable.getValueAt(row, 1).toString();
+        double unitPrice = Double.parseDouble(paymentTable.getValueAt(row, 4).toString());
+        int quantity = Integer.parseInt(paymentTable.getValueAt(row, 3).toString());
         double totalAmount = quantity * unitPrice;
 
         PaymentConfirmation dialog = new PaymentConfirmation(this, true);
         dialog.setPaymentDetails(supplier, totalAmount);
 
-        dialog.setVisible(true); // blocks until closed
+        dialog.setVisible(true); // blocks until closed  
 
         // Check if confirmed
         if (dialog.isConfirmed()) {
-            paymentTable.setValueAt("Paid", row, 3); // Mark as paid
+            paymentTable.setValueAt("Paid", row, 7);
             JOptionPane.showMessageDialog(this, "Payment successful.");
+            
+            String poID = paymentTable.getValueAt(row, 0).toString();
+            updatePOStatusInFile(poID);
         }
     }//GEN-LAST:event_btnProcessPaymentActionPerformed
 
