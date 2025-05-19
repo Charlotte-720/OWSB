@@ -124,9 +124,7 @@ public class viewrequisition extends javax.swing.JFrame {
 
     //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
-        this.dispose();
-        PM pm = new PM();
-        pm.setVisible(true);
+
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
