@@ -8,10 +8,7 @@ import com.lowagie.text.Document;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -19,15 +16,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collections;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 
 /**
@@ -46,6 +46,8 @@ public class FinancialReport extends javax.swing.JFrame {
         loadDataFromPOFile();
         topItems = getTopPurchasedItems();
         ((BarChartPanel) barChartPanel).setData(topItems);
+        populateMonthComboBox();
+        comboMonthFilter.addActionListener(e -> applyMonthFilter());
 
     }
     
@@ -212,6 +214,132 @@ public class FinancialReport extends javax.swing.JFrame {
                 ));
     }
 
+    private void populateMonthComboBox() {
+        comboMonthFilter.removeAllItems();
+        comboMonthFilter.addItem("All Months");
+
+        Set<String> months = new TreeSet<>(Comparator.reverseOrder()); // latest first
+        DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(", ");
+                for (String part : parts) {
+                    if (part.startsWith("Date:")) {
+                        String dateStr = part.split(":")[1].trim();
+                        try {
+                            LocalDate date = LocalDate.parse(dateStr, fileFormat);
+                            months.add(date.format(displayFormat));
+                        } catch (Exception e) {
+                            System.out.println("Skipping invalid date: " + dateStr);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to read dates from po.txt.");
+            e.printStackTrace();
+        }
+
+        for (String month : months) {
+            comboMonthFilter.addItem(month);
+        }
+    }
+
+    private void applyMonthFilter() {
+        String selected = (String) comboMonthFilter.getSelectedItem();
+        if (selected == null) return;
+
+        int totalPO = 0;
+        int pendingApprovals = 0;
+        int rejectedOrders = 0;
+        double totalPayment = 0;
+        double outstandingAmount = 0;
+        Map<String, Integer> itemQuantities = new HashMap<>();
+
+        DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split(", ");
+                String dateStr = "", item = "", status = "";
+                double totalPrice = 0;
+                int quantity = 0;
+
+                for (String part : parts) {
+                    part = part.trim();
+
+                    if (part.startsWith("Date:")) {
+                        dateStr = part.split(":")[1].trim();
+                    } else if (part.startsWith("Item:")) {
+                        item = part.split(":")[1].trim();
+                    } else if (part.startsWith("Quantity:")) {
+                        quantity = Integer.parseInt(part.split(":")[1].trim());
+                    } else if (part.startsWith("Total Price:")) {
+                        totalPrice = Double.parseDouble(part.split(":")[1].trim());
+                    } else if (part.startsWith("Status:")) {
+                        status = part.split(":")[1].trim();
+                    }
+                }
+
+                LocalDate date;
+                try {
+                    date = LocalDate.parse(dateStr, fileFormat);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                String poMonth = date.format(displayFormat);
+
+                // Only count matching month or all
+                if (selected.equals("All Months") || poMonth.equals(selected)) {
+                    totalPO++;
+                    itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
+
+                    switch (status) {
+                        case "Paid": totalPayment += totalPrice; break;
+                        case "Approved": outstandingAmount += totalPrice; break;
+                        case "Pending": pendingApprovals++; break;
+                        case "Rejected": rejectedOrders++; break;
+                    }
+                }
+            }
+
+            // Update labels
+            TotalPO.setText(String.valueOf(totalPO));
+            TotalPayment.setText("RM " + String.format("%.2f", totalPayment));
+            OutstandingAmount.setText("RM " + String.format("%.2f", outstandingAmount));
+            PendingApprovals.setText(String.valueOf(pendingApprovals));
+            RejectedOrder.setText(String.valueOf(rejectedOrders));
+
+            // Update bar chart (top 3)
+            topItems = itemQuantities.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(3)
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (e1, e2) -> e1,
+                    LinkedHashMap::new
+                ));
+
+            ((BarChartPanel) barChartPanel).setData(topItems);
+            barChartPanel.repaint();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error filtering data.");
+            e.printStackTrace();
+        }
+    }
+
 
 
 
@@ -243,10 +371,10 @@ public class FinancialReport extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         btnGenerate = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        comboMonthFilter = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(null);
 
         jPanel1.setBackground(new java.awt.Color(255, 253, 247));
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -395,7 +523,7 @@ public class FinancialReport extends javax.swing.JFrame {
                     .addComponent(RejectedOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
@@ -406,8 +534,8 @@ public class FinancialReport extends javax.swing.JFrame {
             }
         });
 
-        btnGenerate.setBackground(new java.awt.Color(255, 207, 207));
-        btnGenerate.setText("Generate Report");
+        btnGenerate.setBackground(new java.awt.Color(255, 226, 226));
+        btnGenerate.setText("Export Report");
         btnGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateActionPerformed(evt);
@@ -423,23 +551,25 @@ public class FinancialReport extends javax.swing.JFrame {
             }
         });
 
+        comboMonthFilter.setBackground(new java.awt.Color(255, 207, 207));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(141, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(248, 248, 248)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(comboMonthFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
                         .addComponent(btnGenerate)
-                        .addGap(67, 67, 67)
-                        .addComponent(btnCancel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(133, 133, 133)
-                        .addComponent(reportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(53, 53, 53)
+                        .addComponent(btnCancel))
+                    .addComponent(reportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(127, 127, 127)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -447,15 +577,16 @@ public class FinancialReport extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel12)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(574, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(reportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGenerate)
-                    .addComponent(btnCancel))
-                .addGap(30, 30, 30))
+                    .addComponent(btnCancel)
+                    .addComponent(comboMonthFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -466,7 +597,7 @@ public class FinancialReport extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 625, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setSize(new java.awt.Dimension(800, 625));
@@ -518,6 +649,7 @@ public class FinancialReport extends javax.swing.JFrame {
     private javax.swing.JPanel barChartPanel;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnGenerate;
+    private javax.swing.JComboBox<String> comboMonthFilter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;

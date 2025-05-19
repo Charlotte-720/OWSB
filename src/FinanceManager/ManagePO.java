@@ -26,6 +26,18 @@ public class ManagePO extends javax.swing.JFrame {
     public ManagePO() {
         initComponents();
         loadPOData();
+        
+        comboFilter.addItem("All Statuses");
+        comboFilter.addItem("Pending");
+        comboFilter.addItem("Approved");
+        comboFilter.addItem("Rejected");
+        comboFilter.addItem("Paid");
+
+        comboFilter.addActionListener(e -> {
+            String selectedStatus = (String) comboFilter.getSelectedItem();
+            filterPOByStatus(selectedStatus);
+        });
+
     }
     
     public ArrayList<PurchaseOrder> readPOFile() {
@@ -111,6 +123,28 @@ public class ManagePO extends javax.swing.JFrame {
         return supplierNames.toArray(new String[0]);
     }
 
+    private void filterPOByStatus(String statusFilter) {
+        DefaultTableModel model = (DefaultTableModel) poTable.getModel();
+        model.setRowCount(0); // clear existing rows
+
+        ArrayList<PurchaseOrder> poList = readPOFile();
+
+        for (PurchaseOrder po : poList) {
+            if (statusFilter.equals("All Statuses") || po.getStatus().equalsIgnoreCase(statusFilter)) {
+                model.addRow(new Object[] {
+                    po.getPoID(),
+                    po.getSupplierName(),
+                    po.getItem(),
+                    po.getQuantity(),
+                    po.getUnitPrice(),
+                    po.getTotalPrice(),
+                    po.getDate(),
+                    po.getStatus()
+                });
+            }
+        }
+    }
+
 
 
     /**
@@ -131,6 +165,7 @@ public class ManagePO extends javax.swing.JFrame {
         btnEdit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        comboFilter = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -210,6 +245,12 @@ public class ManagePO extends javax.swing.JFrame {
             }
         });
 
+        comboFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -235,20 +276,24 @@ public class ManagePO extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addGap(13, 13, 13)
-                .addComponent(labelTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelTitle)
+                    .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnApprove)
                     .addComponent(btnReject)
@@ -281,7 +326,7 @@ public class ManagePO extends javax.swing.JFrame {
         }
         
         String currentStatus = poTable.getValueAt(row, 7).toString();
-        if (currentStatus.equalsIgnoreCase("Approved") || currentStatus.equalsIgnoreCase("Rejected")) {
+        if (currentStatus.equalsIgnoreCase("Approved") || currentStatus.equalsIgnoreCase("Rejected") || currentStatus.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been " + currentStatus + ", so you cannot edit it.");
             return;
         }
@@ -321,6 +366,9 @@ public class ManagePO extends javax.swing.JFrame {
         } else if (currentStatus.equalsIgnoreCase("Rejected")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been rejected. Cannot approve.");
             return;
+        } else if (currentStatus.equalsIgnoreCase("Paid")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been paid. Cannot approve.");
+            return;
         }
         
         int confirm = JOptionPane.showConfirmDialog(this, 
@@ -350,6 +398,9 @@ public class ManagePO extends javax.swing.JFrame {
         } else if (currentStatus.equalsIgnoreCase("Approved")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been approved. Cannot reject.");
             return;
+        } else if (currentStatus.equalsIgnoreCase("Paid")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been paid. Cannot reject.");
+            return;
         }
         
         int confirm = JOptionPane.showConfirmDialog(this, 
@@ -378,6 +429,10 @@ public class ManagePO extends javax.swing.JFrame {
         fmg.setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    private void comboFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboFilterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -388,6 +443,7 @@ public class ManagePO extends javax.swing.JFrame {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnReject;
+    private javax.swing.JComboBox<String> comboFilter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

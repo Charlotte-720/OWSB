@@ -4,11 +4,6 @@
  */
 package FinanceManager;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author charl
