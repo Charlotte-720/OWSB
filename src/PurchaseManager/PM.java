@@ -211,13 +211,9 @@ public class PM extends javax.swing.JFrame {
     }//GEN-LAST:event_ViewSuppliersActionPerformed
 
     private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
-        JFrame frame = new JFrame("View Requisition");
-        frame.setContentPane(new viewrequisition());
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         this.dispose();
+        viewrequisition Viewrequisition = new viewrequisition();
+        Viewrequisition.setVisible(true);
     }//GEN-LAST:event_ViewRequisitionActionPerformed
 
     private void GenerateViewPOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPOActionPerformed
