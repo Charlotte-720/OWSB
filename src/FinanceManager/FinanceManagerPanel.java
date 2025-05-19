@@ -37,18 +37,42 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         System.out.println("Position: " + position);
         
         initComponents();
-        loadMonthlySummaryFromPOFile();
+        populateMonthComboBox();
+
+        comboMonth.addActionListener(e -> {
+            String selected = (String) comboMonth.getSelectedItem();
+            if (selected != null) {
+                loadSelectedMonthSummary(selected);
+            }
+        });
+        if (comboMonth.getItemCount() > 0) {
+            comboMonth.setSelectedIndex(0); // auto-trigger listener
+        }
     }
     
-    private void loadMonthlySummaryFromPOFile() {
+    private void populateMonthComboBox() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        comboMonth.removeAllItems();
+
+        LocalDate now = LocalDate.now();
+        for (int i = 0; i < 6; i++) {
+            LocalDate pastMonth = now.minusMonths(i);
+            comboMonth.addItem(pastMonth.format(formatter));
+        }
+    }
+    
+    private void loadSelectedMonthSummary(String selectedMonthYear) {
         int totalPO = 0;
         double totalPayment = 0;
         int pendingPO = 0;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate now = LocalDate.now();
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        DateTimeFormatter fileDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try {
+            LocalDate targetMonth = LocalDate.parse("01 " + selectedMonthYear, DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+
+            BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"));
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -57,38 +81,34 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
                 try {
                     String[] fields = line.split(", ");
                     String dateStr = fields[6].split(": ")[1];
-                    LocalDate poDate = LocalDate.parse(dateStr, formatter);
+                    LocalDate poDate = LocalDate.parse(dateStr, fileDateFormat);
 
-                    // Only include this month's POs
-                    if (poDate.getMonth() == now.getMonth() && poDate.getYear() == now.getYear()) {
+                    if (poDate.getMonth() == targetMonth.getMonth() && poDate.getYear() == targetMonth.getYear()) {
                         totalPO++;
 
                         String totalPriceStr = fields[5].split(": ")[1];
                         String status = fields[7].split(": ")[1];
                         double totalPrice = Double.parseDouble(totalPriceStr);
 
-                        if (status.equals("Paid")) {
-                            totalPayment += totalPrice;
-                        }
-                        if (status.equals("Pending")) {
-                            pendingPO++;
-                        }
+                        if (status.equals("Paid")) totalPayment += totalPrice;
+                        if (status.equals("Pending")) pendingPO++;
                     }
                 } catch (Exception e) {
                     System.out.println("Skipping malformed line: " + line);
                 }
             }
+            reader.close();
 
-        // Update GUI labels
-        displayTotalPO.setText(String.valueOf(totalPO));
-        displayTotalPayment.setText("RM " + String.format("%.2f", totalPayment));
-        displayPending.setText(String.valueOf(pendingPO));
+            displayTotalPO.setText(String.valueOf(totalPO));
+            displayTotalPayment.setText("RM " + String.format("%.2f", totalPayment));
+            displayPending.setText(String.valueOf(pendingPO));
 
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
-            e.printStackTrace();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Failed to load monthly summary.");
+            ex.printStackTrace();
         }
     }
+
  
     /**
      * This method is called from within the constructor to initialize the form.
