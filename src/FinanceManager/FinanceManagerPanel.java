@@ -5,7 +5,11 @@
 package FinanceManager;
 
 import Admin.Loginpage1;
-import PurchaseManager.viewrequisition;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -31,19 +35,61 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         }
         System.out.println("EmployeeID: " + employeeID);
         System.out.println("Position: " + position);
+        
         initComponents();
-        
-        // Dummy summary data
-        int totalPO = 12;
-        double totalPayment = 4500.00;
-        int pendingPO = 3;
-        
-        // Update labels
+        loadMonthlySummaryFromPOFile();
+    }
+    
+    private void loadMonthlySummaryFromPOFile() {
+        int totalPO = 0;
+        double totalPayment = 0;
+        int pendingPO = 0;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate now = LocalDate.now();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                try {
+                    String[] fields = line.split(", ");
+                    String dateStr = fields[6].split(": ")[1];
+                    LocalDate poDate = LocalDate.parse(dateStr, formatter);
+
+                    // Only include this month's POs
+                    if (poDate.getMonth() == now.getMonth() && poDate.getYear() == now.getYear()) {
+                        totalPO++;
+
+                        String totalPriceStr = fields[5].split(": ")[1];
+                        String status = fields[7].split(": ")[1];
+                        double totalPrice = Double.parseDouble(totalPriceStr);
+
+                        if (status.equals("Paid")) {
+                            totalPayment += totalPrice;
+                        }
+                        if (status.equals("Pending")) {
+                            pendingPO++;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Skipping malformed line: " + line);
+                }
+            }
+
+        // Update GUI labels
         displayTotalPO.setText(String.valueOf(totalPO));
         displayTotalPayment.setText("RM " + String.format("%.2f", totalPayment));
         displayPending.setText(String.valueOf(pendingPO));
-    }
 
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
+            e.printStackTrace();
+        }
+    }
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +118,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         displayTotalPO = new javax.swing.JLabel();
         displayTotalPayment = new javax.swing.JLabel();
         displayPending = new javax.swing.JLabel();
+        comboMonth = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,6 +244,8 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
         labelPending.setText("Pending Approvals:");
 
+        comboMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout summaryPanelLayout = new javax.swing.GroupLayout(summaryPanel);
         summaryPanel.setLayout(summaryPanelLayout);
         summaryPanelLayout.setHorizontalGroup(
@@ -206,29 +255,30 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
                 .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(summaryPanelLayout.createSequentialGroup()
                         .addComponent(labelFinancialSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, summaryPanelLayout.createSequentialGroup()
-                        .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(summaryPanelLayout.createSequentialGroup()
-                                .addComponent(labelPending, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(displayPending, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(summaryPanelLayout.createSequentialGroup()
-                                .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(displayTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(summaryPanelLayout.createSequentialGroup()
-                                .addComponent(labelTotalPO, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                                .addGap(154, 154, 154)
-                                .addComponent(displayTotalPO, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(15, 15, 15))))
+                        .addComponent(labelPending, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(displayPending, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, summaryPanelLayout.createSequentialGroup()
+                        .addComponent(labelTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(displayTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, summaryPanelLayout.createSequentialGroup()
+                        .addComponent(labelTotalPO, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                        .addGap(154, 154, 154)
+                        .addComponent(displayTotalPO, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(15, 15, 15))
         );
         summaryPanelLayout.setVerticalGroup(
             summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(summaryPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(labelFinancialSummary)
-                .addGap(32, 32, 32)
+                .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelFinancialSummary)
+                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(summaryPanelLayout.createSequentialGroup()
                         .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,6 +399,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnManagePurchaseOrder1;
     private javax.swing.JButton btnProcessPayment;
     private javax.swing.JButton btnVerifyInventoryUpdates;
+    private javax.swing.JComboBox<String> comboMonth;
     private javax.swing.JLabel displayPending;
     private javax.swing.JLabel displayTotalPO;
     private javax.swing.JLabel displayTotalPayment;
