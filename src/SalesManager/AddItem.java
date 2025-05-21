@@ -1,5 +1,6 @@
 package SalesManager;
 
+import model.Item;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.io.BufferedReader;

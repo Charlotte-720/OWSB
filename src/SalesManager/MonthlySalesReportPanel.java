@@ -1,6 +1,7 @@
 
 package SalesManager;
 
+import model.Item;
 import java.io.IOException;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;

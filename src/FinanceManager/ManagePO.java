@@ -4,7 +4,7 @@
  */
 package FinanceManager;
 
-import PurchaseManager.PurchaseOrder;
+import model.PurchaseOrder;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,7 +54,7 @@ public class ManagePO extends javax.swing.JFrame {
                 String supplierName = fields[1].split(": ")[1];
                 String item = fields[2].split(": ")[1];
                 String quantity = fields[3].split(": ")[1];
-                String unitPrice = fields[4].split(": ")[1];
+                String unitPrice = fields[4].split(": ")[1];    
                 String totalPrice = fields[5].split(": ")[1];
                 String date = fields[6].split(": ")[1];
                 String status = fields[7].split(": ")[1];

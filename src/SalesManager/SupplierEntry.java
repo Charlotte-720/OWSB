@@ -1,5 +1,6 @@
 package SalesManager;
 
+import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;

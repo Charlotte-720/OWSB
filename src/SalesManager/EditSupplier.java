@@ -1,5 +1,6 @@
 package SalesManager;
 
+import model.Supplier;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 

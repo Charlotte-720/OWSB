@@ -1,5 +1,6 @@
 package SalesManager;
 
+import model.Supplier;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;

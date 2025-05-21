@@ -1,6 +1,8 @@
 
 package SalesManager;
 
+import model.SalesRecord;
+import model.Item;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

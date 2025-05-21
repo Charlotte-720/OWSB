@@ -4,7 +4,7 @@
  */
 package FinanceManager;
 
-import PurchaseManager.PurchaseOrder;
+import model.PurchaseOrder;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
