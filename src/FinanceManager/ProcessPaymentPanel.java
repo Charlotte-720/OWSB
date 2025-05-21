@@ -30,7 +30,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     
     public ArrayList<PurchaseOrder> readPOFile() {
         ArrayList<PurchaseOrder> poList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(", ");
@@ -76,7 +76,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     private void updatePOStatusInFile(String poIDToUpdate) {
         ArrayList<String> updatedLines = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("PO_ID: " + poIDToUpdate)) {
@@ -93,7 +93,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/PurchaseManager/po.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/po.txt"))) {
             for (String updatedLine : updatedLines) {
                 writer.write(updatedLine);
                 writer.newLine();

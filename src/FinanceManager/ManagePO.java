@@ -42,7 +42,7 @@ public class ManagePO extends javax.swing.JFrame {
     
     public ArrayList<PurchaseOrder> readPOFile() {
         ArrayList<PurchaseOrder> poList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(", ");
@@ -84,7 +84,7 @@ public class ManagePO extends javax.swing.JFrame {
     }
     
     private void saveTableToFile() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/PurchaseManager/po.txt"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/txtFile/po.txt"))) {
             for (int i = 0; i < poTable.getRowCount(); i++) {
                 String poID = poTable.getValueAt(i, 0).toString();
                 String supplierName = poTable.getValueAt(i, 1).toString();

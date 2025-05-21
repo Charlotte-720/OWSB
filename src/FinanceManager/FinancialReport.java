@@ -58,7 +58,7 @@ public class FinancialReport extends javax.swing.JFrame {
         double totalPayment = 0;
         double outstandingAmount = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -179,7 +179,7 @@ public class FinancialReport extends javax.swing.JFrame {
     private LinkedHashMap<String, Integer> getTopPurchasedItems() {
         Map<String, Integer> itemQuantities = new HashMap<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("po.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -222,7 +222,7 @@ public class FinancialReport extends javax.swing.JFrame {
         DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(", ");
@@ -262,7 +262,7 @@ public class FinancialReport extends javax.swing.JFrame {
         DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
