@@ -4,84 +4,117 @@
  */
 package InventoryManager.models;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author reymy
  */
 
 public class Item {
-    // Fields for the item
-    private String itemCode;
-    private String itemName;
+    private String itemID;
+    private String itemName;    
+    private double price;
     private String category;
-    private int quantity;
-    private int threshold;
+    private LocalDate expiredDate;
+    private String supplierID;
+    private int totalStock;
+    private LocalDate updatedDate;
 
-    // Constructor
-    public Item(String itemCode, String itemName, String category, int quantity, int threshold) {
-        this.itemCode = itemCode;
+    // ✅ Your full constructor (matches items.txt structure)
+    public Item(String itemID, String itemName, double price, String category,
+                LocalDate expiredDate, String supplierID, int totalStock, LocalDate updatedDate) {
+        this.itemID = itemID;
         this.itemName = itemName;
+        this.price = price;
         this.category = category;
-        this.quantity = quantity;
-        this.threshold = threshold;
+        this.expiredDate = expiredDate;
+        this.supplierID = supplierID;
+        this.totalStock = totalStock;
+        this.updatedDate = updatedDate;
     }
 
-    // Getters and Setters
-    public String getItemCode() {
-        return itemCode;
-    }
-
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
+    // Additional overloaded constructors (groupmate's)
+    public Item(String itemID, String itemName, double price, int totalStock) {
+        this.itemID = itemID;
         this.itemName = itemName;
+        this.price = price;
+        this.totalStock = totalStock;
     }
 
-    public String getCategory() {
-        return category;
+    public Item(String itemID, String itemName, double price, String supplierID) {
+        this.itemID = itemID;
+        this.itemName = itemName;
+        this.price = price;
+        this.supplierID = supplierID;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    // Getters
+    public String getItemID() {
+        return itemID; 
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getItemName() { 
+        return itemName; 
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public double getPrice() {
+        return price;
     }
 
-    public int getThreshold() {
-        return threshold;
+    public String getCategory() { 
+        return category; 
     }
 
-    public void setThreshold(int threshold) {
-        this.threshold = threshold;
+    public LocalDate getExpiredDate() { 
+        return expiredDate; 
     }
 
-    //A helper method to check if the item is low on stock
-    public boolean isLowStock() {
-        return quantity <= threshold;
+    public String getSupplierID() { 
+        return supplierID; 
     }
 
-    //Override toString() for debugging or display
+    public int getTotalStock() { 
+        return totalStock; 
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate; 
+    }
+
+    // Setters
+    public void setPrice(double price) { 
+        this.price = price; 
+    }
+
+    public void setCategory(String category) { 
+        this.category = category; 
+    }
+
+    public void setExpiredDate(LocalDate expiredDate) {
+        this.expiredDate = expiredDate;
+    }
+
+    public void setTotalStock(int totalStock) {
+        this.totalStock = totalStock;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) { 
+        this.updatedDate = updatedDate;
+    }
+
+    // Debug / Display
     @Override
     public String toString() {
         return "Item{" +
-                "itemCode='" + itemCode + '\'' +
+                "itemID='" + itemID + '\'' +
                 ", itemName='" + itemName + '\'' +
+                ", price=" + price +
                 ", category='" + category + '\'' +
-                ", quantity=" + quantity +
-                ", threshold=" + threshold +
+                ", expiredDate=" + expiredDate +
+                ", supplierID='" + supplierID + '\'' +
+                ", totalStock=" + totalStock +
+                ", updatedDate=" + updatedDate +
                 '}';
     }
 }
-

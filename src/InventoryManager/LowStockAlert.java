@@ -4,6 +4,11 @@
  */
 package InventoryManager;
 import javax.swing.JFrame;
+import InventoryManager.models.Item;
+import InventoryManager.functions.InventoryService;
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -11,6 +16,24 @@ import javax.swing.JFrame;
  */
 public class LowStockAlert extends javax.swing.JFrame {
 
+    private void loadLowStockItems() {
+        List<Item> allItems = InventoryService.getSampleItems(); // or a shared item list if available
+        DefaultTableModel model = (DefaultTableModel) lowStockTable.getModel();
+        model.setRowCount(0); // Clear table
+
+        for (Item item : allItems) {
+            if (item.isLowStock()) {
+                Object[] row = {
+                    item.getItemCode(),
+                    item.getItemName(),
+                    item.getQuantity(),
+                    item.getThreshold()
+                };
+                model.addRow(row);
+            }
+        }
+    }
+    
     /**
      * Creates new form LowStockAlert
      */
@@ -18,8 +41,12 @@ public class LowStockAlert extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        loadLowStockItems();
 
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,8 +60,8 @@ public class LowStockAlert extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         titleLabel = new javax.swing.JLabel();
         closeButton = new javax.swing.JLabel();
-        lowStockTable = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        lowStockScrollPane = new javax.swing.JScrollPane();
+        lowStockTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
 
@@ -54,7 +81,7 @@ public class LowStockAlert extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        lowStockTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -65,7 +92,7 @@ public class LowStockAlert extends javax.swing.JFrame {
                 "Item Code", "Item Name", "Quantity", "Threshold"
             }
         ));
-        lowStockTable.setViewportView(jTable1);
+        lowStockScrollPane.setViewportView(lowStockTable);
 
         refreshButton.setBackground(new java.awt.Color(235, 247, 255));
         refreshButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -96,7 +123,7 @@ public class LowStockAlert extends javax.swing.JFrame {
                 .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(lowStockTable, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lowStockScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 51, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(114, 114, 114)
@@ -114,7 +141,7 @@ public class LowStockAlert extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addComponent(titleLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lowStockTable, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lowStockScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,7 +168,7 @@ public class LowStockAlert extends javax.swing.JFrame {
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        // TODO add your handling code here:
+        loadLowStockItems();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -188,8 +215,8 @@ public class LowStockAlert extends javax.swing.JFrame {
     private javax.swing.JButton backButton;
     private javax.swing.JLabel closeButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JScrollPane lowStockTable;
+    private javax.swing.JScrollPane lowStockScrollPane;
+    private javax.swing.JTable lowStockTable;
     private javax.swing.JButton refreshButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables

@@ -5,12 +5,25 @@
 package InventoryManager;
 import javax.swing.JFrame;
 
+import InventoryManager.models.Item;
+import InventoryManager.functions.InventoryService;
+import InventoryManager.functions.ReportExporter;
+import com.lowagie.text.Document;
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.util.List;
+import java.io.FileOutputStream;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author reymy
  */
 public class GenerateStockReport extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form GenerateStockReport
      */
@@ -18,8 +31,29 @@ public class GenerateStockReport extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        loadStockReportTable();
     }
 
+    private void loadStockReportTable() {
+        List<Item> items = InventoryService.getSampleItems(); // or live data
+        DefaultTableModel model = (DefaultTableModel) stockReportTable.getModel();
+        model.setRowCount(0);
+
+        for (Item item : items) {
+            String status = item.isLowStock() ? "LOW" : "OK";
+            Object[] row = {
+                item.getItemCode(),
+                item.getItemName(),
+                item.getCategory(),
+                item.getQuantity(),
+                item.getThreshold(),
+                status
+            };
+            model.addRow(row);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,9 +67,8 @@ public class GenerateStockReport extends javax.swing.JFrame {
         titleLabel = new javax.swing.JLabel();
         closeButton = new javax.swing.JLabel();
         generateButton = new javax.swing.JButton();
-        timestampLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        reportTable = new javax.swing.JTable();
+        stockReportTable = new javax.swing.JTable();
         exportButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
 
@@ -57,18 +90,14 @@ public class GenerateStockReport extends javax.swing.JFrame {
 
         generateButton.setBackground(new java.awt.Color(235, 247, 255));
         generateButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        generateButton.setText("Generate");
+        generateButton.setText("Refresh");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generateButtonActionPerformed(evt);
             }
         });
 
-        timestampLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        timestampLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        timestampLabel.setText("Report last generated: …");
-
-        reportTable.setModel(new javax.swing.table.DefaultTableModel(
+        stockReportTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -79,7 +108,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
                 "Item Code", "Item Name", "Category", "Quantity in Stock", "Threshold", "Status"
             }
         ));
-        jScrollPane1.setViewportView(reportTable);
+        jScrollPane1.setViewportView(stockReportTable);
 
         exportButton.setBackground(new java.awt.Color(235, 247, 255));
         exportButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -116,14 +145,9 @@ public class GenerateStockReport extends javax.swing.JFrame {
                 .addGap(0, 26, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(timestampLabel)
-                        .addGap(284, 284, 284))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(titleLabel)
-                        .addGap(188, 188, 188)
-                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(titleLabel)
+                .addGap(188, 188, 188)
+                .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,11 +155,9 @@ public class GenerateStockReport extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
-                        .addComponent(titleLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(timestampLabel))
+                        .addComponent(titleLabel))
                     .addComponent(closeButton))
-                .addGap(18, 18, 18)
+                .addGap(40, 40, 40)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -164,11 +186,32 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-        // TODO add your handling code here:
+        loadStockReportTable();
     }//GEN-LAST:event_generateButtonActionPerformed
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-        // TODO add your handling code here:
+        StockReportExportPopup popup = new StockReportExportPopup((java.awt.Frame) this, true);
+        popup.setVisible(true);
+
+        String format = popup.getSelectedFormat();
+        if (format != null) {
+            List<Item> items = InventoryService.getSampleItems(); // Replace with actual item list
+            try {
+                switch (format) {
+                    case "PDF":
+                        ReportExporter.exportStockReportAsPDF(items);
+                        break;
+                    case "PNG":
+                        ReportExporter.exportStockReportAsPNG(items); // Stub or real
+                        break;
+                    default:
+                        javax.swing.JOptionPane.showMessageDialog(this, "Unsupported format.");
+                }
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Failed to export: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -218,8 +261,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
     private javax.swing.JButton generateButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable reportTable;
-    private javax.swing.JLabel timestampLabel;
+    private javax.swing.JTable stockReportTable;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

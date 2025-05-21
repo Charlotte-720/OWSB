@@ -4,13 +4,21 @@
  */
 package InventoryManager;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import InventoryManager.functions.InventoryService;
+import InventoryManager.models.PurchaseOrder;
+import InventoryManager.models.Item;
+import java.util.List;
 
 /**
  *
  * @author reymy
  */
 public class POVerification extends javax.swing.JFrame {
-
+    
+    private List<PurchaseOrder> poList;
+    
+    
     /**
      * Creates new form POVerification
      */
@@ -18,8 +26,54 @@ public class POVerification extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        poList = InventoryService.loadPOsFromFile("data/PurchaseOrders.txt");
+        loadPOsToTable();
+        
+        poTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && poTable.getSelectedRow() != -1) {
+                int selectedIndex = poTable.getSelectedRow();
+                loadItemsOfSelectedPO(selectedIndex);
+            }
+        });
+        
+    }
+    
+    private void loadPOsToTable() {
+        DefaultTableModel model = (DefaultTableModel) poTable.getModel();
+        model.setRowCount(0); // Clear existing rows
+
+        for (PurchaseOrder po : poList) {
+            Object[] row = {
+                po.getPoID(),
+                po.getSupplier(),
+                po.getDate().toString(),
+                po.getStatus()
+            };
+            model.addRow(row);
+        }
+    }
+    
+    
+    private void loadItemsOfSelectedPO(int index) {
+        DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
+        model.setRowCount(0);
+
+        List<Item> items = poList.get(index).getItems();
+        for (Item item : items) {
+            Object[] row = {
+                item.getItemID(),
+                item.getItemName(),
+                item.getTotalStock(),
+                poList.get(index).getStatus() // shows PO status in item rows
+            };
+            model.addRow(row);
+        }
     }
 
+   
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -161,7 +215,40 @@ public class POVerification extends javax.swing.JFrame {
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedIndex = poTable.getSelectedRow();
+        if (selectedIndex != -1) {
+            PurchaseOrder po = poList.get(selectedIndex);
+
+            if (po.getStatus().equalsIgnoreCase("Approved")) {
+                po.setStatus("Received");
+
+               // Update inventory quantities based on PO items
+                List<Item> inventoryItems = InventoryService.loadItemsFromFile("OWSB/items.txt");
+                for (Item poItem : po.getItems()) {
+                    for (Item stockItem : inventoryItems) {
+                        if (stockItem.getItemID().equals(poItem.getItemID())) {
+                            stockItem.setTotalStock(stockItem.getTotalStock() + poItem.getTotalStock());
+                            break;
+                        }
+                    }
+                }
+
+                // ✅ Save both PO and item updates
+                InventoryService.savePOsToFile(poList, "data/PurchaseOrders.txt");
+                InventoryService.saveItemsToFile(inventoryItems, "OWSB/items.txt");
+
+                loadPOsToTable();
+                loadItemsOfSelectedPO(selectedIndex);
+
+                javax.swing.JOptionPane.showMessageDialog(this, "PO confirmed and stock updated.");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Only Approved POs can be confirmed.\nThis PO is currently: " + po.getStatus(),
+                    "Confirmation Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+   
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed

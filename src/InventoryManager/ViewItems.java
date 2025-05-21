@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InventoryManager;
+
+import InventoryManager.functions.InventoryService;
 import javax.swing.JFrame;
 import InventoryManager.models.Item;
 import java.util.List;
@@ -15,16 +17,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewItems extends javax.swing.JFrame {
 
-    private List<Item> getSampleItems() {
-        List<Item> itemList = new ArrayList<>();
-
-        itemList.add(new Item("I001", "A4 Paper", "Stationery", 15, 10));
-        itemList.add(new Item("I002", "Ink Cartridge", "Printing", 4, 5));
-        itemList.add(new Item("I003", "Notebook", "Stationery", 30, 10));
-        itemList.add(new Item("I004", "Whiteboard Marker", "Office Supplies", 2, 5));
-
-        return itemList;
-    }
     
     private void loadItemsToTable(List<Item> items) {
         DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
@@ -51,7 +43,7 @@ public class ViewItems extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        List<Item> sampleItems = getSampleItems();
+        List<Item> sampleItems = InventoryService.getSampleItems();
         loadItemsToTable(sampleItems);
     }
 
