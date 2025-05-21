@@ -5,9 +5,9 @@ import javax.swing.SwingUtilities;
 import java.awt.Window;
 
 public class addPO extends javax.swing.JPanel {  
-    private generatepo generatePOReference;
+    private generateandviewpo generatePOReference;
     
-    public addPO(generatepo generatePOInstance) {
+    public addPO(generateandviewpo generatePOInstance) {
         initComponents();
         this.generatePOReference = generatePOInstance;
     }
@@ -56,24 +56,6 @@ public class addPO extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Date :");
-
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
-            }
-        });
-
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
-            }
-        });
-
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
-            }
-        });
 
         save.setBackground(new java.awt.Color(204, 0, 204));
         save.setForeground(new java.awt.Color(255, 255, 255));
@@ -255,18 +237,6 @@ public class addPO extends javax.swing.JPanel {
             window.dispose(); // This will close only the AddPO window
         }
     }//GEN-LAST:event_cancelMouseClicked
-
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
-
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -37,8 +37,9 @@ public class PM extends javax.swing.JFrame {
         ViewRequisition = new PurchaseManager.button();
         GenerateViewPO = new PurchaseManager.button();
         wlc = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         cancel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -143,9 +144,6 @@ public class PM extends javax.swing.JFrame {
 
         wlc.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setText("Welcome Back Name");
-
         cancel.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         cancel.setForeground(new java.awt.Color(255, 0, 0));
         cancel.setText("X");
@@ -155,14 +153,24 @@ public class PM extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel4.setText("WELCOME BACK!");
+
+        jLabel1.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
+        jLabel1.setText("Purchase Manager, <userid>");
+
         javax.swing.GroupLayout wlcLayout = new javax.swing.GroupLayout(wlc);
         wlc.setLayout(wlcLayout);
         wlcLayout.setHorizontalGroup(
             wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wlcLayout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addGroup(wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(wlcLayout.createSequentialGroup()
+                        .addGap(93, 93, 93)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(cancel)
                 .addGap(20, 20, 20))
         );
@@ -171,12 +179,14 @@ public class PM extends javax.swing.JFrame {
             .addGroup(wlcLayout.createSequentialGroup()
                 .addGroup(wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(wlcLayout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(wlcLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(498, Short.MAX_VALUE))
+                        .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(wlcLayout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(477, Short.MAX_VALUE))
         );
 
         getContentPane().add(wlc, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 550, 600));
@@ -191,23 +201,15 @@ public class PM extends javax.swing.JFrame {
     
     // homepage to other panel
     private void ViewItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
-        JFrame frame = new JFrame("View Item");
-        frame.setContentPane(new viewitem());
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         this.dispose();
+        viewitem Viewitem = new viewitem();
+        Viewitem.setVisible(true);
     }//GEN-LAST:event_backActionPerformed
 
     private void ViewSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewSuppliersActionPerformed
-        JFrame frame = new JFrame("View Suppliers");
-        frame.setContentPane(new viewsuppliers());
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
         this.dispose();
+        viewsuppliers Viewsuppliers = new viewsuppliers();
+        Viewsuppliers.setVisible(true);
     }//GEN-LAST:event_ViewSuppliersActionPerformed
 
     private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
@@ -218,14 +220,14 @@ public class PM extends javax.swing.JFrame {
 
     private void GenerateViewPOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPOActionPerformed
         JFrame frame = new JFrame("Generate and View PO");
-        frame.setContentPane(new generatepo());
+        frame.setContentPane(new generateandviewpo());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_GenerateViewPOActionPerformed
 
+    //logout to login page
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
         // TODO add your handling code here:
             int response = JOptionPane.showConfirmDialog(this, 
@@ -262,7 +264,8 @@ public class PM extends javax.swing.JFrame {
     private PurchaseManager.button ViewSuppliers;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel home;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel logout;
     private javax.swing.JPanel wlc;

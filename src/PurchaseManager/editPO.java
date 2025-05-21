@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class editPO {
     public static boolean editPO(JFrame parentFrame, String poId, String filePath) {
-        String supplierName = "", item = "", quantity = "", unitPrice = "", date = "";
+        String supplierName = "", item = "", quantity = "", unitPrice = "", date = "", status = "";
 
         // Read original values from file
         File file = new File(filePath);
@@ -30,6 +30,7 @@ public class editPO {
                         else if (part.startsWith("Quantity: ")) quantity = part.substring(10);
                         else if (part.startsWith("Unit Price: ")) unitPrice = part.substring(12);
                         else if (part.startsWith("Date: ")) date = part.substring(6);
+                        else if (part.startsWith("Status: ")) status = part.substring(8);
                     }
                     found = true;
                 }
@@ -42,6 +43,12 @@ public class editPO {
 
         if (!found) {
             JOptionPane.showMessageDialog(parentFrame, "PO_ID not found.");
+            return false;
+        }
+        
+        if (!status.equalsIgnoreCase("Pending")) {
+            JOptionPane.showMessageDialog(parentFrame,
+                    "This PO cannot be edited because its status is: " + status);
             return false;
         }
 
