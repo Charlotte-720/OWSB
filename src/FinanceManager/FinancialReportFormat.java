@@ -56,6 +56,7 @@ public class FinancialReportFormat extends javax.swing.JDialog {
         });
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - export-file.png")); // NOI18N
         labelTitle.setText("Export Financial Report");
 
         jLabel2.setText("Select report format (PDF/PNG): ");
@@ -95,28 +96,26 @@ public class FinancialReportFormat extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(73, 73, 73)
-                                .addComponent(labelTitle))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(57, 57, 57)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(comboFormat, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(comboFormat, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelTitle)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(98, 98, 98)
                                 .addComponent(btnGenerate)
                                 .addGap(53, 53, 53)
                                 .addComponent(btnCancel)))
-                        .addGap(0, 54, Short.MAX_VALUE)))
+                        .addGap(0, 53, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(20, 20, 20)
                 .addComponent(labelTitle)
-                .addGap(51, 51, 51)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboFormat, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)

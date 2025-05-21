@@ -154,8 +154,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
         sidebarPanel.setBackground(new java.awt.Color(134, 167, 136));
 
-        btnManagePurchaseOrder.setText("✅ Manage Purchase Order");
-        btnManagePurchaseOrder.setMaximumSize(null);
+        btnManagePurchaseOrder.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - ManagePO btn.png")); // NOI18N
+        btnManagePurchaseOrder.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnManagePurchaseOrder.setLabel("Manage Purchase Order");
         btnManagePurchaseOrder.setPreferredSize(null);
         btnManagePurchaseOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -168,29 +169,40 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnVerifyInventoryUpdates.setText("📊 Verify Inventory Updates");
+        btnVerifyInventoryUpdates.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - inventory.png")); // NOI18N
+        btnVerifyInventoryUpdates.setText("Verify Inventory Updates");
+        btnVerifyInventoryUpdates.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnVerifyInventoryUpdates.setPreferredSize(null);
         btnVerifyInventoryUpdates.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerifyInventoryUpdatesActionPerformed(evt);
             }
         });
 
-        btnProcessPayment.setText("💵 Process Payments");
+        btnProcessPayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - cashless-payment.png")); // NOI18N
+        btnProcessPayment.setText("Process Payments");
+        btnProcessPayment.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnProcessPayment.setPreferredSize(null);
         btnProcessPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProcessPaymentActionPerformed(evt);
             }
         });
 
-        btnGenerateReports.setText("📁 Generate Reports");
+        btnGenerateReports.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - report.png")); // NOI18N
+        btnGenerateReports.setText("Generate Reports");
+        btnGenerateReports.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnGenerateReports.setPreferredSize(null);
         btnGenerateReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateReportsActionPerformed(evt);
             }
         });
 
-        btnLogout.setText("🔒 Logout");
+        btnLogout.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - logout.png")); // NOI18N
+        btnLogout.setText("Logout");
         btnLogout.setToolTipText("");
+        btnLogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnLogout.setPreferredSize(null);
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,7 +210,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnManagePurchaseOrder1.setText("🛒 View Product Requisition");
+        btnManagePurchaseOrder1.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - shopping-cart.png")); // NOI18N
+        btnManagePurchaseOrder1.setText("View Product Requisition");
+        btnManagePurchaseOrder1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnManagePurchaseOrder1.setPreferredSize(null);
         btnManagePurchaseOrder1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -236,22 +250,22 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
                 .addComponent(btnGenerateReports, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         maincontentPanel.add(sidebarPanel);
-        sidebarPanel.setBounds(0, 0, 220, 618);
+        sidebarPanel.setBounds(0, 0, 240, 610);
 
         labelWelcome.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         labelWelcome.setText("Welcome back!");
         maincontentPanel.add(labelWelcome);
-        labelWelcome.setBounds(250, 90, 280, 40);
+        labelWelcome.setBounds(280, 90, 280, 40);
 
         labelRole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         labelRole.setForeground(new java.awt.Color(102, 102, 102));
         labelRole.setText("Finance Manager");
         maincontentPanel.add(labelRole);
-        labelRole.setBounds(250, 130, 110, 20);
+        labelRole.setBounds(280, 130, 110, 20);
 
         summaryPanel.setBackground(new java.awt.Color(255, 226, 226));
 

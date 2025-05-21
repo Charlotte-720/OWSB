@@ -4,8 +4,9 @@
  */
 package FinanceManager;
 
+import FinanceManager.StatusFormat.StatusCellRenderer;
+import java.awt.Color;
 import model.PurchaseOrder;
-import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -13,8 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +29,7 @@ public class ManagePO extends javax.swing.JFrame {
         initComponents();
         loadPOData();
         poTable.getColumnModel().getColumn(7).setCellRenderer(new StatusCellRenderer());
+        TableStyle.styleTableHeader(poTable, new Color(166, 214, 214), Color.BLACK);
         
         comboFilter.addItem("All Statuses");
         comboFilter.addItem("Pending");
@@ -148,49 +148,6 @@ public class ManagePO extends javax.swing.JFrame {
             }
         }
     }
-    
-    private class StatusCellRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-
-            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-            String status = value != null ? value.toString() : "";
-
-            switch (status.toLowerCase()) {
-            case "pending":
-                cell.setBackground(new java.awt.Color(255, 255, 204)); // Light Yellow
-                break;
-            case "approved":
-                cell.setBackground(new java.awt.Color(204, 255, 204)); // Light Green
-                break;
-            case "rejected":
-                cell.setBackground(new java.awt.Color(255, 204, 204)); // Light Red
-                break;
-            case "paid":
-                cell.setBackground(new java.awt.Color(204, 229, 255)); // Light Blue
-                break;
-            default:
-                cell.setBackground(java.awt.Color.WHITE);
-        }
-
-            // Maintain text color and selection behavior
-            if (isSelected) {
-                cell.setBackground(table.getSelectionBackground());
-                cell.setForeground(table.getSelectionForeground());
-            } else {
-                cell.setForeground(java.awt.Color.BLACK);
-            } 
-
-            return cell;
-        }
-    }
-
-
-
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -227,6 +184,7 @@ public class ManagePO extends javax.swing.JFrame {
         });
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - checklist.png")); // NOI18N
         labelTitle.setText("Purchase Order List");
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -301,11 +259,11 @@ public class ManagePO extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(215, 215, 215)
-                                .addComponent(labelTitle))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(179, 179, 179)
                                 .addComponent(btnApprove)
@@ -314,14 +272,14 @@ public class ManagePO extends javax.swing.JFrame {
                                 .addGap(44, 44, 44)
                                 .addComponent(btnEdit)
                                 .addGap(53, 53, 53)
-                                .addComponent(btnBack)))
-                        .addGap(0, 178, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)))
+                                .addComponent(btnBack))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(215, 215, 215)
+                                .addComponent(labelTitle)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 31, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE))

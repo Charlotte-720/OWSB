@@ -201,6 +201,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="1"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="C:\Users\charl\OneDrive\Documents\NetBeansProjects\OWSB\src\Icons\Icon - report title.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Financial Report"/>
               </Properties>
             </Component>

@@ -4,6 +4,7 @@
  */
 package FinanceManager;
 
+import java.awt.Color;
 import model.PurchaseOrder;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,6 +27,8 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     public ProcessPaymentPanel() {
         initComponents();
         loadPOData();
+        paymentTable.getColumnModel().getColumn(7).setCellRenderer(new StatusFormat.StatusCellRenderer());
+        TableStyle.styleTableHeader(paymentTable, new Color(120, 157, 188), Color.BLACK);
     }
     
     public ArrayList<PurchaseOrder> readPOFile() {
@@ -128,6 +131,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - send.png")); // NOI18N
         labelTitle.setText("Process Payment");
 
         btnProcessPayment.setBackground(new java.awt.Color(63, 114, 175));
@@ -181,8 +185,8 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(213, 213, 213)
+                .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(196, 196, 196)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -207,7 +211,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
                         .addGap(497, 497, 497))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(labelTitle)
-                        .addGap(16, 16, 16)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
