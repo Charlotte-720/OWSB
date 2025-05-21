@@ -134,8 +134,6 @@ public class viewrequisition extends javax.swing.JFrame {
         if (previousFrame != null) {
             previousFrame.setVisible(true);
         }
-//        PM pm = new PM("examplePM");
-//        pm.setVisible(true);
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed

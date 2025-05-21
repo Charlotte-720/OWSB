@@ -14,7 +14,7 @@ Department: IT
 Gross Salary: 5000
 Gender: Female
 Company: Tech Solutions
-Start Date: 04/01/2012
+Start Date: 05/01/2012
 End Date: 14/06/2020
 Job Title: System Administrator
 Overview: Experienced in managing IT systems

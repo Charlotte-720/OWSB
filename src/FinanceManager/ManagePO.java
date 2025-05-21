@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import PurchaseManager.PurchaseOrder;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -12,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,6 +29,7 @@ public class ManagePO extends javax.swing.JFrame {
     public ManagePO() {
         initComponents();
         loadPOData();
+        poTable.getColumnModel().getColumn(7).setCellRenderer(new StatusCellRenderer());
         
         comboFilter.addItem("All Statuses");
         comboFilter.addItem("Pending");
@@ -144,6 +148,46 @@ public class ManagePO extends javax.swing.JFrame {
             }
         }
     }
+    
+    private class StatusCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            String status = value != null ? value.toString() : "";
+
+            switch (status.toLowerCase()) {
+            case "pending":
+                cell.setBackground(new java.awt.Color(255, 255, 204)); // Light Yellow
+                break;
+            case "approved":
+                cell.setBackground(new java.awt.Color(204, 255, 204)); // Light Green
+                break;
+            case "rejected":
+                cell.setBackground(new java.awt.Color(255, 204, 204)); // Light Red
+                break;
+            case "paid":
+                cell.setBackground(new java.awt.Color(204, 229, 255)); // Light Blue
+                break;
+            default:
+                cell.setBackground(java.awt.Color.WHITE);
+        }
+
+            // Maintain text color and selection behavior
+            if (isSelected) {
+                cell.setBackground(table.getSelectionBackground());
+                cell.setForeground(table.getSelectionForeground());
+            } else {
+                cell.setForeground(java.awt.Color.BLACK);
+            } 
+
+            return cell;
+        }
+    }
+
+
 
 
 
