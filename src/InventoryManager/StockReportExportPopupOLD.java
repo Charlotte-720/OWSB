@@ -156,7 +156,7 @@ public class StockReportExportPopupOLD extends javax.swing.JFrame {
 
         if (selectedFormat.equals("PDF")) {
             try {
-                List<Item> items = InventoryService.getSampleItems(); // Or live data
+                List<Item> items = InventoryService.getSampleItems(); 
                 ReportExporter.exportStockReportAsPDF(items);
                 JOptionPane.showMessageDialog(this, "Stock report successfully exported as PDF.");
             } catch (Exception e) {

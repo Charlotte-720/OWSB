@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 public class LowStockAlert extends javax.swing.JFrame {
 
     private void loadLowStockItems() {
-        List<Item> allItems = InventoryService.getSampleItems(); // or a shared item list if available
+        List<Item> allItems = InventoryService.getSampleItems(); 
         DefaultTableModel model = (DefaultTableModel) lowStockTable.getModel();
         model.setRowCount(0); // Clear table
 

@@ -36,7 +36,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }
 
     private void loadStockReportTable() {
-        List<Item> items = InventoryService.getSampleItems(); // or live data
+        List<Item> items = InventoryService.getSampleItems(); 
         DefaultTableModel model = (DefaultTableModel) stockReportTable.getModel();
         model.setRowCount(0);
 
@@ -195,7 +195,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
 
         String format = popup.getSelectedFormat();
         if (format != null) {
-            List<Item> items = InventoryService.getSampleItems(); // Replace with actual item list
+            List<Item> items = InventoryService.getSampleItems(); 
             try {
                 switch (format) {
                     case "PDF":
