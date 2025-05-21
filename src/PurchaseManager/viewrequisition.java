@@ -1,8 +1,13 @@
 package PurchaseManager;
 
+import javax.swing.JFrame;
+
 public class viewrequisition extends javax.swing.JFrame {
 
-    public viewrequisition() {
+    private JFrame previousFrame;
+    
+    public viewrequisition(JFrame parentFrame) {
+        this.previousFrame = parentFrame;
         initComponents();
         DSIT.loadRequisitionData(jTable1);
     }
@@ -19,6 +24,7 @@ public class viewrequisition extends javax.swing.JFrame {
         back = new PurchaseManager.button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -120,18 +126,23 @@ public class viewrequisition extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
+        if (previousFrame != null) {
+            previousFrame.setVisible(true);
+        }
+//        PM pm = new PM("examplePM");
+//        pm.setVisible(true);
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
+        if (previousFrame != null) {
+            previousFrame.setVisible(true);
+        }
     }//GEN-LAST:event_backActionPerformed
 
 

@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import Admin.Loginpage1;
+import PurchaseManager.viewrequisition;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
@@ -71,7 +72,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         try {
             LocalDate targetMonth = LocalDate.parse("01 " + selectedMonthYear, DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
-            BufferedReader reader = new BufferedReader(new FileReader("src/PurchaseManager/po.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"));
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -392,9 +393,10 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
     private void btnManagePurchaseOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrder1ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-//        viewrequisition viewrequisition = new viewrequisition();
-//        viewrequisition.setVisible(true);
+        this.setVisible(false);
+        viewrequisition view = new viewrequisition(this);
+        view.setVisible(true);
+
     }//GEN-LAST:event_btnManagePurchaseOrder1ActionPerformed
 
     private void btnManagePurchaseOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderMouseClicked

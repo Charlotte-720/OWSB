@@ -213,9 +213,10 @@ public class PM extends javax.swing.JFrame {
     }//GEN-LAST:event_ViewSuppliersActionPerformed
 
     private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
-        this.dispose();
-        viewrequisition Viewrequisition = new viewrequisition();
-        Viewrequisition.setVisible(true);
+        this.setVisible(false);  // hide current frame
+        viewrequisition view = new viewrequisition(this);
+        view.setVisible(true);
+
     }//GEN-LAST:event_ViewRequisitionActionPerformed
 
     private void GenerateViewPOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPOActionPerformed
@@ -251,11 +252,6 @@ public class PM extends javax.swing.JFrame {
 
     }//GEN-LAST:event_logoutMouseClicked
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            //new PM().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private PurchaseManager.button GenerateViewPO;
