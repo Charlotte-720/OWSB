@@ -5,6 +5,14 @@
 package InventoryManager;
 import javax.swing.JFrame;
 
+import InventoryManager.functions.InventoryService;
+import model.Item;
+import model.PurchaseOrder;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 /**
  *
  * @author reymy
@@ -18,7 +26,37 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        updateInventorySnapshot();
     }
+    
+    private void updateInventorySnapshot() {
+        List<model.Item> items = InventoryManager.functions.InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+        List<model.PurchaseOrder> poList = InventoryManager.functions.InventoryService.loadPOsFromFile("src/txtFile/po.txt");
+
+        int totalItems = items.size();
+        int lowStockCount = 0;
+        for (model.Item item : items) {
+            if (item.getTotalStock() < InventoryManager.functions.InventoryService.LOW_STOCK_THRESHOLD) {
+                lowStockCount++;
+            }
+        }
+
+        int pendingPOCount = 0;
+        for (model.PurchaseOrder po : poList) {
+            if (po.getStatus().equalsIgnoreCase("Pending")) {
+                pendingPOCount++;
+            }
+        }
+
+        totalItemsLabel.setText("Total Items in Stock: " + totalItems);
+        lowStockLabel.setText("Items Low in Stock: " + lowStockCount);
+        pendingPOsLabel.setText("Pending Purchase Orders: " + pendingPOCount);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss");
+        String formattedDate = LocalDateTime.now().format(formatter);
+        lastUpdatedLabel.setText("Last Updated: " + formattedDate);
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -4,9 +4,10 @@
  */
 package InventoryManager;
 
+import model.Item;
+
 import InventoryManager.functions.InventoryService;
 import javax.swing.JFrame;
-import InventoryManager.models.Item;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -20,19 +21,23 @@ public class ViewItems extends javax.swing.JFrame {
     
     private void loadItemsToTable(List<Item> items) {
         DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
-        model.setRowCount(0); // clear existing rows
+        model.setRowCount(0); // Clear existing rows
 
         for (Item item : items) {
             Object[] row = {
-                item.getItemCode(),
+                item.getItemID(),
                 item.getItemName(),
                 item.getCategory(),
-                item.getQuantity(),
-                item.getThreshold()
+                item.getPrice(),
+                item.getExpiredDate(),
+                item.getSupplierID(),
+                item.getTotalStock(),
+                item.getUpdatedDate()
             };
             model.addRow(row);
         }
     }
+
 
 
     /**
@@ -43,8 +48,8 @@ public class ViewItems extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        List<Item> sampleItems = InventoryService.getSampleItems();
-        loadItemsToTable(sampleItems);
+        List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+        loadItemsToTable(items);
     }
 
     /**

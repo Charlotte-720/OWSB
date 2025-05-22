@@ -4,7 +4,7 @@
  */
 package InventoryManager;
 import javax.swing.JFrame;
-import InventoryManager.models.Item;
+import model.Item;
 import InventoryManager.functions.InventoryService;
 import java.util.List;
 import java.util.ArrayList;
@@ -17,17 +17,16 @@ import javax.swing.table.DefaultTableModel;
 public class LowStockAlert extends javax.swing.JFrame {
 
     private void loadLowStockItems() {
-        List<Item> allItems = InventoryService.getSampleItems(); 
+        List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
         DefaultTableModel model = (DefaultTableModel) lowStockTable.getModel();
         model.setRowCount(0); // Clear table
 
         for (Item item : allItems) {
-            if (item.isLowStock()) {
+            if (item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD) {  
                 Object[] row = {
-                    item.getItemCode(),
+                    item.getItemID(),
                     item.getItemName(),
-                    item.getQuantity(),
-                    item.getThreshold()
+                    item.getTotalStock()
                 };
                 model.addRow(row);
             }

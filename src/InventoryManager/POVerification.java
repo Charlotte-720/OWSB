@@ -3,11 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InventoryManager;
+
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import InventoryManager.functions.InventoryService;
-import InventoryManager.models.PurchaseOrder;
-import InventoryManager.models.Item;
+import model.PurchaseOrder;
+import model.Item;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class POVerification extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        poList = InventoryService.loadPOsFromFile("data/PurchaseOrders.txt");
+        poList = InventoryService.loadPOsFromFile("src/txtFile/po.txt");
         loadPOsToTable();
         
         poTable.getSelectionModel().addListSelectionListener(e -> {
@@ -41,13 +43,13 @@ public class POVerification extends javax.swing.JFrame {
     
     private void loadPOsToTable() {
         DefaultTableModel model = (DefaultTableModel) poTable.getModel();
-        model.setRowCount(0); // Clear existing rows
+        model.setRowCount(0);
 
         for (PurchaseOrder po : poList) {
             Object[] row = {
                 po.getPoID(),
-                po.getSupplier(),
-                po.getDate().toString(),
+                po.getSupplierName(),
+                po.getDate(), // already String in current model
                 po.getStatus()
             };
             model.addRow(row);
@@ -56,20 +58,27 @@ public class POVerification extends javax.swing.JFrame {
     
     
     private void loadItemsOfSelectedPO(int index) {
-        DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
-        model.setRowCount(0);
+    DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
+    model.setRowCount(0);
 
-        List<Item> items = poList.get(index).getItems();
-        for (Item item : items) {
+    PurchaseOrder po = poList.get(index);
+    String itemNameFromPO = po.getItem().toLowerCase().trim();
+
+    List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+
+    for (Item item : allItems) {
+        if (item.getItemName().toLowerCase().contains(itemNameFromPO)) {
             Object[] row = {
                 item.getItemID(),
                 item.getItemName(),
                 item.getTotalStock(),
-                poList.get(index).getStatus() // shows PO status in item rows
+                po.getStatus()
             };
             model.addRow(row);
         }
     }
+}
+
 
    
     
@@ -222,8 +231,7 @@ public class POVerification extends javax.swing.JFrame {
             if (po.getStatus().equalsIgnoreCase("Approved")) {
                 po.setStatus("Received");
 
-               // Update inventory quantities based on PO items
-                List<Item> inventoryItems = InventoryService.loadItemsFromFile("OWSB/items.txt");
+                List<Item> inventoryItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
                 for (Item poItem : po.getItems()) {
                     for (Item stockItem : inventoryItems) {
                         if (stockItem.getItemID().equals(poItem.getItemID())) {
@@ -233,9 +241,9 @@ public class POVerification extends javax.swing.JFrame {
                     }
                 }
 
-                // ✅ Save both PO and item updates
-                InventoryService.savePOsToFile(poList, "data/PurchaseOrders.txt");
-                InventoryService.saveItemsToFile(inventoryItems, "OWSB/items.txt");
+
+                InventoryService.savePOsToFile(poList, "src/txtFile/po.txt");
+                InventoryService.saveItemsToFile(inventoryItems, "src/txtFile/items.txt");
 
                 loadPOsToTable();
                 loadItemsOfSelectedPO(selectedIndex);

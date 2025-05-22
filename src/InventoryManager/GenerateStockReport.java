@@ -5,15 +5,10 @@
 package InventoryManager;
 import javax.swing.JFrame;
 
-import InventoryManager.models.Item;
+import model.Item;
 import InventoryManager.functions.InventoryService;
 import InventoryManager.functions.ReportExporter;
-import com.lowagie.text.Document;
-import com.lowagie.text.Image;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+
 import java.util.List;
 import java.io.FileOutputStream;
 import javax.swing.table.DefaultTableModel;
@@ -36,23 +31,24 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }
 
     private void loadStockReportTable() {
-        List<Item> items = InventoryService.getSampleItems(); 
+        List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
         DefaultTableModel model = (DefaultTableModel) stockReportTable.getModel();
         model.setRowCount(0);
 
         for (Item item : items) {
-            String status = item.isLowStock() ? "LOW" : "OK";
+            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK";
             Object[] row = {
-                item.getItemCode(),
+                item.getItemID(),
                 item.getItemName(),
                 item.getCategory(),
-                item.getQuantity(),
-                item.getThreshold(),
+                item.getTotalStock(),
+                InventoryService.LOW_STOCK_THRESHOLD, // Displayed as static value
                 status
             };
             model.addRow(row);
         }
     }
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -195,7 +191,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
 
         String format = popup.getSelectedFormat();
         if (format != null) {
-            List<Item> items = InventoryService.getSampleItems(); 
+            List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
             try {
                 switch (format) {
                     case "PDF":

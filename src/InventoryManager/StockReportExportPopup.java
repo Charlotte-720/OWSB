@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import javax.swing.JOptionPane;
-import InventoryManager.models.Item;
+import model.Item;
 import InventoryManager.functions.InventoryService;
 import InventoryManager.functions.ReportExporter;
 

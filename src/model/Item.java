@@ -94,6 +94,11 @@ public class Item {
         this.updatedDate = updatedDate;
     }
     
+    //update quantity for inv manager when verify PO
+    public void increaseStock(int quantityToAdd) {
+        this.totalStock += quantityToAdd;
+    }
+    
     @Override
     public String toString() {
         return "Item{" +

@@ -1,5 +1,8 @@
 package model;
 
+import java.util.List;
+
+
 public class PurchaseOrder {
     private String poID;
     private String supplierName;
@@ -8,7 +11,8 @@ public class PurchaseOrder {
     private String unitPrice;
     private String totalPrice;
     private String date;
-    private String status;
+    private String status;  
+    private List<Item> items; // for inventory manager role
     
     public PurchaseOrder(String poID, String supplierName, String item, String quantity, String unitPrice, String totalPrice, String date, String status) {
         this.poID = poID;
@@ -18,6 +22,11 @@ public class PurchaseOrder {
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
         this.date = date;
+        this.status = status;
+    }
+    
+    //setter for IM
+    public void setStatus(String status) {
         this.status = status;
     }
     
@@ -52,4 +61,14 @@ public class PurchaseOrder {
     public String getStatus() {
         return status;
     }
+    
+    // Add getters and setters for items
+    public List<Item> getItems() {
+        return items;
+    }
+    
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+    
 }
