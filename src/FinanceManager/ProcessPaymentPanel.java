@@ -46,7 +46,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
                 String date = fields[6].split(": ")[1];
                 String status = fields[7].split(": ")[1];
 
-                if ("Approved".equals(status)) {
+                if ("Received".equals(status)) {
                     PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
                     poList.add(po);
                 }
@@ -251,6 +251,10 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         }
 
         String status = paymentTable.getValueAt(row, 7).toString();
+        if (!status.equalsIgnoreCase("Received")) {
+            JOptionPane.showMessageDialog(this, "Only POs with status 'Received' can be paid.");
+            return;
+        }
         if (status.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This PO has already been paid.");
             return;
