@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import InventoryManager.functions.InventoryService;
 import model.PurchaseOrder;
 import model.Item;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,12 +18,14 @@ import java.util.List;
 public class POVerification extends javax.swing.JFrame {
     
     private List<PurchaseOrder> poList;
+    private JFrame previousFrame;
     
     
     /**
      * Creates new form POVerification
      */
-    public POVerification() {
+    public POVerification(JFrame parentFrame) {
+        this.previousFrame = parentFrame;
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -222,7 +223,10 @@ public class POVerification extends javax.swing.JFrame {
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
         new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
-        dispose();
+        this.dispose();
+        if (previousFrame != null) {
+            previousFrame.setVisible(true);
+        }
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
@@ -263,43 +267,15 @@ public class POVerification extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
-        dispose();
+        this.dispose();
+        if (previousFrame != null) {
+            previousFrame.setVisible(true);
+        }
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(POVerification.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(POVerification.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(POVerification.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(POVerification.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new POVerification().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;

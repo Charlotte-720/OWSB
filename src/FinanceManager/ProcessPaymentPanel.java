@@ -85,7 +85,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
                 if (line.contains("PO_ID: " + poIDToUpdate)) {
                     String[] parts = line.split(", ");
                     if (parts.length >= 8) {
-                        parts[7] = "Status: Paid";  // ✅ Only change this field
+                        parts[7] = "Status: Paid";
                         line = String.join(", ", parts);
                     }
                 }

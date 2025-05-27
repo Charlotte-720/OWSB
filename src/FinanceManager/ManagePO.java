@@ -111,21 +111,27 @@ public class ManagePO extends javax.swing.JFrame {
         }
     }
 
-    public String[] loadSupplierNames() {
-        ArrayList<String> supplierNames = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("suppliers.txt"))) {
+    public String[] loadSupplierName() {
+        ArrayList<String> supplierList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-                if (fields.length >= 4 && fields[3].equalsIgnoreCase("true")) {
-                    supplierNames.add(fields[1]); 
+                String[] parts = line.split(", ");
+                if (parts.length >= 4) {
+                    String name = parts[1].split(": ")[1];   
+                    String active = parts[3].split(": ")[1];   
+
+                    if (active.equalsIgnoreCase("true")) {
+                        supplierList.add(name);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return supplierNames.toArray(new String[0]);
+        return supplierList.toArray(new String[0]);
     }
+
 
     private void filterPOByStatus(String statusFilter) {
         DefaultTableModel model = (DefaultTableModel) poTable.getModel();
@@ -337,7 +343,7 @@ public class ManagePO extends javax.swing.JFrame {
         String quantity = poTable.getValueAt(row, 3).toString();
         String unitPrice = poTable.getValueAt(row, 4).toString();
         String supplier = poTable.getValueAt(row, 1).toString(); 
-        String[] suppliers = loadSupplierNames();
+        String[] suppliers = loadSupplierName();
 
         EditPOForm dialog = new EditPOForm(this, true); 
         dialog.setPOData(item, quantity, unitPrice, supplier, suppliers);

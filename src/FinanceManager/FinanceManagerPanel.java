@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import Admin.Loginpage1;
+import InventoryManager.POVerification;
 import PurchaseManager.viewrequisition;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -127,7 +128,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnProcessPayment = new javax.swing.JButton();
         btnGenerateReports = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
-        btnManagePurchaseOrder1 = new javax.swing.JButton();
+        btnViewProductRequisition = new javax.swing.JButton();
         labelWelcome = new javax.swing.JLabel();
         labelRole = new javax.swing.JLabel();
         summaryPanel = new javax.swing.JPanel();
@@ -157,7 +158,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnManagePurchaseOrder.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - ManagePO btn.png")); // NOI18N
         btnManagePurchaseOrder.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnManagePurchaseOrder.setLabel("Manage Purchase Order");
-        btnManagePurchaseOrder.setPreferredSize(null);
         btnManagePurchaseOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnManagePurchaseOrderMouseClicked(evt);
@@ -172,7 +172,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnVerifyInventoryUpdates.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - inventory.png")); // NOI18N
         btnVerifyInventoryUpdates.setText("Verify Inventory Updates");
         btnVerifyInventoryUpdates.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnVerifyInventoryUpdates.setPreferredSize(null);
         btnVerifyInventoryUpdates.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerifyInventoryUpdatesActionPerformed(evt);
@@ -182,7 +181,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnProcessPayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - cashless-payment.png")); // NOI18N
         btnProcessPayment.setText("Process Payments");
         btnProcessPayment.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnProcessPayment.setPreferredSize(null);
         btnProcessPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProcessPaymentActionPerformed(evt);
@@ -192,7 +190,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnGenerateReports.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - report.png")); // NOI18N
         btnGenerateReports.setText("Generate Reports");
         btnGenerateReports.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnGenerateReports.setPreferredSize(null);
         btnGenerateReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateReportsActionPerformed(evt);
@@ -210,13 +207,13 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnManagePurchaseOrder1.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - shopping-cart.png")); // NOI18N
-        btnManagePurchaseOrder1.setText("View Product Requisition");
-        btnManagePurchaseOrder1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnManagePurchaseOrder1.setPreferredSize(null);
-        btnManagePurchaseOrder1.addActionListener(new java.awt.event.ActionListener() {
+        btnViewProductRequisition.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - shopping-cart.png")); // NOI18N
+        btnViewProductRequisition.setText("View Product Requisition");
+        btnViewProductRequisition.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnViewProductRequisition.setPreferredSize(null);
+        btnViewProductRequisition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManagePurchaseOrder1ActionPerformed(evt);
+                btnViewProductRequisitionActionPerformed(evt);
             }
         });
 
@@ -231,7 +228,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
                     .addComponent(btnGenerateReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnProcessPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnVerifyInventoryUpdates, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManagePurchaseOrder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewProductRequisition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnManagePurchaseOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(26, 26, 26))
         );
@@ -241,7 +238,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
                 .addGap(81, 81, 81)
                 .addComponent(btnManagePurchaseOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
-                .addComponent(btnManagePurchaseOrder1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnViewProductRequisition, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(btnVerifyInventoryUpdates, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
@@ -396,6 +393,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
     private void btnVerifyInventoryUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifyInventoryUpdatesActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        POVerification poVerification = new POVerification(this);
+        poVerification.setVisible(true);
     }//GEN-LAST:event_btnVerifyInventoryUpdatesActionPerformed
 
     private void btnManagePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderActionPerformed
@@ -405,13 +405,13 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         managePO.setVisible(true);
     }//GEN-LAST:event_btnManagePurchaseOrderActionPerformed
 
-    private void btnManagePurchaseOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrder1ActionPerformed
+    private void btnViewProductRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewProductRequisitionActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         viewrequisition view = new viewrequisition(this);
         view.setVisible(true);
 
-    }//GEN-LAST:event_btnManagePurchaseOrder1ActionPerformed
+    }//GEN-LAST:event_btnViewProductRequisitionActionPerformed
 
     private void btnManagePurchaseOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderMouseClicked
         // TODO add your handling code here:
@@ -431,9 +431,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnGenerateReports;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManagePurchaseOrder;
-    private javax.swing.JButton btnManagePurchaseOrder1;
     private javax.swing.JButton btnProcessPayment;
     private javax.swing.JButton btnVerifyInventoryUpdates;
+    private javax.swing.JButton btnViewProductRequisition;
     private javax.swing.JComboBox<String> comboMonth;
     private javax.swing.JLabel displayPending;
     private javax.swing.JLabel displayTotalPO;
