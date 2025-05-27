@@ -1,3 +1,0 @@
-PO_ID: 01, Supplier Name: kevin, Item: keybroad, Quantity: 6000, Unit Price: 20, Total Price: 120000.00, Date: 20-20-2024, Status: Pending
-PO_ID: 02, Supplier Name: lee, Item: apple, Quantity: 10000, Unit Price: 2, Total Price: 20000.00, Date: 20-20-2003, Status: Pending
-PO_ID: 03, Supplier Name: lee, Item: monitor, Quantity: 2000, Unit Price: 2, Total Price: 4000.00, Date: ddd, Status: Pending
