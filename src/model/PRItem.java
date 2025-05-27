@@ -4,13 +4,15 @@ import java.time.LocalDate;
 
 public class PRItem {
     private String itemID;
+    private String itemName;
     private int quantity;
     private String supplierID;
     private double unitPrice;
     private LocalDate requiredDeliveryDate;
 
-    public PRItem(String itemID, int quantity, String supplierID, double unitPrice, LocalDate requiredDeliveryDate) {
+    public PRItem(String itemID, int quantity, String itemName, String supplierID, double unitPrice, LocalDate requiredDeliveryDate) {
         this.itemID = itemID;
+        this.itemName = itemName;
         this.quantity = quantity;
         this.supplierID = supplierID; 
         this.unitPrice = unitPrice;
@@ -24,6 +26,14 @@ public class PRItem {
     
     public int getQuantity() {
         return quantity; 
+    }
+    
+    public String getItemName() {
+        return itemName;
+    }
+    
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
     
     public String getSupplierID() {
@@ -49,10 +59,16 @@ public class PRItem {
     }
     
     public void setQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
         this.quantity = quantity; 
     }
     
     public void setUnitPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Unit price cannot be negative");
+        }
         this.unitPrice = price; 
     }
     

@@ -13,7 +13,10 @@ public class PurchaseRequisition {
     private LocalDate requiredDeliveryDate;
     private String status;
     private List<PRItem> items;
-
+    
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_APPROVED = "APPROVED";
+    public static final String STATUS_REJECTED = "REJECTED";
 
     public PurchaseRequisition(String prID, String raisedBy,
             LocalDate requestDate, LocalDate requiredDeliveryDate, 

@@ -3,19 +3,18 @@ package SalesManager;
 import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
 public class PROperations extends javax.swing.JFrame {
-
-    public PROperations() {
+    private String currentSalesManagerID;
+    
+    public PROperations(String salesManagerID) {
+        this.currentSalesManagerID = salesManagerID;
         initComponents();
         loadPurchaseRequisition();
         setupActionColumn();
@@ -48,25 +47,22 @@ public class PROperations extends javax.swing.JFrame {
     
     private void editPR(int row) {
     DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+    String salesManagerID = getCurrentSalesManagerID();
     
-    // Make sure the table has a value at the specified position
     if (model.getValueAt(row, 0) != null) {
         String prID = model.getValueAt(row, 0).toString();
         
         try {
-            // Create the EditPR form - ensure this class exists in your project
-            EditPR editForm = new EditPR(prID);
+            EditPR editForm = new EditPR(prID, salesManagerID);
             editForm.setVisible(true);
             
-            // Add window listener to refresh the table after editing
             editForm.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    loadPurchaseRequisition(); // Refresh table after edit
+                    loadPurchaseRequisition(); 
                 }
             });
         } catch (Exception e) {
-            // Handle any exceptions that might occur
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, 
                 "Error opening Edit form: " + e.getMessage(),
@@ -98,8 +94,8 @@ public class PROperations extends javax.swing.JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                // Call method to delete PR
-                boolean deleted = deletePRFromFile(prID);
+                // Use FileHandler to delete PR
+                boolean deleted = FileHandler.deletePurchaseRequisition(prID);
                 if (deleted) {
                     loadPurchaseRequisition(); // Refresh table
                     JOptionPane.showMessageDialog(this, 
@@ -120,80 +116,58 @@ public class PROperations extends javax.swing.JFrame {
             }
         }
     }
-
-    // Delete PR from file
-    private boolean deletePRFromFile(String prID) throws IOException {
-        List<String> lines = new ArrayList<>();
-        boolean found = false;
-        
-        // Read all lines, excluding the one to delete
-        try (BufferedReader reader = new BufferedReader(new FileReader("pr.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length > 0 && !parts[0].equals(prID)) {
-                    lines.add(line);
-                } else {
-                    found = true;
-                }
-            }
-        }
-        
-        // Write back the remaining lines
-        if (found) {
-            FileHandler.writeLinesToFile("pr.txt", lines);
-            return true;
-        }
-        return false;
-    }
-    
     private void loadPurchaseRequisition() {
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        model.setRowCount(0); 
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader("pr.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 8) {
-                    String prID = parts[0];
-                    String itemID = parts[1];
-                    int quantity = Integer.parseInt(parts[2]);
-                    double price = Double.parseDouble(parts[3]);
-                    double totalPrice = Double.parseDouble(parts[4]);
-                    LocalDate creationDate = LocalDate.parse(parts[5]); 
-                    String supplierID = parts[6];
-                    LocalDate requiredDeliveryDate = LocalDate.parse(parts[7]);
-                    String status = parts.length > 8 ? parts[8] : "SUBMITTED";
-                    
-                    model.addRow(new Object[]{
-                        prID, 
-                        itemID, 
-                        quantity, 
-                        price, 
-                        totalPrice, 
-                        creationDate, 
-                        supplierID, 
-                        requiredDeliveryDate, 
-                        status,
-                        "" // Empty string for actions column
-                    });
-                }
+    DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+    model.setRowCount(0); 
+
+    try {
+        List<String[]> records = FileHandler.readPurchaseRequisitions();
+        for (String[] parts : records) {
+            if (parts.length >= 11) { 
+                String prID = parts[0];           
+                String itemName = parts[2];   
+                String quantity = parts[3];      
+                String unitPrice = parts[4];     
+                String totalPrice = parts[5];     
+                String supplierID = parts[6]; 
+                String raisedBy = parts[7];       
+                String requiredDeliveryDate = parts[8]; 
+                String requestDate = parts[9];    
+                String status = parts[10];     
+                
+                model.addRow(new Object[]{
+                    prID,                   
+                    itemName,                
+                    quantity,               
+                    unitPrice,               
+                    totalPrice,             
+                    requestDate,             
+                    supplierID,             
+                    requiredDeliveryDate,    
+                    status,                  
+                    ""                       
+                });
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, 
-                "Error loading Purchase Requisitions: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
         }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, 
+            "Error loading Purchase Requisitions: " + e.getMessage(),
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
     }
+}
+    private String getCurrentSalesManagerID() {
+        return this.currentSalesManagerID != null ? this.currentSalesManagerID : "DEFAULT_SM";
+    }
+
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        addButton = new javax.swing.JButton();
+        RestockExistingItemButton = new javax.swing.JButton();
         PRPanel = new javax.swing.JPanel();
         PRTitle = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -201,17 +175,18 @@ public class PROperations extends javax.swing.JFrame {
         date = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         prTable = new javax.swing.JTable();
+        PurchaseNewItemButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(221, 246, 246));
 
-        addButton.setBackground(new java.awt.Color(255, 255, 204));
-        addButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        addButton.setText("Add PR");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
+        RestockExistingItemButton.setBackground(new java.awt.Color(255, 255, 204));
+        RestockExistingItemButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        RestockExistingItemButton.setText("Restock Existing Item");
+        RestockExistingItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
+                RestockExistingItemButtonActionPerformed(evt);
             }
         });
 
@@ -280,23 +255,34 @@ public class PROperations extends javax.swing.JFrame {
         prTable.setRowHeight(40);
         jScrollPane1.setViewportView(prTable);
 
+        PurchaseNewItemButton.setBackground(new java.awt.Color(255, 255, 204));
+        PurchaseNewItemButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        PurchaseNewItemButton.setText("Purchase New Items");
+        PurchaseNewItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PurchaseNewItemButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PRPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(RestockExistingItemButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PurchaseNewItemButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(10, 10, 10))
         );
         jPanel1Layout.setVerticalGroup(
@@ -304,9 +290,11 @@ public class PROperations extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(PRPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
+                .addGap(15, 15, 15)
+                .addComponent(PurchaseNewItemButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addButton)
+                    .addComponent(RestockExistingItemButton)
                     .addComponent(date)
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -334,8 +322,10 @@ public class PROperations extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddPR addPRDialog = new AddPR();
+    private void RestockExistingItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestockExistingItemButtonActionPerformed
+        String salesManagerID = getCurrentSalesManagerID();
+    
+        PRExistingItem addPRDialog = new PRExistingItem(salesManagerID);
             addPRDialog.setVisible(true); 
             // Add listener to refresh table when AddPR dialog is closed
         addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -344,11 +334,25 @@ public class PROperations extends javax.swing.JFrame {
                 loadPurchaseRequisition(); // Refresh table after adding new PR
             }
         });
-    }//GEN-LAST:event_addButtonActionPerformed
+    }//GEN-LAST:event_RestockExistingItemButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void PurchaseNewItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PurchaseNewItemButtonActionPerformed
+        String salesManagerID = getCurrentSalesManagerID();
+    
+        PRNewItem addPRDialog = new PRNewItem(salesManagerID);
+            addPRDialog.setVisible(true);
+            
+        addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                loadPurchaseRequisition(); // Refresh table after adding new PR
+            }
+        });
+    }//GEN-LAST:event_PurchaseNewItemButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -388,7 +392,8 @@ public class PROperations extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PRPanel;
     private javax.swing.JLabel PRTitle;
-    private javax.swing.JButton addButton;
+    private javax.swing.JButton PurchaseNewItemButton;
+    private javax.swing.JButton RestockExistingItemButton;
     private javax.swing.JLabel date;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JLabel jLabel1;

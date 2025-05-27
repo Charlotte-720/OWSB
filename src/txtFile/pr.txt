@@ -1,8 +1,5 @@
-PR002,ITM01,60,3.00,180.00,2025-04-28,S01,2027-01-04,SUBMITTED
-PR003,ITM03,20,2.0,40.0,2025-04-28,S01,2025-06-20
-PR004,ITM02,3,15.0,45.0,2025-04-30,S01,2025-05-04
-PR005,ITM04,50,5.0,250.0,2025-04-30,S04,2025-05-05
-PR006,ITM06,20,15.0,300.0,2025-04-30,S06,2025-05-05
-PR007,ITM01,20,3.00,60.00,2025-05-01,S04,2025-05-30,SAVED
-PR007,ITM01,20,3.00,60.00,2025-05-01,S04,2025-05-30,SAVED
-PR008,ITM02,20,3.0,60.0,2025-05-01,S04,2025-05-05
+PR ID: PR001, Item ID: ITM13, Item Name: Biscuits, Quantity: 20, Unit Price: 13.00, Total Price: 260.00, Supplier ID: S11, Raised By: 1002, Required Delivery Date: 2025-05-30, Request Date: 2025-05-28, Status: Pending
+PR ID: PR002, Item ID: ITM13, Item Name: croissant, Quantity: 10, Unit Price: 12.00, Total Price: 120.00, Supplier ID: S10, Raised By: 1002, Required Delivery Date: 2025-05-30, Request Date: 2025-05-28, Status: Pending
+PR ID: PR003, Item ID: ITM13, Item Name: meat, Quantity: 10, Unit Price: 12.00, Total Price: 120.00, Supplier ID: S09, Raised By: 1002, Required Delivery Date: 2026-05-30, Request Date: 2025-05-28, Status: Pending
+PR ID: PR004, Item ID: ITM08, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Supplier ID: S09, Raised By: Updated, Required Delivery Date: 2026-05-02, Request Date: 2025-05-28, Status: SUBMITTED
+PR ID: PR005, Item ID: ITM08, Item Name: Melon, Quantity: 2, Unit Price: 10.00, Total Price: 20.00, Supplier ID: S04, Raised By: 1002, Required Delivery Date: 2025-06-30, Request Date: 2025-05-28, Status: Pending

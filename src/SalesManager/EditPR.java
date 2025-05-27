@@ -14,90 +14,67 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class EditPR extends javax.swing.JFrame {
-     private String currentPRID;
+    private String currentPRID;
+    private String currentSalesManagerID;
 
     public EditPR() {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    public EditPR(String prID) {
+    public EditPR(String prID, String salesManagerID) {
         initComponents();
         this.currentPRID = prID;
+        this.currentSalesManagerID = salesManagerID;
+        salesManager.setText(salesManagerID);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        PRTitle.setText("Edit Purchase Requisition - " + prID);
-        loadPurchaseRequisitionData();
-        populateItemIDs();
+        
+        loadPRData();
+        loadItemIDs();
     }
     
-    private void loadPurchaseRequisitionData() {
-        if (currentPRID == null) {
-            return;
-        }
-
+    private String getCurrentSalesManagerID() {
+        return this.currentSalesManagerID;
+    }
+    
+    private void loadPRData() {
         try {
-            String[] prData = loadPRById(currentPRID);
-            
+            String[] prData = FileHandler.getPurchaseRequisitionById(currentPRID);
             if (prData != null && prData.length >= 8) {
-                populatePRFields(prData);
+                populateFields(prData);
                 saveButton.setText("Update");
             } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Purchase Requisition not found!", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+                showError("Purchase Requisition not found!");
                 this.dispose();
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error loading purchase requisition data: " + e.getMessage(), 
-                "File Error", 
-                JOptionPane.ERROR_MESSAGE);
+            showError("Error loading PR data: " + e.getMessage());
             this.dispose();
         }
     }
-    private void populatePRFields(String[] prData) {
-        String itemIDValue = prData[1];
-        int quantityValue = Integer.parseInt(prData[2]);
-        double priceValue = Double.parseDouble(prData[3]);
-        double totalPriceValue = Double.parseDouble(prData[4]);
-        LocalDate creationDateValue = LocalDate.parse(prData[5]);
-        String supplierIDValue = prData[6];
-        LocalDate requiredDeliveryDateValue = LocalDate.parse(prData[7]);
-        
-        // Set the form fields with the loaded data
-        itemID.setSelectedItem(itemIDValue);
-        quantity.setText(String.valueOf(quantityValue));
-        unitPrice.setText(String.valueOf(priceValue));
-        supplierID.setText(supplierIDValue);
-        requiredDeliveryDate.setText(requiredDeliveryDateValue.toString());
-        creationDate.setText(creationDateValue.toString());
-        
-        // Add the item to the table
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        model.setRowCount(0); // Clear the table
-        model.addRow(new Object[]{
-            itemIDValue,
-            quantityValue,
-            priceValue,
-            totalPriceValue
-        });
-        
+    
+    private void populateFields(String[] prData) {
         try {
-            Item item = FileHandler.getItemById(itemIDValue);
-            if (item != null) {
-                itemName.setText(item.getItemName());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            itemID.setSelectedItem(prData[1]);
+            quantity.setText(prData[2]);
+            unitPrice.setText(prData[3]);
+            supplierID.setText(prData[5]);
+            requiredDeliveryDate.setText(prData[7]);
+            creationDate.setText(prData[8]);
+            
+            // Update item name display
+            updateItemDisplay();
+            
+            // Add to table
+            updateTable();
+            
+        } catch (Exception e) {
+            showError("Error loading PR data: " + e.getMessage());
         }
     }
     
-    private String[] loadPRById(String prID) throws IOException {
-        return FileHandler.getPurchaseRequisitionById(prID);
-    }
     
-    private void populateItemIDs() {
+    private void loadItemIDs() {
         try {
             List<Item> items = FileHandler.loadAllItems();
             String[] itemIDs = new String[items.size()];
@@ -105,25 +82,15 @@ public class EditPR extends javax.swing.JFrame {
                 itemIDs[i] = items.get(i).getItemID();
             }
             
-            DefaultComboBoxModel<String> itemModel = new DefaultComboBoxModel<>(itemIDs);
-            itemID.setModel(itemModel);
-            
-            // Set up listener to update item name when selection changes
-            itemID.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    updateItemNameAndPrice();
-                }
-            });
+            itemID.setModel(new DefaultComboBoxModel<>(itemIDs));
+            itemID.addActionListener(e -> updateItemDisplay());
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error loading items: " + e.getMessage(),
-                "File Error", 
-                JOptionPane.ERROR_MESSAGE);
+            showError("Error loading items: " + e.getMessage());
         }
     }
-    private void updateItemNameAndPrice() {
+    private void updateItemDisplay() {
         String selectedItemID = (String) itemID.getSelectedItem();
-        if (selectedItemID != null && !selectedItemID.isEmpty()) {
+        if (selectedItemID != null) {
             try {
                 Item item = FileHandler.getItemById(selectedItemID);
                 if (item != null) {
@@ -131,70 +98,79 @@ public class EditPR extends javax.swing.JFrame {
                     unitPrice.setText(String.valueOf(item.getPrice()));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                // Ignore error, keep existing values
             }
         }
     }
     
-    /**
-     * Validates quantity input
-     */
-    private int validateQuantity() {
+    // Helper method to update table
+    private void updateTable() {
         try {
-            String quantityText = quantity.getText().trim();
-            if (quantityText.isEmpty()) {
-                showError("Please enter quantity");
-                return -1;
-            }
-            int qty = Integer.parseInt(quantityText);
+            String selectedItemID = (String) itemID.getSelectedItem();
+            int qty = Integer.parseInt(quantity.getText());
+            double price = Double.parseDouble(unitPrice.getText());
+            double total = qty * price;
+            
+            // Get item name
+            String itemNameText = itemName.getText();
+            
+            // Update table
+            DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+            model.setRowCount(0);
+            model.addRow(new Object[]{selectedItemID, itemNameText, qty, price, total});
+            
+        } catch (NumberFormatException e) {
+            // Ignore if numbers are invalid
+        }
+    }
+    
+    private boolean validateInputs() {
+        if (itemID.getSelectedItem() == null) {
+            showError("Please select an item");
+            return false;
+        }
+        
+        if (quantity.getText().trim().isEmpty()) {
+            showError("Please enter quantity");
+            return false;
+        }
+        
+        try {
+            int qty = Integer.parseInt(quantity.getText());
             if (qty <= 0) {
                 showError("Quantity must be positive");
-                return -1;
+                return false;
             }
-            return qty;
         } catch (NumberFormatException e) {
             showError("Invalid quantity format");
-            return -1;
+            return false;
         }
-    }
-    
-    /**
-     * Validates delivery date input
-     */
-    private LocalDate validateDeliveryDate() {
+        
+        if (requiredDeliveryDate.getText().trim().isEmpty()) {
+            showError("Please enter delivery date");
+            return false;
+        }
+        
         try {
-            String dateText = requiredDeliveryDate.getText().trim();
-            if (dateText.isEmpty()) {
-                showError("Please enter required delivery date");
-                return null;
-            }
-            
-            LocalDate deliveryDate = LocalDate.parse(dateText);
-            LocalDate today = LocalDate.now();
-            
-            if (deliveryDate.isBefore(today)) {
+            LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText());
+            if (deliveryDate.isBefore(LocalDate.now())) {
                 showError("Delivery date cannot be in the past!");
-                return null;
+                return false;
             }
-            return deliveryDate;
         } catch (DateTimeParseException e) {
             showError("Invalid date format. Please use YYYY-MM-DD");
-            return null;
+            return false;
         }
+        
+        return true;
     }
     
     private void showError(String message) {
-        JOptionPane.showMessageDialog(this, 
-            message, 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
     private void showSuccess(String message) {
-        JOptionPane.showMessageDialog(this, 
-            message, 
-            "Success", 
-            JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void clearFields() {
@@ -239,6 +215,7 @@ public class EditPR extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         submitButton = new javax.swing.JButton();
         clearButton = new javax.swing.JButton();
+        salesManager = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -265,43 +242,46 @@ public class EditPR extends javax.swing.JFrame {
             PRPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PRPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PRPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PRPanelLayout.createSequentialGroup()
-                        .addComponent(PRTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(147, 147, 147))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PRPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addComponent(PRTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(75, 75, 75)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         PRPanelLayout.setVerticalGroup(
             PRPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PRPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(PRTitle)
-                .addGap(14, 14, 14))
+            .addGroup(PRPanelLayout.createSequentialGroup()
+                .addGroup(PRPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PRPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addGroup(PRPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(PRTitle)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        salesManagerLabel.setText("Sales Manager:");
+        salesManagerLabel.setBackground(new java.awt.Color(0, 0, 204));
+        salesManagerLabel.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        salesManagerLabel.setForeground(new java.awt.Color(0, 0, 204));
+        salesManagerLabel.setText("Sales Manager :");
 
         itemLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        itemLabel.setText("Item");
+        itemLabel.setText("Item :");
 
         itemNameLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        itemNameLabel.setText("Item Name");
+        itemNameLabel.setText("Item Name :");
 
         quantityLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        quantityLabel.setText("Quantity");
+        quantityLabel.setText("Quantity :");
 
         priceLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        priceLabel.setText("Price");
+        priceLabel.setText("Price :");
 
         supplierIDLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        supplierIDLabel.setText("Supplier ID");
+        supplierIDLabel.setText("Supplier ID :");
 
         requiredDeliveryDateLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        requiredDeliveryDateLabel.setText("Required Delivery Date");
+        requiredDeliveryDateLabel.setText("Required Delivery Date :");
 
         itemID.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -322,9 +302,17 @@ public class EditPR extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item ID", "Quantity", "Price", "Total Amount"
+                "Item ID", "Item Name", "Quantity", "Price", "Total Amount"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         prTable.setRowHeight(30);
         jScrollPane1.setViewportView(prTable);
 
@@ -333,7 +321,7 @@ public class EditPR extends javax.swing.JFrame {
 
         saveButton.setBackground(new java.awt.Color(255, 255, 204));
         saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        saveButton.setText("Save");
+        saveButton.setText("Update");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
@@ -358,27 +346,26 @@ public class EditPR extends javax.swing.JFrame {
             }
         });
 
+        salesManager.setText(" ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(PRPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(salesManagerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(creationDateLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(creationDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(requiredDeliveryDateLabel)
                                 .addGap(18, 18, 18)
                                 .addComponent(requiredDeliveryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(clearButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(priceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -387,25 +374,31 @@ public class EditPR extends javax.swing.JFrame {
                                     .addComponent(itemLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(supplierIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(41, 41, 41)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(supplierID, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(unitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(clearButton)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(375, 375, 375)
-                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(9, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(salesManager, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(supplierID, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(unitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(salesManagerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(creationDateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(creationDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,18 +406,23 @@ public class EditPR extends javax.swing.JFrame {
                 .addComponent(PRPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(creationDate, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(creationDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(creationDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+                        .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(salesManagerLabel)
-                            .addComponent(creationDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
+                            .addComponent(salesManager))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(itemLabel)
                             .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -440,7 +438,7 @@ public class EditPR extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(unitPrice)
                             .addComponent(priceLabel))
-                        .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(supplierIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(supplierID))
@@ -452,7 +450,7 @@ public class EditPR extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
                             .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -465,7 +463,7 @@ public class EditPR extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -473,116 +471,39 @@ public class EditPR extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-         try {
-        // Validate inputs
-        String selectedItemID = (String) itemID.getSelectedItem();
-        if (selectedItemID == null || selectedItemID.isEmpty()) {
-            showError("Please select an item");
-            return;
-        }
+         if (!validateInputs()) return;
         
-        int quantityValue = validateQuantity();
-        if (quantityValue <= 0) return;
-        
-        double priceValue;
         try {
-            priceValue = Double.parseDouble(unitPrice.getText());
-            if (priceValue <= 0) {
-                showError("Price must be positive");
-                return;
+            String selectedItemID = (String) itemID.getSelectedItem();
+            int quantityValue = Integer.parseInt(quantity.getText());
+            double priceValue = Double.parseDouble(unitPrice.getText());
+            double totalPrice = priceValue * quantityValue;
+            LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText());
+            LocalDate creationDateValue = LocalDate.parse(creationDate.getText());
+            String supplierIDValue = supplierID.getText();
+            
+            // Update table
+            updateTable();
+            
+            // Update PR using existing FileHandler method
+            boolean updated = FileHandler.updatePurchaseRequisition(
+                currentPRID, selectedItemID, quantityValue, priceValue, 
+                totalPrice, creationDateValue, supplierIDValue, 
+                deliveryDate, "PENDING"
+            );
+            
+            if (updated) {
+                showSuccess("Purchase Requisition updated successfully!");
+            } else {
+                showError("Purchase Requisition not found in file");
+                }
+            } catch (Exception e) {
+                showError("Error updating Purchase Requisition: " + e.getMessage());
             }
-        } catch (NumberFormatException e) {
-            showError("Invalid price format");
-            return;
-        }
-        
-        LocalDate deliveryDate = validateDeliveryDate();
-        if (deliveryDate == null) return;
-        
-        // Calculate total price
-        double totalPrice = priceValue * quantityValue;
-        
-        // Get creation date from the form
-        LocalDate creationDateValue;
-        try {
-            creationDateValue = LocalDate.parse(creationDate.getText());
-        } catch (DateTimeParseException e) {
-            creationDateValue = LocalDate.now();
-        }
-        
-        // Get supplier ID from the form
-        String supplierIDValue = supplierID.getText();
-        
-        // Update the table to show the changes
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        model.setRowCount(0); // Clear the table
-        model.addRow(new Object[]{
-            selectedItemID,
-            quantityValue,
-            priceValue,
-            totalPrice
-        });
-        
-        // Try to get the existing status or use default
-        String status = "SAVED"; // Default status
-        try {
-            String[] prData = FileHandler.getPurchaseRequisitionById(currentPRID);
-            if (prData != null && prData.length > 8) {
-                status = prData[8]; // Keep the existing status
-            }
-        } catch (Exception e) {
-            // If there's an error getting the status, just use the default
-        }
-        
-        // Update PR in file using FileHandler
-        boolean updated = FileHandler.updatePurchaseRequisition(
-            currentPRID,
-            selectedItemID,
-            quantityValue,
-            priceValue,
-            totalPrice,
-            creationDateValue,
-            supplierIDValue,
-            deliveryDate,
-            status
-        );
-        
-        if (updated) {
-            showSuccess("Purchase Requisition saved successfully!");
-        } else {
-            throw new IOException("Purchase Requisition not found in file");
-        }
-    } catch (Exception e) {
-        showError("Error saving Purchase Requisition: " + e.getMessage());
-        e.printStackTrace();
-    }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void quantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityActionPerformed
-        try {
-        int qty = Integer.parseInt(quantity.getText());
-        double price = Double.parseDouble(unitPrice.getText());
-        double total = qty * price;
-        
-        // Update the table to show the changes
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        String selectedItemID = (String) itemID.getSelectedItem();
-        
-        if (model.getRowCount() > 0) {
-            model.setValueAt(qty, 0, 1);
-            model.setValueAt(total, 0, 3);
-        } else if (selectedItemID != null && !selectedItemID.isEmpty()) {
-            // If there's no row yet, add one
-            model.addRow(new Object[]{
-                selectedItemID,
-                qty,
-                price,
-                total
-            });
-        }
-    } catch (NumberFormatException e) {
-        // Ignore if inputs aren't valid numbers yet
-    }
+        updateTable();
 
     }//GEN-LAST:event_quantityActionPerformed
 
@@ -595,72 +516,36 @@ public class EditPR extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        try {
-        // Validate inputs
-        String selectedItemID = (String) itemID.getSelectedItem();
-        if (selectedItemID == null || selectedItemID.isEmpty()) {
-            showError("Please select an item");
-            return;
-        }
+         if (!validateInputs()) return;
         
-        int quantityValue = validateQuantity();
-        if (quantityValue <= 0) return;
-        
-        double priceValue;
         try {
-            priceValue = Double.parseDouble(unitPrice.getText());
-            if (priceValue <= 0) {
-                showError("Price must be positive");
-                return;
+            String selectedItemID = (String) itemID.getSelectedItem();
+            int quantityValue = Integer.parseInt(quantity.getText());
+            double priceValue = Double.parseDouble(unitPrice.getText());
+            double totalPrice = priceValue * quantityValue;
+            LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText());
+            LocalDate creationDateValue = LocalDate.parse(creationDate.getText());
+            String supplierIDValue = supplierID.getText();
+            
+            // Update table
+            updateTable();
+            
+            // Submit PR using existing FileHandler method
+            boolean updated = FileHandler.updatePurchaseRequisition(
+                currentPRID, selectedItemID, quantityValue, priceValue, 
+                totalPrice, creationDateValue, supplierIDValue, 
+                deliveryDate, "Pending"
+            );
+            
+            if (updated) {
+                showSuccess("Purchase Requisition submitted successfully!");
+                this.dispose();
+            } else {
+                showError("Purchase Requisition not found in file");
             }
-        } catch (NumberFormatException e) {
-            showError("Invalid price format");
-            return;
+        } catch (Exception e) {
+            showError("Error submitting Purchase Requisition: " + e.getMessage());
         }
-        
-        LocalDate deliveryDate = validateDeliveryDate();
-        if (deliveryDate == null) return;
-        
-        // Calculate total price
-        double totalPrice = priceValue * quantityValue;
-        
-        // Get creation date and supplier ID from the form
-        LocalDate creationDateValue = LocalDate.parse(creationDate.getText());
-        String supplierIDValue = supplierID.getText();
-        
-        // Update the table to show the changes
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        model.setRowCount(0); // Clear the table
-        model.addRow(new Object[]{
-            selectedItemID,
-            quantityValue,
-            priceValue,
-            totalPrice
-        });
-        
-        // Update PR in file with SUBMITTED status using FileHandler
-        boolean updated = FileHandler.updatePurchaseRequisition(
-            currentPRID,
-            selectedItemID,
-            quantityValue,
-            priceValue,
-            totalPrice,
-            creationDateValue,
-            supplierIDValue,
-            deliveryDate,
-            "SUBMITTED"
-        );
-        
-        if (updated) {
-            showSuccess("Purchase Requisition submitted successfully!");
-            this.dispose(); // Close the form after submitting
-        } else {
-            throw new IOException("Purchase Requisition not found in file");
-        }
-    } catch (Exception e) {
-        showError("Error submitting Purchase Requisition: " + e.getMessage());
-        e.printStackTrace();
-    }
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
@@ -721,6 +606,7 @@ public class EditPR extends javax.swing.JFrame {
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JTextField requiredDeliveryDate;
     private javax.swing.JLabel requiredDeliveryDateLabel;
+    private javax.swing.JLabel salesManager;
     private javax.swing.JLabel salesManagerLabel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton submitButton;

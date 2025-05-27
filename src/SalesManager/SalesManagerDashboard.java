@@ -34,6 +34,12 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jPanel3.repaint();
     }
     
+    public String getEmployeeName() {
+        // If you have a separate name field, use it. Otherwise, use employeeID
+        return "Sales Manager " + this.employeeID; // You can modify this based on your needs
+    }
+    
+    
     MonthlySalesReportPanel reportPanel = new MonthlySalesReportPanel();
     
     
@@ -292,7 +298,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_supplierEntryButtonActionPerformed
 
     private void purchaseRequisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionButtonActionPerformed
-        PROperations pr = new PROperations();
+        PROperations pr = new PROperations(this.employeeID);
         pr.setVisible(true);
     }//GEN-LAST:event_purchaseRequisitionButtonActionPerformed
 
