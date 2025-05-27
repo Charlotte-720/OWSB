@@ -328,6 +328,7 @@ public class FileHandler {
         return "Supplier ID: " + supplier.getSupplierID() +
                ", Supplier Name: " + supplier.getSupplierName() +
                ", Contact No: " + supplier.getContactNo() +
+                ", Supplies: " + supplier.getSupplies() +
                ", Active: " + supplier.isActive();
     }
     
@@ -381,7 +382,7 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Supplies", "Active"};
                 String[] parts;
                 
                 if (line.contains(": ")) {
@@ -390,13 +391,14 @@ public class FileHandler {
                     parts = line.split(",", -1);
                 }
                 
-                if (parts.length >= 4) {  
+                if (parts.length >= 5) {  
                     String supplierID = parts[0].trim();
                     String supplierName = parts[1].trim();
                     String contactNo = parts[2].trim();
-                    boolean active = Boolean.parseBoolean(parts[3].trim());
+                    String supplies = parts[3].trim();
+                    boolean active = Boolean.parseBoolean(parts[4].trim());
 
-                    Supplier supplier = new Supplier(supplierID, supplierName, contactNo, active);
+                    Supplier supplier = new Supplier(supplierID, supplierName, contactNo, supplies, active);
                     suppliers.add(supplier);
                 }
             }
@@ -440,11 +442,12 @@ public class FileHandler {
     }
     
     // Method to add new supplier
-    public static void addSupplier(String name, String contactNo, boolean active) throws IOException {
+    public static void addSupplier(String name, String contactNo, String supplies, boolean active) throws IOException {
         String supplierID = generateSupplierID();
         String supplierData = "Supplier ID: " + supplierID + 
                              ", Supplier Name: " + name + 
                              ", Contact No: " + contactNo + 
+                             ", Supplies: " + supplies + 
                              ", Active: " + active;
         
         try (FileWriter writer = new FileWriter(SUPPLIER_FILE, true)) {
@@ -454,7 +457,7 @@ public class FileHandler {
 
 
     
-    public static void updateSupplier(String supplierID, String name, String contactNo, boolean active) throws IOException {
+    public static void updateSupplier(String supplierID, String name, String contactNo, String supplies, boolean active) throws IOException {
         System.out.println("FileHandler: Updating supplier: ID=" + supplierID + ", Name=" + name);
         
         List<String> lines = Files.readAllLines(Paths.get(SUPPLIER_FILE));
@@ -485,6 +488,7 @@ public class FileHandler {
                 String updatedLine = "Supplier ID: " + supplierID + 
                                    ", Supplier Name: " + name + 
                                    ", Contact No: " + contactNo + 
+                                    ", Supplies: " + supplies + 
                                    ", Active: " + active;
                 lines.set(i, updatedLine);
                 System.out.println("Updated line to: " + updatedLine);
@@ -510,7 +514,7 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Supplies", "Active"};
                 String[] parts;
                 
                 if (line.contains(": ")) {
@@ -519,12 +523,13 @@ public class FileHandler {
                     parts = line.split(",", -1);
                 }
                 
-                if (parts.length >= 4 && parts[0].trim().equals(supplierID)) {
+                if (parts.length >= 5 && parts[0].trim().equals(supplierID)) {
                     return new Supplier(
                         parts[0].trim(),
                         parts[1].trim(),
                         parts[2].trim(),
-                        Boolean.parseBoolean(parts[3].trim())
+                        parts[3].trim(),
+                        Boolean.parseBoolean(parts[4].trim())
                     );
                 }
             }
@@ -576,7 +581,7 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Supplies", "Active"};
                 String[] parts;
                 
                 if (line.contains(": ")) {
@@ -585,12 +590,13 @@ public class FileHandler {
                     parts = line.split(",", -1);
                 }
                 
-                if (parts.length >= 4) {  
+                if (parts.length >= 5) {  
                     suppliers.add(new Supplier(
                         parts[0].trim(),
                         parts[1].trim(),
                         parts[2].trim(),
-                        Boolean.parseBoolean(parts[3].trim())
+                        parts[3].trim(),
+                        Boolean.parseBoolean(parts[4].trim())
                     ));
                 }
             }
@@ -612,7 +618,7 @@ public class FileHandler {
                 String existingSupplierName = "";
                 
                 if (line.contains(": ")) {
-                    String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                    String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Supplies", "Active"};
                     String[] parts = parseFormattedLine(line, keys);
                     if (parts.length > 1) {
                         existingSupplierID = parts[0].trim();

@@ -4,12 +4,7 @@ import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,7 +19,7 @@ public class SupplierEntry extends javax.swing.JFrame {
             List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
             populateTable(supplierList);
             
-            if (supplierTable.getColumnCount() >= 5) {
+            if (supplierTable.getColumnCount() >= 6) {
                 TableActionEvent event = new TableActionEvent() {
                     @Override
                     public void editButton(int row) {
@@ -39,8 +34,8 @@ public class SupplierEntry extends javax.swing.JFrame {
                     }
                 };
 
-                supplierTable.getColumnModel().getColumn(4).setCellRenderer(new TableActionCellRender());
-                supplierTable.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(event));
+                supplierTable.getColumnModel().getColumn(5).setCellRenderer(new TableActionCellRender());
+                supplierTable.getColumnModel().getColumn(5).setCellEditor(new TableActionCellEditor(event));
             } else {
                 System.err.println("Table doesn't have enough columns for actions");
             }
@@ -113,6 +108,7 @@ public class SupplierEntry extends javax.swing.JFrame {
                 supplier.getSupplierID(),
                 supplier.getSupplierName(),
                 supplier.getContactNo(),
+                supplier.getSupplies(),
                 supplier.isActive(),
             });
         }
@@ -183,17 +179,17 @@ public class SupplierEntry extends javax.swing.JFrame {
 
         supplierTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Supplier ID", "Name", "Contact No", "Is Active", "Actions"
+                "Supplier ID", "Name", "Contact No", "Supplies", "Is Active", "Actions"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -13,6 +13,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -111,26 +114,38 @@ public class ManagePO extends javax.swing.JFrame {
         }
     }
 
-    public String[] loadSupplierName() {
-        ArrayList<String> supplierList = new ArrayList<>();
+    public Map<String, String> loadSupplierNamesWithSupplies() {
+        Map<String, String> supplierMap = new LinkedHashMap<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(", ");
-                if (parts.length >= 4) {
-                    String name = parts[1].split(": ")[1];   
-                    String active = parts[3].split(": ")[1];   
+                if (line.trim().isEmpty()) continue;
 
-                    if (active.equalsIgnoreCase("true")) {
-                        supplierList.add(name);
+                String[] parts = line.split(", ");
+                String name = "", active = "", supplies = "";
+
+                for (String part : parts) {
+                    if (part.startsWith("Supplier Name: ")) {
+                        name = part.substring("Supplier Name: ".length()).trim();
+                    } else if (part.startsWith("Supplies: ")) {
+                        supplies = part.substring("Supplies: ".length()).trim();
+                    } else if (part.startsWith("Active: ")) {
+                        active = part.substring("Active: ".length()).trim();
                     }
+                }
+
+                if (active.equalsIgnoreCase("true") && !name.isEmpty()) {
+                    supplierMap.put(name, supplies);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return supplierList.toArray(new String[0]);
+
+        return supplierMap;
     }
+
 
 
     private void filterPOByStatus(String statusFilter) {
@@ -343,7 +358,21 @@ public class ManagePO extends javax.swing.JFrame {
         String quantity = poTable.getValueAt(row, 3).toString();
         String unitPrice = poTable.getValueAt(row, 4).toString();
         String supplier = poTable.getValueAt(row, 1).toString(); 
-        String[] suppliers = loadSupplierName();
+        
+        Map<String, String> supplierMap = loadSupplierNamesWithSupplies();
+        List<String> filteredSuppliers = new ArrayList<>();
+        for (Map.Entry<String, String> entry : supplierMap.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(item)) {
+                filteredSuppliers.add(entry.getKey());  // key = supplier name
+            }
+        }
+        
+        if (filteredSuppliers.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No active suppliers found for this item.");
+            return;
+        }
+        
+        String[] suppliers = filteredSuppliers.toArray(new String[0]);
 
         EditPOForm dialog = new EditPOForm(this, true); 
         dialog.setPOData(item, quantity, unitPrice, supplier, suppliers);

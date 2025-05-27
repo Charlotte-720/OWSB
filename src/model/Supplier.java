@@ -1,21 +1,19 @@
 
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class Supplier {
     private String supplierID;
     private String supplierName;
     private String contactNo;
+    private String supplies;
     private boolean isActive;
     
     //Constructor
-    public Supplier(String supplierID, String supplierName, String contactNo, boolean isActive) {
+    public Supplier(String supplierID, String supplierName, String contactNo, String supplies, boolean isActive) {
         this.supplierID = supplierID;
         this.supplierName = supplierName;
         this.contactNo = contactNo;
+        this.supplies = supplies;
         this.isActive = isActive;
     }
     //Getters
@@ -29,6 +27,10 @@ public class Supplier {
     
     public String getContactNo(){
         return contactNo;
+    }
+    
+    public String getSupplies() {
+        return supplies;
     }
 
     public boolean isActive() { 
@@ -54,6 +56,7 @@ public String toString() {
         "supplierID='" + supplierID + '\'' +
         ", supplierName='" + supplierName + '\'' +
         ", contactNo='" + contactNo + '\'' +
+        ", supplies='" + supplies + '\'' +
         ", active=" + isActive +
         '}';
 }
