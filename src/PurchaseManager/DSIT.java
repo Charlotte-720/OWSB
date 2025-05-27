@@ -11,21 +11,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class DSIT {        
     public static void loadSupplierData(JTable table) {
-        // Define columns for suppliers
-        String[] columnNames = {"Supplier ID", "Name", "Contact", "Is Active"};
-
+        String[] columnNames = {"ID", "Name", "Contact", "Active"};
         List<Object[]> rows = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("Suppliers.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Assuming Suppliers.txt stores data in CSV format like:
-                // SupplierID,Name,Contact,IsActive
                 String[] values = line.split(",");
                 if (values.length >= 4) {
                     Object[] row = new Object[4];
                     for (int i = 0; i < 4; i++) {
-                        row[i] = values[i].trim();
+                        String[] parts = values[i].split(":", 2);
+                        row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();
                     }
                     rows.add(row);
                 }
@@ -34,13 +31,11 @@ public class DSIT {
             e.printStackTrace();
         }
 
-        // Convert List to 2D Object array for table model
         Object[][] data = new Object[rows.size()][];
         for (int i = 0; i < rows.size(); i++) {
             data[i] = rows.get(i);
         }
 
-        // Create model with non-editable cells
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -48,9 +43,9 @@ public class DSIT {
             }
         };
 
-        // Set model on the table
         table.setModel(model);
     }
+
     
     public static void loadItemData(JTable table){
         
@@ -58,16 +53,15 @@ public class DSIT {
 
         List<Object[]> rows = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("items.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/items.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Assuming Suppliers.txt stores data in CSV format like:
-                // SupplierID,Name,Contact,IsActive
                 String[] values = line.split(",");
                 if (values.length >= 8) {
                     Object[] row = new Object[8];
                     for (int i = 0; i < 8; i++) {
-                        row[i] = values[i].trim();
+                        String[] parts = values[i].split(":", 2);
+                        row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();                    
                     }
                     rows.add(row);
                 }
@@ -99,7 +93,7 @@ public class DSIT {
 
         List<Object[]> rows = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("pr.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/pr.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 // Assuming Suppliers.txt stores data in CSV format like:
@@ -108,8 +102,8 @@ public class DSIT {
                 if (values.length >= 9) {
                     Object[] row = new Object[9];
                     for (int i = 0; i < 9; i++) {
-                        row[i] = values[i].trim();
-                    }
+                        String[] parts = values[i].split(":", 2);
+                        row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();                       }
                     rows.add(row);
                 }
             }
