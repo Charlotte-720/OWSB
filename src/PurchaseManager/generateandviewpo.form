@@ -3,7 +3,12 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+      <Color blue="f5" green="e6" red="e1" type="rgb"/>
+    </Property>
+    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+        <LineBorder thickness="2"/>
+      </Border>
     </Property>
   </Properties>
   <AuxValues>
@@ -31,7 +36,7 @@
                       <Component id="edit" min="-2" pref="137" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                       <Component id="delete" min="-2" pref="137" max="-2" attributes="0"/>
-                      <EmptySpace pref="47" max="32767" attributes="0"/>
+                      <EmptySpace pref="43" max="32767" attributes="0"/>
                       <Component id="back" min="-2" pref="137" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
@@ -64,7 +69,7 @@
                   <Component id="add" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="back" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="32" max="32767" attributes="0"/>
+              <EmptySpace pref="28" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -180,10 +185,10 @@
     <Component class="PurchaseManager.button" name="edit">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="0" red="cc" type="rgb"/>
+          <Color blue="6e" green="55" red="55" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+          <Color blue="dc" green="dc" red="dc" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Edit"/>
         <Property name="round" type="int" value="20"/>
@@ -198,10 +203,10 @@
     <Component class="PurchaseManager.button" name="delete">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="0" red="cc" type="rgb"/>
+          <Color blue="6e" green="55" red="55" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+          <Color blue="dc" green="dc" red="dc" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Delete"/>
         <Property name="round" type="int" value="20"/>
@@ -216,10 +221,10 @@
     <Component class="PurchaseManager.button" name="add">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="0" red="cc" type="rgb"/>
+          <Color blue="6e" green="55" red="55" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+          <Color blue="dc" green="dc" red="dc" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Add"/>
         <Property name="round" type="int" value="20"/>
@@ -234,10 +239,10 @@
     <Component class="PurchaseManager.button" name="back">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="0" red="cc" type="rgb"/>
+          <Color blue="6e" green="55" red="55" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+          <Color blue="dc" green="dc" red="dc" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Back"/>
         <Property name="round" type="int" value="20"/>

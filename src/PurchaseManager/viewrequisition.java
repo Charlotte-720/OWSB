@@ -26,7 +26,7 @@ public class viewrequisition extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(225, 230, 245));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
@@ -70,8 +70,8 @@ public class viewrequisition extends javax.swing.JFrame {
             }
         });
 
-        back.setBackground(new java.awt.Color(204, 0, 204));
-        back.setForeground(new java.awt.Color(255, 255, 255));
+        back.setBackground(new java.awt.Color(85, 85, 110));
+        back.setForeground(new java.awt.Color(220, 220, 220));
         back.setText("Back");
         back.setRound(20);
         back.setShadowColor(new java.awt.Color(0, 0, 0));
