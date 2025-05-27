@@ -1,7 +1,3 @@
-PO_ID: 01, Supplier Name: How, Item: Melon, Quantity: 50, Unit Price: 10.00, Total Price: 500.00, Date: 16-05-2025, Status: Pending
-PO_ID: 03, Supplier Name: JV, Item: Papaya, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Pending
-PO_ID: 04, Supplier Name: JVV, Item: Coconut, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Pending
-PO_ID: 05, Supplier Name: jiaxuan, Item: Candy, Quantity: 500, Unit Price: 1.00, Total Price: 500.00, Date: 16-05-2025, Status: Pending
-PO_ID: 06, Supplier Name: JV, Item: Papaya, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-03-2025, Status: Approved
-PO_ID: 07, Supplier Name: JVV, Item: Coconut, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-03-2025, Status: Rejected
-PO_ID: 08, Supplier Name: jiaxuan, Item: Melon, Quantity: 500, Unit Price: 1.00, Total Price: 500.00, Date: 16-02-2025, Status: Paid
+PO_ID: 01, Supplier Name: kevin, Item: keybroad, Quantity: 6000, Unit Price: 20, Total Price: 120000.00, Date: 20-20-2024, Status: Pending
+PO_ID: 02, Supplier Name: lee, Item: apple, Quantity: 10000, Unit Price: 2, Total Price: 20000.00, Date: 20-20-2003, Status: Pending
+PO_ID: 03, Supplier Name: lee, Item: monitor, Quantity: 2000, Unit Price: 2, Total Price: 4000.00, Date: ddd, Status: Pending

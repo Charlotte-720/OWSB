@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.util.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.Component;
 
 public class generateandviewpo extends javax.swing.JPanel {
     public generateandviewpo() {
@@ -17,6 +19,8 @@ public class generateandviewpo extends javax.swing.JPanel {
         JTableHeader header = jTable1.getTableHeader();
         header.setBackground(new java.awt.Color(255,255,255)); // Example: Steel Blue
         header.setForeground(Color.BLACK); // Text color
+        
+        jTable1.getColumnModel().getColumn(7).setCellRenderer(new StatusColumnCellRenderer());
     }
 
     @SuppressWarnings("unchecked")
@@ -283,7 +287,36 @@ public class generateandviewpo extends javax.swing.JPanel {
         }
     }
 
+    class StatusColumnCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, 
+               boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+            if (value != null) {
+                String status = value.toString().toLowerCase();
+
+                switch (status) {
+                    case "rejected":
+                        setForeground(Color.RED);
+                        break;
+                    case "pending":
+                        setForeground(new Color(255, 165, 0)); // orange-ish yellow
+                        break;
+                    case "approved":
+                        setForeground(new Color(0, 128, 0)); // dark green
+                        break;
+                    default:
+                        setForeground(Color.BLACK);
+                        break;
+                }
+            } else {
+                setForeground(Color.BLACK);
+            }
+
+            return this;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private PurchaseManager.button add;

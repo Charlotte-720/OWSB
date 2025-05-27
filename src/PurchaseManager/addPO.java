@@ -3,6 +3,9 @@ package PurchaseManager;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import java.awt.Window;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class addPO extends javax.swing.JPanel {  
     private generateandviewpo generatePOReference;
@@ -20,13 +23,11 @@ public class addPO extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         save = new PurchaseManager.button();
         cancel = new javax.swing.JLabel();
@@ -48,10 +49,6 @@ public class addPO extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Unit Price:");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Total Price:");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -88,13 +85,15 @@ public class addPO extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
+                        .addGap(107, 107, 107)
+                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel5)
                             .addComponent(jLabel6))
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,18 +101,15 @@ public class addPO extends javax.swing.JPanel {
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -131,13 +127,9 @@ public class addPO extends javax.swing.JPanel {
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14))
         );
@@ -151,22 +143,30 @@ public class addPO extends javax.swing.JPanel {
               String quantityStr = jTextField3.getText().trim();
               String unitPriceStr = jTextField4.getText().trim();
               String date = jTextField6.getText().trim();
-              
+
               // Check for empty fields
               if (supplierName.isEmpty() || item.isEmpty() || quantityStr.isEmpty() || unitPriceStr.isEmpty() || date.isEmpty()) {
                   javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields. Fields cannot be empty!");
                   return; // Stop saving if any field is empty
               }
+              
+              // Date validation for MM-dd-yyyy
+              SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+              sdf.setLenient(false);
+              try {
+                  sdf.parse(date);
+              } catch (ParseException pe) {
+                  javax.swing.JOptionPane.showMessageDialog(this, "Date must be in MM-dd-yyyy format!");
+                  return;
+              }
 
               // Parse numeric values
-                int quantity = Integer.parseInt(quantityStr);
-                double unitPrice = Double.parseDouble(unitPriceStr);
-                double totalPrice = quantity * unitPrice;
-                String totalPriceStr = String.format("%.2f", totalPrice);
-              
-              // File path (save in project folder or specify your own path)
-              String filePath = "po.txt";
-              java.io.File file = new java.io.File("src/PurchaseManager/po.txt");
+              int quantity = Integer.parseInt(quantityStr);
+              double unitPrice = Double.parseDouble(unitPriceStr);
+              double totalPrice = quantity * unitPrice;
+              String totalPriceStr = String.format("%.2f", totalPrice);
+
+              java.io.File file = new java.io.File("src/txtFile/po.txt");
 
               int poID = 1; // Start from 1
 
@@ -182,26 +182,25 @@ public class addPO extends javax.swing.JPanel {
                   scanner.close();
               }
 
-              // Open the file in append mode
-              java.io.FileWriter fw = new java.io.FileWriter(file, true);
-              java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
-
               // Format the PO_ID (example: 01, 02, 03, etc.)
               String formattedPoId = String.format("%02d", poID);
 
-              // Write the new data
+              // Compose the new data string with total price included
               String newData = "PO_ID: " + formattedPoId + 
                                ", Supplier Name: " + supplierName + 
                                ", Item: " + item + 
                                ", Quantity: " + quantity +
                                ", Unit Price: " + unitPriceStr +
-                               ", Total Price: " + totalPriceStr +
+                               ", Total Price: " + totalPriceStr +   // <-- added total price here
                                ", Date: " + date + 
                                ", Status: Pending";
 
+              // Write to the file using FileWriter (create po.txt if doesn't exist)
+              java.io.FileWriter fw = new java.io.FileWriter(file, true);
+              java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
               bw.write(newData);
-              bw.newLine(); // Write a new line
-              bw.close(); // Close writers
+              bw.newLine();
+              bw.close();
 
               // Show success message
               javax.swing.JOptionPane.showMessageDialog(this, "Saved Successfully!");
@@ -211,7 +210,6 @@ public class addPO extends javax.swing.JPanel {
               jTextField2.setText("");
               jTextField3.setText("");
               jTextField4.setText("");
-              jTextField5.setText("");
               jTextField6.setText("");
 
              // Refresh the table in GeneratePO
@@ -238,20 +236,17 @@ public class addPO extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cancelMouseClicked
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private PurchaseManager.button save;
     // End of variables declaration//GEN-END:variables
