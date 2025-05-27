@@ -14,23 +14,197 @@ import java.util.List;
 public class AddItem extends javax.swing.JFrame {
    private ItemEntry entryWindow;
    private List<Item> itemList;
+   private List<POItem> paidPOItems;
+   
+   // Inner class to represent PO items
+   private static class POItem {
+       String itemName;
+       int itemQuantity;
+       double itemPrice;
+       String status;
+       String supplierName;
+       
+       POItem(String itemName, int itemQuantity, double itemPrice, String status, String supplierName) {
+           this.itemName = itemName;
+           this.itemQuantity = itemQuantity;
+           this.itemPrice = itemPrice;
+           this.status = status;
+           this.supplierName = supplierName;
+       }
+   }
    
     public AddItem(ItemEntry entryWindow) {
     this.entryWindow = entryWindow;
     // load items
     try {
         itemList = FileHandler.loadAllItems();
+        paidPOItems = loadPaidPOItems();
     } catch (IOException e) {
         JOptionPane.showMessageDialog(this, 
             "Error loading items: " + e.getMessage(),
             "File Error",
             JOptionPane.ERROR_MESSAGE);
         itemList = new ArrayList<>();
+        paidPOItems = new ArrayList<>();
     }
     initComponents();
-    populateSupplierID();
+    populateItemNameFromPO();
+    setupItemNameListener();
+    populateItemCategories();
 }
     
+    private void populateItemCategories() {
+        String[] categories = {
+            "Groceries",
+            "Fresh Produce",
+            "Dairy Products", 
+            "Frozen Foods",
+            "Meat & Seafood",
+        };
+        itemCategory.setModel(new DefaultComboBoxModel<>(categories));
+    }
+    
+    // Method to load items with PAID status from po.txt
+    private List<POItem> loadPaidPOItems() throws IOException {
+        List<POItem> paidItems = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
+            String line;
+            int lineNumber = 0;
+            while ((line = br.readLine()) != null) {
+                lineNumber++;
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                try {
+                    String itemName = extractValue(line, "Item:");
+                    String quantityStr = extractValue(line, "Quantity:");
+                    String priceStr = extractValue(line, "Unit Price:");
+                    String status = extractValue(line, "Status:");
+                    String supplierName = extractValue(line, "Supplier Name:");
+
+                    int itemQuantity = Integer.parseInt(quantityStr.trim());
+                    double itemPrice = Double.parseDouble(priceStr.trim());
+
+                    // Check if status is PAID 
+                    if ("Paid".equalsIgnoreCase(status.trim())) {
+                        POItem newItem = new POItem(itemName.trim(), itemQuantity, itemPrice, status.trim(),supplierName.trim());
+                        paidItems.add(newItem);
+                    }
+
+                } catch (Exception e) {
+                    continue; // Skip this record and continue with next line
+                }
+            }
+        } catch (IOException e) {
+            throw e;
+        }
+
+        return paidItems;
+    }
+
+    // Helper method to extract values from the formatted line
+    private String extractValue(String line, String label) {
+        int startIndex = line.indexOf(label);
+        if (startIndex == -1) {
+            throw new RuntimeException("Label '" + label + "' not found in line: " + line);
+        }
+
+        startIndex += label.length();
+
+        // Skip any whitespace after the label
+        while (startIndex < line.length() && Character.isWhitespace(line.charAt(startIndex))) {
+            startIndex++;
+        }
+
+        int endIndex = line.indexOf(",", startIndex);
+
+        String value;
+        if (endIndex == -1) {
+            // Last value in the line
+            value = line.substring(startIndex).trim();
+        } else {
+            value = line.substring(startIndex, endIndex).trim();
+        }
+
+        return value;
+    }
+    
+    // Add this method to handle item selection changes
+    private void setupItemNameListener() {
+        if (itemName instanceof JComboBox) {
+            ((JComboBox<String>) itemName).addActionListener(e -> {
+                String selectedItem = (String) ((JComboBox<String>) itemName).getSelectedItem();
+                if (selectedItem != null && !selectedItem.equals("Select Item")) {
+                    updatePriceAndQuantityLabels(selectedItem);
+                } else {
+                    // Clear labels when no item is selected
+                    itemPrice.setText(" ");
+                    itemQuantity.setText(" ");
+                }
+            });
+        }
+    }
+    
+    // Method to update price and quantity labels based on selected item
+    private void updatePriceAndQuantityLabels(String selectedItemName) {
+        boolean found = false;
+
+        for (POItem poItem : paidPOItems) {
+            if (poItem.itemName.equals(selectedItemName)) {
+                itemPrice.setText(String.format("%.2f", poItem.itemPrice));
+                itemQuantity.setText(String.valueOf(poItem.itemQuantity));
+                supplierName.setText(poItem.supplierName);
+                System.out.println("Match found! Price: " + poItem.itemPrice + ", Quantity: " + poItem.itemQuantity);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            itemPrice.setText(" ");
+            itemQuantity.setText(" ");
+            supplierName.setText(" ");
+        }
+    }
+    
+    // Method to populate item name combobox with PAID PO items
+    private void populateItemNameFromPO() {
+        List<String> itemNames = new ArrayList<>();
+        itemNames.add("Select Item"); // Default option
+        
+        for (POItem poItem : paidPOItems) {
+            if (!itemNames.contains(poItem.itemName)) {
+                itemNames.add(poItem.itemName);
+            }
+        }
+        if (itemName instanceof JComboBox) {
+            ((JComboBox<String>) itemName).setModel(
+                new DefaultComboBoxModel<>(itemNames.toArray(new String[0]))
+            );
+        }
+    }
+    
+    // Method to get supplier name for selected item from PO
+    private String getSupplierNameForSelectedItem(String selectedItemName) {
+        for (POItem poItem : paidPOItems) {
+            if (poItem.itemName.equals(selectedItemName)) {
+                return poItem.supplierName;
+            }
+        }
+        return "";
+    }
+    
+    // Method to get price for selected item from PO
+    private double getPriceForSelectedItem(String selectedItemName) {
+        for (POItem poItem : paidPOItems) {
+            if (poItem.itemName.equals(selectedItemName)) {
+                return poItem.itemPrice;
+            }
+        }
+        return 0.0;
+    }
+        
     private String generateItemID() {
         try {
             return FileHandler.generateItemID();
@@ -40,15 +214,6 @@ public class AddItem extends javax.swing.JFrame {
         }
     }
     
-    // Method to load supplier IDs from the file
-    private void populateSupplierID() {
-        try {
-            List<String> supplierIDs = FileHandler.loadSupplierIDs();
-            supplierID.setModel(new DefaultComboBoxModel<>(supplierIDs.toArray(new String[0])));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading suppliers", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
     
     private boolean isDuplicateItem(String itemNameToCheck) {
         try {
@@ -71,20 +236,20 @@ public class AddItem extends javax.swing.JFrame {
         ItemEntryPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        itemName = new javax.swing.JTextField();
-        itemPrice = new javax.swing.JTextField();
         NameLabel = new javax.swing.JLabel();
-        itemQuantity = new javax.swing.JTextField();
         PriceLabel = new javax.swing.JLabel();
-        itemCategory = new javax.swing.JTextField();
         QuantityLabel = new javax.swing.JLabel();
         expiredDate = new javax.swing.JTextField();
         CategoryLabel = new javax.swing.JLabel();
-        supplierID = new javax.swing.JComboBox<>();
         ExpiredDateLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
         SupplierLabel = new javax.swing.JLabel();
         ClearButton = new javax.swing.JButton();
+        itemCategory = new javax.swing.JComboBox<>();
+        itemName = new javax.swing.JComboBox<>();
+        itemPrice = new javax.swing.JLabel();
+        itemQuantity = new javax.swing.JLabel();
+        supplierName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -130,12 +295,6 @@ public class AddItem extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        itemName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemNameActionPerformed(evt);
-            }
-        });
-
         NameLabel.setText("Name");
 
         PriceLabel.setText("Price (RM)");
@@ -150,14 +309,6 @@ public class AddItem extends javax.swing.JFrame {
 
         CategoryLabel.setText("Category");
 
-        supplierID.setEditable(true);
-        supplierID.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        supplierID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierIDActionPerformed(evt);
-            }
-        });
-
         ExpiredDateLabel.setText("Expired Date");
 
         saveButton.setBackground(new java.awt.Color(255, 153, 153));
@@ -169,7 +320,7 @@ public class AddItem extends javax.swing.JFrame {
             }
         });
 
-        SupplierLabel.setText("Supplier ID");
+        SupplierLabel.setText("Supplier Name");
 
         ClearButton.setBackground(new java.awt.Color(153, 204, 255));
         ClearButton.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
@@ -180,6 +331,26 @@ public class AddItem extends javax.swing.JFrame {
             }
         });
 
+        itemCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCategoryActionPerformed(evt);
+            }
+        });
+
+        itemName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemNameActionPerformed(evt);
+            }
+        });
+
+        itemPrice.setText(" ");
+
+        itemQuantity.setText(" ");
+
+        supplierName.setText(" ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,27 +359,30 @@ public class AddItem extends javax.swing.JFrame {
                 .addComponent(ItemEntryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(PriceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(NameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(QuantityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CategoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ExpiredDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(SupplierLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(53, 53, 53)
+                        .addGap(61, 61, 61)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(PriceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(NameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(QuantityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(CategoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ExpiredDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(SupplierLabel)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)))
+                .addGap(57, 57, 57)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemPrice)
-                    .addComponent(itemQuantity)
-                    .addComponent(itemCategory)
                     .addComponent(expiredDate)
-                    .addComponent(supplierID, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(itemCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ClearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemQuantity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -219,27 +393,27 @@ public class AddItem extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NameLabel)
                     .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PriceLabel)
-                    .addComponent(itemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(itemPrice))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(QuantityLabel)
-                    .addComponent(itemQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(itemQuantity))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CategoryLabel)
                     .addComponent(itemCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ExpiredDateLabel)
                     .addComponent(expiredDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SupplierLabel)
-                    .addComponent(supplierID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                    .addComponent(supplierName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -267,10 +441,6 @@ public class AddItem extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void itemNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itemNameActionPerformed
-
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
             if (!validateInputs()) return;
@@ -292,38 +462,55 @@ public class AddItem extends javax.swing.JFrame {
         }
     }
     
+    private Item createItemFromInputs() {
+        return new Item(
+            generateItemID(),                           // Auto-generated
+            itemName.getSelectedItem().toString(),      // Name from combobox
+            Double.parseDouble(itemPrice.getText()),    // Price from label
+            itemCategory.getSelectedItem().toString(),  // Category
+            LocalDate.parse(expiredDate.getText()),     // Expiry
+            supplierName.getText(),      // Supplier
+            Integer.parseInt(itemQuantity.getText()),   // Quantity from label
+            LocalDate.now()                            // Current date
+        );
+    }
+    
+    // Updated validation method
     private boolean validateInputs() {
-        // Simple validation - expand as needed
-        if (itemName.getText().trim().isEmpty()) {
-            showError("Item name cannot be empty");
+        // Validation for combobox selection
+        if (itemName.getSelectedItem() == null || 
+            itemName.getSelectedItem().toString().equals("Select Item")) {
+            showError("Please select an item name");
             return false;
         }
+
+        // Check if price and quantity labels have been populated
+        if (itemPrice.getText().trim().isEmpty() || itemPrice.getText().equals(" ")) {
+            showError("Please select a valid item to get price information");
+            return false;
+        }
+
+        if (itemQuantity.getText().trim().isEmpty() || itemQuantity.getText().equals(" ")) {
+            showError("Please select a valid item to get quantity information");
+            return false;
+        }
+
         try {
             Double.parseDouble(itemPrice.getText());
             Integer.parseInt(itemQuantity.getText());
-            LocalDate.parse(expiredDate.getText()); // Validate date format
+            LocalDate expiredDate = validateExpiredDate();
+            if (expiredDate == null) 
+                return false;
+            
         } catch (Exception e) {
             showError("Invalid number or date format");
             return false;
         }
         return true;
     }
-    
-    private Item createItemFromInputs() {
-        return new Item(
-            generateItemID(),                     // Auto-generated
-            itemName.getText().trim(),             // Name
-            Double.parseDouble(itemPrice.getText()), // Price
-            itemCategory.getText().trim(),         // Category
-            LocalDate.parse(expiredDate.getText()), // Expiry
-            (String) supplierID.getSelectedItem(), // Supplier
-            Integer.parseInt(itemQuantity.getText()), // Quantity
-            LocalDate.now()                       // Current date
-        );
-    }
 
     private Item findExistingItem(String name, String category, String supplierID, double price) {
-        try (BufferedReader br = new BufferedReader(new FileReader("items.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/items.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",", -1);
@@ -382,11 +569,33 @@ public class AddItem extends javax.swing.JFrame {
             );
         }
     }
+    
+    private LocalDate validateExpiredDate() {
+        try {
+            String dateText = expiredDate.getText().trim();
+            if (dateText.isEmpty()) {
+                showError("Please enter expired date");
+                return null;
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate expired = LocalDate.parse(dateText, formatter);
+            LocalDate today = LocalDate.now();
+
+            if (expired.isBefore(today)) {
+                showError("Expired date cannot be in the past!");
+                return null;
+            }
+            return expired;
+        } catch (Exception e) {
+            showError("Invalid date format. Please use YYYY-MM-DD");
+            return null;
+        }
+    }
 
     private void updateItemStock(String itemID, int newQuantity, LocalDate newExpiredDate) {
         List<String> lines = new ArrayList<>();
         
-        try (BufferedReader br = new BufferedReader(new FileReader("items.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/items.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",", -1);
@@ -402,7 +611,7 @@ public class AddItem extends javax.swing.JFrame {
             e.printStackTrace();
         }
         
-        try (FileWriter writer = new FileWriter("items.txt")) {
+        try (FileWriter writer = new FileWriter("src/txtFile/items.txt")) {
             for (String line : lines) {
                 writer.write(line + "\n");
             }
@@ -419,7 +628,7 @@ public class AddItem extends javax.swing.JFrame {
         String itemLine = String.format("%s,%s,%.2f,%s,%s,%s,%d,%s",
                 itemID, name, price, category, expiredDate, supplierID, quantity, createdDate);
         
-        try (FileWriter writer = new FileWriter("items.txt", true)) {
+        try (FileWriter writer = new FileWriter("src/txtFile/items.txt", true)) {
             writer.write(itemLine + "\n");
             showSuccess("New item created successfully!");
             clearFields();
@@ -435,10 +644,6 @@ public class AddItem extends javax.swing.JFrame {
     
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void supplierIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierIDActionPerformed
-        
-    }//GEN-LAST:event_supplierIDActionPerformed
-
     private void expiredDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expiredDateActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_expiredDateActionPerformed
@@ -451,13 +656,21 @@ public class AddItem extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
+    private void itemCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemCategoryActionPerformed
+
+    private void itemNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemNameActionPerformed
+
     private void clearFields() {
-        itemName.setText("");
+        itemName.setSelectedIndex(0);
         itemPrice.setText("");
         itemQuantity.setText("");                                             
-        itemCategory.setText("");
+        itemCategory.setSelectedIndex(0);
         expiredDate.setText("");
-        supplierID.setSelectedIndex(0);
+        supplierName.setText(""); 
     }
 
 //    public static void main(String[] args) {
@@ -474,14 +687,14 @@ public class AddItem extends javax.swing.JFrame {
     private javax.swing.JLabel QuantityLabel;
     private javax.swing.JLabel SupplierLabel;
     private javax.swing.JTextField expiredDate;
-    private javax.swing.JTextField itemCategory;
-    private javax.swing.JTextField itemName;
-    private javax.swing.JTextField itemPrice;
-    private javax.swing.JTextField itemQuantity;
+    private javax.swing.JComboBox<String> itemCategory;
+    private javax.swing.JComboBox<String> itemName;
+    private javax.swing.JLabel itemPrice;
+    private javax.swing.JLabel itemQuantity;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton saveButton;
-    private javax.swing.JComboBox<String> supplierID;
+    private javax.swing.JLabel supplierName;
     // End of variables declaration//GEN-END:variables
 }

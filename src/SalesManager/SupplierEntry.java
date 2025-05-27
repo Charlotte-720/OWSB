@@ -21,7 +21,7 @@ public class SupplierEntry extends javax.swing.JFrame {
     public SupplierEntry() {
         initComponents();
         try {
-            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("suppliers.txt"); // using FileHandler
+            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
             populateTable(supplierList);
             
             if (supplierTable.getColumnCount() >= 5) {
@@ -96,7 +96,7 @@ public class SupplierEntry extends javax.swing.JFrame {
 
     private void refreshTable() {
         try {
-            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("suppliers.txt"); // using FileHandler
+            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
             populateTable(supplierList);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error refreshing suppliers: " + e.getMessage(),

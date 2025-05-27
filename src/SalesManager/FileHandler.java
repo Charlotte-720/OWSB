@@ -14,11 +14,31 @@ import java.util.List;
 
 public class FileHandler {
 
-    private static final String ITEM_FILE = "items.txt";
-    private static final String SUPPLIER_FILE = "suppliers.txt";
-    private static final String SALES_FILE = "sales_records.txt";
-    private static final String PR_FILE = "pr.txt";
-
+    private static final String ITEM_FILE = "src/txtFile/items.txt";
+    private static final String SUPPLIER_FILE = "src/txtFile/suppliers.txt";
+    private static final String SALES_FILE = "src/txtFile/sales_records.txt";
+    private static final String PR_FILE = "src/txtFile/pr.txt";
+    
+    // Helper method to parse formatted line back to array
+    private static String[] parseFormattedLine(String line, String[] expectedKeys) {
+        String[] values = new String[expectedKeys.length];
+        for (int i = 0; i < expectedKeys.length; i++) {
+            String key = expectedKeys[i] + ": ";
+            int startIndex = line.indexOf(key);
+            if (startIndex != -1) {
+                startIndex += key.length();
+                int endIndex = line.indexOf(", ", startIndex);
+                if (endIndex == -1) {
+                    endIndex = line.length();
+                }
+                values[i] = line.substring(startIndex, endIndex).trim();
+            } else {
+                values[i] = "";
+            }
+        }
+        return values;
+    }
+    
     public static List<String[]> readAllRecords(String filename) throws IOException {
         List<String[]> records = new ArrayList<>();
         if (!new File(filename).exists()) {
@@ -29,7 +49,26 @@ public class FileHandler {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    records.add(line.split(","));
+                    // Check if it's old format (comma-separated) or new format
+                    if (line.contains(": ")) {
+                        // New formatted style - need to determine which type based on content
+                        if (line.contains("Item ID: ")) {
+                            String[] keys = {"Item ID", "Item Name", "Price", "Category", "Expired Date", "Supplier ID", "Total Stock", "Updated Date"};
+                            records.add(parseFormattedLine(line, keys));
+                        } else if (line.contains("Supplier ID: ")) {
+                            String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                            records.add(parseFormattedLine(line, keys));
+                        } else if (line.contains("Sale ID: ")) {
+                            String[] keys = {"Sale ID", "Item ID", "Quantity Sold", "Sale Date", "Total Amount"};
+                            records.add(parseFormattedLine(line, keys));
+                        } else if (line.contains("PR ID: ")) {
+                            String[] keys = {"PR ID", "Raised By", "Request Date", "Required Delivery Date", "Status", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID"};
+                            records.add(parseFormattedLine(line, keys));
+                        }
+                    } else {
+                        // Old format - comma separated
+                        records.add(line.split(","));
+                    }
                 }
             }
         }
@@ -41,15 +80,20 @@ public class FileHandler {
     
     public static void saveItemToFile(Item item) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ITEM_FILE, true))) {
-            writer.write(itemToFileString(item));
+            writer.write(itemToFormattedString(item));
             writer.newLine();
         }
     }
 
-    private static String itemToFileString(Item item) {
-        return item.getItemID() + "," + item.getItemName() + "," + item.getPrice() + ","
-                + item.getCategory() + "," + item.getExpiredDate() + "," + item.getSupplierID() + ","
-                + item.getTotalStock() + "," + item.getUpdatedDate();
+    private static String itemToFormattedString(Item item) {
+        return "Item ID: " + item.getItemID() + 
+               ", Item Name: " + item.getItemName() + 
+               ", Price: " + item.getPrice() +
+               ", Category: " + item.getCategory() + 
+               ", Expired Date: " + item.getExpiredDate() + 
+               ", Supplier ID: " + item.getSupplierID() +
+               ", Total Stock: " + item.getTotalStock() + 
+               ", Updated Date: " + item.getUpdatedDate();
     }
 
     public static String generateItemID() throws IOException {
@@ -63,18 +107,28 @@ public class FileHandler {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().length() > 0) {
-                    String[] parts = line.split(",");
-                    if (parts.length > 0) {
-                        String itemID = parts[0].trim();
-                        if (itemID.startsWith("ITM")) {
-                            try {
-                                int itemNumber = Integer.parseInt(itemID.substring(3));
-                                if (itemNumber > lastItemNumber) {
-                                    lastItemNumber = itemNumber;
-                                }
-                            } catch (NumberFormatException e) {
-                                // Skip invalid ID
+                    String itemID = "";
+                    if (line.contains("Item ID: ")) {
+                        int start = line.indexOf("Item ID: ") + 9;
+                        int end = line.indexOf(",", start);
+                        if (end == -1) end = line.length();
+                        itemID = line.substring(start, end).trim();
+                    } else {
+                        // Old format fallback
+                        String[] parts = line.split(",");
+                        if (parts.length > 0) {
+                            itemID = parts[0].trim();
+                        }
+                    }
+                    
+                    if (itemID.startsWith("ITM")) {
+                        try {
+                            int itemNumber = Integer.parseInt(itemID.substring(3));
+                            if (itemNumber > lastItemNumber) {
+                                lastItemNumber = itemNumber;
                             }
+                        } catch (NumberFormatException e) {
+                            // Skip invalid ID
                         }
                     }
                 }
@@ -103,12 +157,22 @@ public class FileHandler {
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 2) {
-                    String existingName = parts[1].trim();
-                    if (existingName.equalsIgnoreCase(itemName.trim())) {
-                        return true;
+                String existingName = "";
+                if (line.contains("Item Name: ")) {
+                    int start = line.indexOf("Item Name: ") + 11;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    existingName = line.substring(start, end).trim();
+                } else {
+                    // Old format fallback
+                    String[] parts = line.split(",", -1);
+                    if (parts.length >= 2) {
+                        existingName = parts[1].trim();
                     }
+                }
+                
+                if (existingName.equalsIgnoreCase(itemName.trim())) {
+                    return true;
                 }
             }
         }
@@ -123,18 +187,41 @@ public class FileHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(ITEM_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 8 && parts[0].trim().equals(itemId)) {
-                    return new Item(
-                        parts[0].trim(),
-                        parts[1].trim(),
-                        Double.parseDouble(parts[2].trim()),
-                        parts[3].trim(),
-                        LocalDate.parse(parts[4].trim()),
-                        parts[5].trim(),
-                        Integer.parseInt(parts[6].trim()),
-                        LocalDate.parse(parts[7].trim())
-                    );
+                String currentItemId = "";
+                if (line.contains("Item ID: ")) {
+                    int start = line.indexOf("Item ID: ") + 9;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentItemId = line.substring(start, end).trim();
+                } else {
+                    // Old format fallback
+                    String[] parts = line.split(",", -1);
+                    if (parts.length >= 8) {
+                        currentItemId = parts[0].trim();
+                    }
+                }
+                
+                if (currentItemId.equals(itemId)) {
+                    String[] keys = {"Item ID", "Item Name", "Price", "Category", "Expired Date", "Supplier ID", "Total Stock", "Updated Date"};
+                    String[] parts;
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",", -1);
+                    }
+                    
+                    if (parts.length >= 8) {
+                        return new Item(
+                            parts[0].trim(),
+                            parts[1].trim(),
+                            Double.parseDouble(parts[2].trim()),
+                            parts[3].trim(),
+                            LocalDate.parse(parts[4].trim()),
+                            parts[5].trim(),
+                            Integer.parseInt(parts[6].trim()),
+                            LocalDate.parse(parts[7].trim())
+                        );
+                    }
                 }
             }
         }
@@ -142,35 +229,7 @@ public class FileHandler {
     }
 
     public static Item loadItemData(String itemID) throws IOException {
-        if (itemID == null || itemID.trim().isEmpty()) {
-            throw new IllegalArgumentException("Item ID cannot be null or empty");
-        }
-
-        if (!new File(ITEM_FILE).exists()) {
-            return null;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ITEM_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 8 && parts[0].trim().equals(itemID)) {
-                    return new Item(
-                        parts[0].trim(),
-                        parts[1].trim(),
-                        Double.parseDouble(parts[2].trim()),
-                        parts[3].trim(),
-                        LocalDate.parse(parts[4].trim()),
-                        parts[5].trim(),
-                        Integer.parseInt(parts[6].trim()),
-                        LocalDate.parse(parts[7].trim())
-                    );
-                }
-            }
-        }
-        return null;
+        return getItemById(itemID);
     }
 
     public static List<Item> loadItemsFromFile() throws IOException {
@@ -184,7 +243,15 @@ public class FileHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(ITEM_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", -1);
+                String[] keys = {"Item ID", "Item Name", "Price", "Category", "Expired Date", "Supplier ID", "Total Stock", "Updated Date"};
+                String[] parts;
+                
+                if (line.contains(": ")) {
+                    parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
+                
                 if (parts.length >= 8) {
                     Item item = new Item(
                         parts[0], 
@@ -210,7 +277,7 @@ public class FileHandler {
     public static void saveAllItems(List<Item> items) throws IOException {
         try (FileWriter writer = new FileWriter(ITEM_FILE)) {
             for (Item item : items) {
-                writer.write(itemToFileString(item) + "\n");
+                writer.write(itemToFormattedString(item) + "\n");
             }
         }
     }
@@ -221,8 +288,21 @@ public class FileHandler {
         try (BufferedReader br = new BufferedReader(new FileReader(ITEM_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 1 && !parts[0].equals(itemID)) {
+                String currentItemId = "";
+                if (line.contains("Item ID: ")) {
+                    int start = line.indexOf("Item ID: ") + 9;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentItemId = line.substring(start, end).trim();
+                } else {
+                    // Old format fallback
+                    String[] parts = line.split(",", -1);
+                    if (parts.length >= 1) {
+                        currentItemId = parts[0];
+                    }
+                }
+                
+                if (!currentItemId.equals(itemID)) {
                     lines.add(line);
                 }
             }
@@ -240,24 +320,22 @@ public class FileHandler {
     
     public static void saveSupplier(Supplier supplier) throws IOException {
         try (FileWriter writer = new FileWriter(SUPPLIER_FILE, true)) {
-            writer.write(supplierToString(supplier) + "\n");
+            writer.write(supplierToFormattedString(supplier) + "\n");
         }
     }
 
-    private static String supplierToString(Supplier supplier) {
-        return String.format("%s,%s,%s,%b",
-            supplier.getSupplierID(),
-            supplier.getSupplierName(),
-            supplier.getContactNo(),
-            supplier.isActive()
-        );
+    private static String supplierToFormattedString(Supplier supplier) {
+        return "Supplier ID: " + supplier.getSupplierID() +
+               ", Supplier Name: " + supplier.getSupplierName() +
+               ", Contact No: " + supplier.getContactNo() +
+               ", Active: " + supplier.isActive();
     }
     
     public static String generateSupplierID() throws IOException {
         int lastSupplierNumber = 0;
         
         if (!new File(SUPPLIER_FILE).exists()) {
-            return "S01"; // First ID if file doesn't exist
+            return "S01";
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(SUPPLIER_FILE))) {
@@ -265,18 +343,28 @@ public class FileHandler {
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] parts = line.split(",", -1);
-                if (parts.length > 0) {
-                    String supplierID = parts[0].trim();
-                    if (supplierID.startsWith("S")) {
-                        try {
-                            int supplierNumber = Integer.parseInt(supplierID.substring(1));
-                            if (supplierNumber > lastSupplierNumber) {
-                                lastSupplierNumber = supplierNumber;
-                            }
-                        } catch (NumberFormatException e) {
-                            continue; // Skip invalid IDs
+                String supplierID = "";
+                if (line.contains("Supplier ID: ")) {
+                    int start = line.indexOf("Supplier ID: ") + 13;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    supplierID = line.substring(start, end).trim();
+                } else {
+                    // Old format fallback
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        supplierID = parts[0].trim();
+                    }
+                }
+                
+                if (supplierID.startsWith("S")) {
+                    try {
+                        int supplierNumber = Integer.parseInt(supplierID.substring(1));
+                        if (supplierNumber > lastSupplierNumber) {
+                            lastSupplierNumber = supplierNumber;
                         }
+                    } catch (NumberFormatException e) {
+                        continue;
                     }
                 }
             }
@@ -286,14 +374,22 @@ public class FileHandler {
     }
     
     // Method to read suppliers from file
-    public static List<Supplier> readSuppliersFromFile(String fileName) throws IOException {
+     public static List<Supplier> readSuppliersFromFile(String fileName) throws IOException {
         List<Supplier> suppliers = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] parts = line.split(",", -1);
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] parts;
+                
+                if (line.contains(": ")) {
+                    parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
+                
                 if (parts.length >= 4) {  
                     String supplierID = parts[0].trim();
                     String supplierName = parts[1].trim();
@@ -312,19 +408,31 @@ public class FileHandler {
     public static void deleteSupplier(String supplierID) throws IOException {
         List<String> lines = new ArrayList<>();
         boolean found = false;
-        try (BufferedReader br = new BufferedReader(new FileReader(SUPPLIER_FILE))) {  // Changed to use SUPPLIER_FILE constant
+        try (BufferedReader br = new BufferedReader(new FileReader(SUPPLIER_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 found = true;
-                String[] parts = line.split(",", -1);
-                if (parts.length > 0 && !parts[0].equals(supplierID)) {
+                String currentSupplierID = "";
+                if (line.contains("Supplier ID: ")) {
+                    int start = line.indexOf("Supplier ID: ") + 13;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentSupplierID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        currentSupplierID = parts[0];
+                    }
+                }
+                
+                if (!currentSupplierID.equals(supplierID)) {
                     lines.add(line);
                     continue;
                 }
             }
         }
 
-        try (FileWriter writer = new FileWriter(SUPPLIER_FILE)) {  // Changed to use SUPPLIER_FILE constant
+        try (FileWriter writer = new FileWriter(SUPPLIER_FILE)) {
             for (String line : lines) {
                 writer.write(line + "\n");
             }
@@ -334,51 +442,67 @@ public class FileHandler {
     // Method to add new supplier
     public static void addSupplier(String name, String contactNo, boolean active) throws IOException {
         String supplierID = generateSupplierID();
-        String supplierData = String.format("%s,%s,%s,%b", supplierID, name, contactNo, active);
+        String supplierData = "Supplier ID: " + supplierID + 
+                             ", Supplier Name: " + name + 
+                             ", Contact No: " + contactNo + 
+                             ", Active: " + active;
         
         try (FileWriter writer = new FileWriter(SUPPLIER_FILE, true)) {
             writer.write(supplierData + "\n");
         }
     }
 
+
     
     public static void updateSupplier(String supplierID, String name, String contactNo, boolean active) throws IOException {
-    System.out.println("FileHandler: Updating supplier: ID=" + supplierID + ", Name=" + name);
-    
-    // Read all lines from the supplier file
-    List<String> lines = Files.readAllLines(Paths.get(SUPPLIER_FILE));
-    System.out.println("Read " + lines.size() + " lines from supplier file");
-
-    boolean found = false;
-
-    // Loop through the lines to find the supplier with the matching supplierID
-    for (int i = 0; i < lines.size(); i++) {
-        String line = lines.get(i);
-        String[] parts = line.split(",", -1);
-        System.out.println("Checking line " + i + ": " + line);
+        System.out.println("FileHandler: Updating supplier: ID=" + supplierID + ", Name=" + name);
         
-        if (parts.length > 0 && parts[0].equals(supplierID)) {
-            System.out.println("Found matching supplier ID at line " + i);
-            // Update the supplier data with the new information
-            String updatedLine = String.format("%s,%s,%s,%b", supplierID, name, contactNo, active);
-            lines.set(i, updatedLine);
-            System.out.println("Updated line to: " + updatedLine);
-            found = true;
-            break;
+        List<String> lines = Files.readAllLines(Paths.get(SUPPLIER_FILE));
+        System.out.println("Read " + lines.size() + " lines from supplier file");
+
+        boolean found = false;
+
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            String currentSupplierID = "";
+            
+            if (line.contains("Supplier ID: ")) {
+                int start = line.indexOf("Supplier ID: ") + 13;
+                int end = line.indexOf(",", start);
+                if (end == -1) end = line.length();
+                currentSupplierID = line.substring(start, end).trim();
+            } else {
+                String[] parts = line.split(",", -1);
+                if (parts.length > 0) {
+                    currentSupplierID = parts[0];
+                }
+            }
+            
+            System.out.println("Checking line " + i + ": " + line);
+            
+            if (currentSupplierID.equals(supplierID)) {
+                System.out.println("Found matching supplier ID at line " + i);
+                String updatedLine = "Supplier ID: " + supplierID + 
+                                   ", Supplier Name: " + name + 
+                                   ", Contact No: " + contactNo + 
+                                   ", Active: " + active;
+                lines.set(i, updatedLine);
+                System.out.println("Updated line to: " + updatedLine);
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            System.out.println("Writing " + lines.size() + " lines back to file");
+            Files.write(Paths.get(SUPPLIER_FILE), lines);
+            System.out.println("File updated successfully");
+        } else {
+            System.out.println("Supplier with ID " + supplierID + " not found in file");
+            throw new IOException("Supplier with ID " + supplierID + " not found");
         }
     }
-
-    if (found) {
-        // If the supplier was found and updated, write the updated lines back to the file
-        System.out.println("Writing " + lines.size() + " lines back to file");
-        Files.write(Paths.get(SUPPLIER_FILE), lines);
-        System.out.println("File updated successfully");
-    } else {
-        // If the supplier was not found, throw an error
-        System.out.println("Supplier with ID " + supplierID + " not found in file");
-        throw new IOException("Supplier with ID " + supplierID + " not found");
-    }
-}
+    
     // Method to get a single supplier by ID
     public static Supplier getSupplierById(String supplierID) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(SUPPLIER_FILE))) {
@@ -386,13 +510,21 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 4 && parts[0].trim().equals(supplierID)) {  // Changed to check for all 5 fields
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] parts;
+                
+                if (line.contains(": ")) {
+                    parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
+                
+                if (parts.length >= 4 && parts[0].trim().equals(supplierID)) {
                     return new Supplier(
-                        parts[0].trim(),  // supplierID
-                        parts[1].trim(),  // name 
-                        parts[2].trim(),  // contactNo
-                        Boolean.parseBoolean(parts[3].trim())  // active
+                        parts[0].trim(),
+                        parts[1].trim(),
+                        parts[2].trim(),
+                        Boolean.parseBoolean(parts[3].trim())
                     );
                 }
             }
@@ -411,9 +543,21 @@ public class FileHandler {
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] parts = line.split(",", -1);
-                if (parts.length > 0) {
-                    supplierIDs.add(parts[0].trim());
+                String supplierID = "";
+                if (line.contains("Supplier ID: ")) {
+                    int start = line.indexOf("Supplier ID: ") + 13;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    supplierID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        supplierID = parts[0].trim();
+                    }
+                }
+                
+                if (!supplierID.isEmpty()) {
+                    supplierIDs.add(supplierID);
                 }
             }
         }
@@ -432,13 +576,21 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] parts = line.split(",", -1);
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] parts;
+                
+                if (line.contains(": ")) {
+                    parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
+                
                 if (parts.length >= 4) {  
                     suppliers.add(new Supplier(
-                        parts[0].trim(),  // supplierID
-                        parts[1].trim(),  // supplierName
-                        parts[2].trim(),  // contactNo
-                        Boolean.parseBoolean(parts[3].trim())  // active
+                        parts[0].trim(),
+                        parts[1].trim(),
+                        parts[2].trim(),
+                        Boolean.parseBoolean(parts[3].trim())
                     ));
                 }
             }
@@ -456,17 +608,29 @@ public class FileHandler {
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 
-                String[] parts = line.split(",", -1);
-                if (parts.length > 1) {
-                    String existingSupplierID = parts[0].trim();
-                    String existingSupplierName = parts[1].trim();
-                    // Skip comparing with the current supplier when updating
-                    if (currentSupplierID != null && existingSupplierID.equals(currentSupplierID)) {
-                        continue;
+                String existingSupplierID = "";
+                String existingSupplierName = "";
+                
+                if (line.contains(": ")) {
+                    String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                    String[] parts = parseFormattedLine(line, keys);
+                    if (parts.length > 1) {
+                        existingSupplierID = parts[0].trim();
+                        existingSupplierName = parts[1].trim();
                     }
-                    if (existingSupplierName.equalsIgnoreCase(supplierName.trim())) {
-                        return true;
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 1) {
+                        existingSupplierID = parts[0].trim();
+                        existingSupplierName = parts[1].trim();
                     }
+                }
+                
+                if (currentSupplierID != null && existingSupplierID.equals(currentSupplierID)) {
+                    continue;
+                }
+                if (existingSupplierName.equalsIgnoreCase(supplierName.trim())) {
+                    return true;
                 }
             }
         }
@@ -477,17 +641,17 @@ public class FileHandler {
    
 
 public static void saveSalesRecord(SalesRecord sale) throws IOException {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(SALES_FILE, true))) {
-        writer.write(String.format("%s,%s,%d,%s,%.2f",
-            sale.getSaleID(),
-            sale.getItemID(),
-            sale.getQuantitySold(),
-            sale.getSaleDate(),
-            sale.getTotalAmount()
-        ));
-        writer.newLine();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SALES_FILE, true))) {
+            String formattedSale = "Sale ID: " + sale.getSaleID() +
+                                 ", Item ID: " + sale.getItemID() +
+                                 ", Quantity Sold: " + sale.getQuantitySold() +
+                                 ", Sale Date: " + sale.getSaleDate() +
+                                 ", Total Amount: " + String.format("%.2f", sale.getTotalAmount());
+            writer.write(formattedSale);
+            writer.newLine();
+        }
     }
-}
+
 
     public static String generateSalesID() throws IOException {
         int lastNumber = 0;
@@ -517,18 +681,26 @@ public static void saveSalesRecord(SalesRecord sale) throws IOException {
     }
     
     try (BufferedReader reader = new BufferedReader(new FileReader(SALES_FILE))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (!line.trim().isEmpty()) {
-                String[] parts = line.split(",");
-                if (parts.length >= 4) {
-                    records.add(parts);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] keys = {"Sale ID", "Item ID", "Quantity Sold", "Sale Date", "Total Amount"};
+                    String[] parts;
+                    
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",");
+                    }
+                    
+                    if (parts.length >= 4) {
+                        records.add(parts);
+                    }
                 }
             }
         }
+        return records;
     }
-    return records;
-}
 
     public static void updateItemStockAfterSale(String itemID, int quantitySold) throws IOException {
     // Load all items
@@ -563,31 +735,29 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
     }
     
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(PR_FILE, true))) {
-        // Write PR header
-        writer.write(String.format("%s,%s,%s,%s,%s",
-            pr.getPrID(),
-            pr.getRaisedBy(),
-            pr.getRequestDate(),
-            pr.getRequiredDeliveryDate(),
-            pr.getStatus()
-        ));
-        writer.newLine();
-        
-        // Write items
-        for (PRItem item : pr.getItems()) {
-            writer.write(String.format("%s,%s,%d,%.2f,%.2f,%s,%s",
-                pr.getPrID(),
-                item.getItemID(),
-                item.getQuantity(),
-                item.getUnitPrice(),
-                item.getTotalPrice(),
-                item.getSupplierID(),
-                item.getRequiredDeliveryDate()
-            ));
+            // Write PR header
+            String headerData = "PR ID: " + pr.getPrID() +
+                              ", Raised By: " + pr.getRaisedBy() +
+                              ", Request Date: " + pr.getRequestDate() +
+                              ", Required Delivery Date: " + pr.getRequiredDeliveryDate() +
+                              ", Status: " + pr.getStatus();
+            writer.write(headerData);
             writer.newLine();
+            
+            // Write items
+            for (PRItem item : pr.getItems()) {
+                String itemData = "PR ID: " + pr.getPrID() +
+                                ", Item ID: " + item.getItemID() +
+                                ", Quantity: " + item.getQuantity() +
+                                ", Unit Price: " + String.format("%.2f", item.getUnitPrice()) +
+                                ", Total Price: " + String.format("%.2f", item.getTotalPrice()) +
+                                ", Supplier ID: " + item.getSupplierID() +
+                                ", Required Delivery Date: " + item.getRequiredDeliveryDate();
+                writer.write(itemData);
+                writer.newLine();
+            }
         }
     }
-}
 
     public static String generatePRID() throws IOException {
         int lastPRNumber = 0;
@@ -601,10 +771,22 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] parts = line.split(",", -1);
-                if (parts.length > 0 && parts[0].startsWith("PR")) {
+                String prID = "";
+                if (line.contains("PR ID: ")) {
+                    int start = line.indexOf("PR ID: ") + 7;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    prID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        prID = parts[0];
+                    }
+                }
+                
+                if (prID.startsWith("PR")) {
                     try {
-                        int prNumber = Integer.parseInt(parts[0].substring(2));
+                        int prNumber = Integer.parseInt(prID.substring(2));
                         if (prNumber > lastPRNumber) {
                             lastPRNumber = prNumber;
                         }
@@ -624,12 +806,20 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
             return records;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
+         try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    String[] parts = line.split(",", -1);
-                    if (parts.length >= 8) {  // Ensure we have all required fields
+                    String[] keys = {"PR ID", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Required Delivery Date", "Raised By", "Request Date", "Status"};
+                    String[] parts;
+                    
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",", -1);
+                    }
+                    
+                    if (parts.length >= 7) {
                         records.add(parts);
                     }
                 }
@@ -649,8 +839,20 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
         try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", -1);
-                if (parts.length > 0 && !parts[0].equals(prID)) {
+                String currentPRID = "";
+                if (line.contains("PR ID: ")) {
+                    int start = line.indexOf("PR ID: ") + 7;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentPRID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        currentPRID = parts[0].trim();
+                    }
+                }
+                
+                if (!currentPRID.equals(prID)) {
                     linesToKeep.add(line);
                 } else {
                     found = true;
@@ -667,9 +869,9 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
                 }
             }
         }
-    
-    return found;
-}
+        
+        return found;
+    }
 
     public static List<PurchaseRequisition> loadAllPurchaseRequisitions() throws IOException {
     List<PurchaseRequisition> prList = new ArrayList<>();
@@ -679,53 +881,67 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
     }
 
     try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
-        String line;
-        PurchaseRequisition currentPR = null;
-        List<PRItem> currentItems = new ArrayList<>();
-        
-        while ((line = reader.readLine()) != null) {
-            if (line.trim().isEmpty()) continue;
+            String line;
+            PurchaseRequisition currentPR = null;
+            List<PRItem> currentItems = new ArrayList<>();
             
-            String[] parts = line.split(",", -1);
-            
-            if (parts.length == 5) {
-                // PR header line
-                if (currentPR != null) {
-                    currentPR.setItems(currentItems);
-                    prList.add(currentPR);
-                    currentItems = new ArrayList<>();
-                }
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
                 
-                currentPR = new PurchaseRequisition(
-                    parts[0], // prID
-                    parts[1], // salesManagerID
-                    LocalDate.parse(parts[2]), // requestDate
-                    LocalDate.parse(parts[3]), // requiredDeliveryDate
-                    parts[4], // status
-                    new ArrayList<>() // empty items list for now
-                );
-            } else if (parts.length >= 7 && currentPR != null) {
-                // PR item line
-                PRItem item = new PRItem(
-                    parts[1], // itemID
-                    Integer.parseInt(parts[2]), // quantity
-                    parts[5], // supplierID
-                    Double.parseDouble(parts[3]), // unitPrice
-                    LocalDate.parse(parts[6]) // requiredDeliveryDate
-                );
-                currentItems.add(item);
+                // Parse the line to determine if it's a header or item line
+                String[] keys;
+                String[] parts;
+                
+                if (line.contains("Raised By: ")) {
+                    // This is a PR header line
+                    keys = new String[]{"PR ID", "Raised By", "Request Date", "Required Delivery Date", "Status"};
+                    parts = parseFormattedLine(line, keys);
+                    
+                    // Save previous PR if exists
+                    if (currentPR != null) {
+                        currentPR.setItems(new ArrayList<>(currentItems));
+                        prList.add(currentPR);
+                        currentItems.clear();
+                    }
+                    
+                    if (parts.length >= 5) {
+                        currentPR = new PurchaseRequisition(
+                            parts[0].trim(), // prID
+                            parts[1].trim(), // raisedBy
+                            LocalDate.parse(parts[2].trim()), // requestDate
+                            LocalDate.parse(parts[3].trim()), // requiredDeliveryDate
+                            parts[4].trim(), // status
+                            new ArrayList<>() // items will be set later
+                        );
+                    }
+                } else if (line.contains("Item ID: ") && currentPR != null) {
+                    // This is a PR item line
+                    keys = new String[]{"PR ID", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Required Delivery Date"};
+                    parts = parseFormattedLine(line, keys);
+                    
+                    if (parts.length >= 7) {
+                        PRItem item = new PRItem(
+                            parts[1].trim(), // itemID
+                            Integer.parseInt(parts[2].trim()), // quantity
+                            parts[5].trim(), // supplierID
+                            Double.parseDouble(parts[3].trim()), // unitPrice
+                            LocalDate.parse(parts[6].trim()) // requiredDeliveryDate
+                        );
+                        currentItems.add(item);
+                    }
+                }
+            }
+            
+            // Add the last PR if exists
+            if (currentPR != null) {
+                currentPR.setItems(new ArrayList<>(currentItems));
+                prList.add(currentPR);
             }
         }
         
-        // Add the last PR if exists
-        if (currentPR != null) {
-            currentPR.setItems(currentItems);
-            prList.add(currentPR);
-        }
+        return prList;
     }
     
-    return prList;
-}
     // Method to get a specific PR by ID
     public static PurchaseRequisition getPurchaseRequisitionByID(String prID) throws IOException {
         List<PurchaseRequisition> allPRs = loadAllPurchaseRequisitions();
@@ -748,12 +964,35 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
     }
     
     public static String[] getPurchaseRequisitionById(String prID) throws IOException {
+        if (!new File(PR_FILE).exists()) {
+            return null;
+        }
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 8 && parts[0].equals(prID)) {
-                    return parts;
+                if (line.trim().isEmpty()) continue;
+                
+                String currentPRID = "";
+                if (line.contains("PR ID: ")) {
+                    int start = line.indexOf("PR ID: ") + 7;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentPRID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        currentPRID = parts[0].trim();
+                    }
+                }
+                
+                if (currentPRID.equals(prID)) {
+                    String[] keys = {"PR ID", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Required Delivery Date", "Raised By", "Request Date", "Status"};
+                    if (line.contains(": ")) {
+                        return parseFormattedLine(line, keys);
+                    } else {
+                        return line.split(",", -1);
+                    }
                 }
             }
         }
@@ -768,80 +1007,110 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
     boolean found = false;
     
     try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts.length >= 8 && parts[0].equals(prID)) {
-                found = true;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String currentPRID = "";
+                if (line.contains("PR ID: ")) {
+                    int start = line.indexOf("PR ID: ") + 7;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentPRID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        currentPRID = parts[0].trim();
+                    }
+                }
                 
-                // Create updated line
-                line = String.format("%s,%s,%d,%.2f,%.2f,%s,%s,%s,%s",
-                    prID,
-                    itemID,
-                    quantity,
-                    price,
-                    totalPrice,
-                    creationDate,
-                    supplierID,
-                    requiredDeliveryDate,
-                    status
-                );
+                if (currentPRID.equals(prID)) {
+                    found = true;
+                    // Create updated line in formatted style
+                    line = "PR ID: " + prID +
+                          ", Item ID: " + itemID +
+                          ", Quantity: " + quantity +
+                          ", Unit Price: " + String.format("%.2f", price) +
+                          ", Total Price: " + String.format("%.2f", totalPrice) +
+                          ", Supplier ID: " + supplierID +
+                          ", Required Delivery Date: " + requiredDeliveryDate +
+                          ", Status: " + status;
+                }
+                lines.add(line);
             }
-            lines.add(line);
         }
+        
+        if (found) {
+            writeLinesToFile(PR_FILE, lines);
+            return true;
+        }
+        
+        return false;
     }
     
-    if (found) {
-        writeLinesToFile(PR_FILE, lines);
-        return true;
-    }
-    
-    return false;
-}
     public static boolean updatePRStatus(String prID, String newStatus) throws IOException {
     List<String> lines = new ArrayList<>();
     boolean found = false;
     
     try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts.length >= 8 && parts[0].equals(prID)) {
-                found = true;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String currentPRID = "";
+                if (line.contains("PR ID: ")) {
+                    int start = line.indexOf("PR ID: ") + 7;
+                    int end = line.indexOf(",", start);
+                    if (end == -1) end = line.length();
+                    currentPRID = line.substring(start, end).trim();
+                } else {
+                    String[] parts = line.split(",", -1);
+                    if (parts.length > 0) {
+                        currentPRID = parts[0].trim();
+                    }
+                }
                 
-                // Get existing values
-                String itemID = parts[1];
-                int quantity = Integer.parseInt(parts[2]);
-                double price = Double.parseDouble(parts[3]);
-                double totalPrice = Double.parseDouble(parts[4]);
-                LocalDate creationDate = LocalDate.parse(parts[5]);
-                String supplierID = parts[6];
-                LocalDate requiredDeliveryDate = LocalDate.parse(parts[7]);
-                
-                // Create updated line with new status
-                line = String.format("%s,%s,%d,%.2f,%.2f,%s,%s,%s,%s",
-                    prID,
-                    itemID,
-                    quantity,
-                    price,
-                    totalPrice,
-                    creationDate,
-                    supplierID,
-                    requiredDeliveryDate,
-                    newStatus
-                );
+                if (currentPRID.equals(prID)) {
+                    found = true;
+                    
+                    // Parse existing line to get current values
+                    String[] keys = {"PR ID", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Required Delivery Date", "Raised By", "Request Date", "Status"};
+                    String[] parts;
+                    
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",", -1);
+                    }
+                    
+                    if (parts.length >= 7) {
+                        // Reconstruct line with new status
+                        if (line.contains("Raised By: ")) {
+                            // Header line
+                            line = "PR ID: " + parts[0] +
+                                  ", Raised By: " + parts[1] +
+                                  ", Request Date: " + parts[2] +
+                                  ", Required Delivery Date: " + parts[3] +
+                                  ", Status: " + newStatus;
+                        } else {
+                            // Item line - preserve all data, just update status if present
+                            line = "PR ID: " + parts[0] +
+                                  ", Item ID: " + parts[1] +
+                                  ", Quantity: " + parts[2] +
+                                  ", Unit Price: " + parts[3] +
+                                  ", Total Price: " + parts[4] +
+                                  ", Supplier ID: " + parts[5] +
+                                  ", Required Delivery Date: " + parts[6];
+                        }
+                    }
+                }
+                lines.add(line);
             }
-            lines.add(line);
         }
+        
+        if (found) {
+            writeLinesToFile(PR_FILE, lines);
+            return true;
+        }
+        
+        return false;
     }
-    
-    if (found) {
-        writeLinesToFile(PR_FILE, lines);
-        return true;
-    }
-    
-    return false;
-}
     //-----------------monthly sales report----------------
     
     public static List<Item> getMonthlySalesItems() throws IOException {
@@ -859,7 +1128,15 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    String[] parts = line.split(",");
+                    String[] keys = {"Sale ID", "Item ID", "Quantity Sold", "Sale Date", "Total Amount"};
+                    String[] parts;
+                    
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",", -1);
+                    }
+                    
                     if (parts.length >= 5) {
                         // Make sure the sales record contains all needed fields:
                         // SaleID, ItemID, Quantity, Date, TotalAmount

@@ -62,30 +62,35 @@
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="PriceLabel" max="32767" attributes="0"/>
-                              <Component id="NameLabel" max="32767" attributes="0"/>
-                              <Component id="QuantityLabel" max="32767" attributes="0"/>
-                              <Component id="CategoryLabel" max="32767" attributes="0"/>
-                              <Component id="ExpiredDateLabel" alignment="0" max="32767" attributes="0"/>
-                              <Component id="SupplierLabel" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="PriceLabel" max="32767" attributes="0"/>
+                                  <Component id="NameLabel" max="32767" attributes="0"/>
+                                  <Component id="QuantityLabel" max="32767" attributes="0"/>
+                                  <Component id="CategoryLabel" max="32767" attributes="0"/>
+                                  <Component id="ExpiredDateLabel" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Component id="SupplierLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="saveButton" alignment="1" min="-2" pref="82" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                          <Component id="saveButton" min="-2" pref="82" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="itemName" min="-2" pref="84" max="-2" attributes="0"/>
-                      <Component id="itemPrice" max="32767" attributes="0"/>
-                      <Component id="itemQuantity" alignment="0" max="32767" attributes="0"/>
-                      <Component id="itemCategory" alignment="0" max="32767" attributes="0"/>
                       <Component id="expiredDate" alignment="0" max="32767" attributes="0"/>
-                      <Component id="supplierID" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
-                      <Component id="ClearButton" min="-2" pref="82" max="-2" attributes="0"/>
+                      <Component id="itemCategory" max="32767" attributes="0"/>
+                      <Component id="ClearButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="itemName" max="32767" attributes="0"/>
+                      <Component id="itemPrice" max="32767" attributes="0"/>
+                      <Component id="itemQuantity" max="32767" attributes="0"/>
+                      <Component id="supplierName" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -100,7 +105,7 @@
                       <Component id="NameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="itemName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="PriceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="itemPrice" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -115,7 +120,7 @@
                       <Component id="CategoryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="itemCategory" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="ExpiredDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="expiredDate" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -123,9 +128,9 @@
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="SupplierLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="supplierID" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="supplierName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="32767" attributes="0"/>
+                  <EmptySpace pref="21" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="saveButton" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
                       <Component id="ClearButton" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
@@ -196,26 +201,15 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="itemName">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemNameActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="itemPrice">
-        </Component>
         <Component class="javax.swing.JLabel" name="NameLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Name"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="itemQuantity">
-        </Component>
         <Component class="javax.swing.JLabel" name="PriceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Price (RM)"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="itemCategory">
         </Component>
         <Component class="javax.swing.JLabel" name="QuantityLabel">
           <Properties>
@@ -231,25 +225,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Category"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="supplierID">
-          <Properties>
-            <Property name="editable" type="boolean" value="true"/>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-              </StringArray>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierIDActionPerformed"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="ExpiredDateLabel">
           <Properties>
@@ -272,7 +247,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="SupplierLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Supplier ID"/>
+            <Property name="text" type="java.lang.String" value="Supplier Name"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="ClearButton">
@@ -288,6 +263,57 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ClearButtonActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="itemCategory">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemCategoryActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="itemName">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemNameActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="itemPrice">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=" "/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="itemQuantity">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=" "/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="supplierName">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=" "/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

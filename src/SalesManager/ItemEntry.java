@@ -133,10 +133,10 @@ public class ItemEntry extends javax.swing.JFrame {
                     item.getItemID(),
                     item.getItemName(),
                     item.getPrice(),
-                    item.getTotalStock(),
-                    item.getCategory(),
+                    item.getCategory(),        
                     item.getExpiredDate(),
                     item.getSupplierID(),
+                    item.getTotalStock(),       
                     item.getUpdatedDate()
                 };
                 model.addRow(rowData);

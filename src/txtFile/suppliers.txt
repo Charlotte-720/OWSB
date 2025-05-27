@@ -1,10 +1,7 @@
-S04,mjjkk,dsda,false
-S06,dwdw,601245263,true
-S07,How,0145829636,true
-S08,noiIrene,0125468596,true
-S09,Charlotte,0172589633,true
-S10,Kitt,0132589635,true
-S11,jiaxuan,109113922,true
-S12,JV,0142589635,true
-S13,JVV,125638523,true
-S14,chunyi,0124177894,true
+Supplier ID: S04, Supplier Name: mk, Contact No: 0121548523, Active: true
+Supplier ID: S06, Supplier Name: dwdw, Contact No: 601245263, Active: false
+Supplier ID: S07, Supplier Name: How, Contact No: 0145829636, Active: false
+Supplier ID: S08, Supplier Name: Irene, Contact No: 0125468596, Active: true
+Supplier ID: S09, Supplier Name: Charlotte, Contact No: 0172589633, Active: true
+Supplier ID: S10, Supplier Name: SC, Contact No: 0125896396, Active: true
+Supplier ID: S11, Supplier Name: ss, Contact No: 0125435252, Active: true

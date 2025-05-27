@@ -224,13 +224,9 @@ public class EditSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        System.out.println("Updating supplier with ID: " + currentSupplierID);
         String newName = supplierName.getText().trim(); // Add trim() to remove whitespace
         String newContactNo = contactNo.getText().trim(); // Add trim() to remove whitespace
         boolean newIsActive = isActive.isSelected();
-
-        // Debug - check what values were retrieved from fields
-        System.out.println("Retrieved values from fields - Name: [" + newName + "], Contact: [" + newContactNo + "], Active: [" + newIsActive + "]");
 
         // Validate inputs
         if (newName.isEmpty() || newContactNo.isEmpty()) {
@@ -240,6 +236,14 @@ public class EditSupplier extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (!newContactNo.matches("^\\d{9,10}$")) {
+                JOptionPane.showMessageDialog(this, 
+                    "Invalid contact number!\n" +
+                    "Format: 9 or 10 digits\n" +
+                    "Example: 123456789 or 1234567890");
+                return;
+            }
 
         try {
             // Check for duplicate supplier name (excluding the current supplier)
@@ -253,17 +257,12 @@ public class EditSupplier extends javax.swing.JFrame {
 
             // Create updated supplier object
             Supplier updatedSupplier = new Supplier(currentSupplierID, newName, newContactNo, newIsActive);
-            System.out.println("Created updated supplier object: " + updatedSupplier);
-
-            // Update in FileHandler
             FileHandler.updateSupplier(
                 updatedSupplier.getSupplierID(),
                 updatedSupplier.getSupplierName(),
                 updatedSupplier.getContactNo(),
                 updatedSupplier.isActive()
             );
-
-            System.out.println("Supplier updated successfully in FileHandler");
 
             // Show success message and close the form
             JOptionPane.showMessageDialog(this, "Supplier updated successfully!");
