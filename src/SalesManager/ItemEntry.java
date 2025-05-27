@@ -7,30 +7,124 @@ import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class ItemEntry extends javax.swing.JFrame {
-
+private List<Item> allItems = new ArrayList<>();
     /**
      * Creates new form ItemEntryTest
      */
     public ItemEntry() {
         initComponents();
         try {
-            List<Item> itemList = FileHandler.loadItemsFromFile();
-            populateTable(itemList);
+            allItems = FileHandler.loadItemsFromFile();
+            populateTable(allItems);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading items: " + e.getMessage());
         }
         
         setupActionColumn();
+        setupSearchFunction(); 
     }
+    
+    private void setupSearchFunction() {
+        SearchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                performSearch();
+            }
+        });
+    }
+    private void performSearch() {
+        String searchText = SearchField.getText().trim().toLowerCase();
+
+        if (searchText.isEmpty()) {
+            // If search field is empty, show all items
+            populateTable(allItems);
+            return;
+        }
+
+        // Filter items based on search text
+        List<Item> filteredItems = new ArrayList<>();
+
+        for (Item item : allItems) {
+            if (matchesSearchCriteria(item, searchText)) {
+                filteredItems.add(item);
+            }
+        }
+
+        // Update table with filtered results
+        populateTable(filteredItems);
+    }
+
+    // New method to check if an item matches search criteria
+    private boolean matchesSearchCriteria(Item item, String searchText) {
+        // Check all fields of the item
+        String[] searchableFields = {
+            item.getItemID() != null ? item.getItemID().toLowerCase() : "",
+            item.getItemName() != null ? item.getItemName().toLowerCase() : "",
+            String.valueOf(item.getPrice()).toLowerCase(),
+            item.getCategory() != null ? item.getCategory().toLowerCase() : "",
+            item.getExpiredDate() != null ? item.getExpiredDate().toString().toLowerCase() : "",
+            item.getSupplierID() != null ? item.getSupplierID().toLowerCase() : "",
+            String.valueOf(item.getTotalStock()).toLowerCase(),
+            item.getUpdatedDate() != null ? item.getUpdatedDate().toString().toLowerCase() : ""
+        };
+
+        // Check if search text is found in any field
+        for (String field : searchableFields) {
+            if (field.contains(searchText)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    // Modified refreshTable method to maintain search results
+    private void refreshTable() {
+        try {
+            allItems = FileHandler.loadItemsFromFile();
+            // Re-apply current search if any
+            performSearch();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error refreshing table: " + e.getMessage());
+        }
+    }
+
+    // You can also add a clear search button method (optional)
+    private void clearSearch() {
+        SearchField.setText("");
+        populateTable(allItems);
+    }
+
+    private String getFieldValueByIndex(Item item, int columnIndex) {
+    switch (columnIndex) {
+        case 0: return item.getItemID() != null ? item.getItemID() : "";
+        case 1: return item.getItemName() != null ? item.getItemName() : "";
+        case 2: return String.valueOf(item.getPrice());
+        case 3: return item.getCategory() != null ? item.getCategory() : "";
+        case 4: return item.getExpiredDate() != null ? item.getExpiredDate().toString() : "";
+        case 5: return item.getSupplierID() != null ? item.getSupplierID() : "";
+        case 6: return String.valueOf(item.getTotalStock());
+        case 7: return item.getUpdatedDate() != null ? item.getUpdatedDate().toString() : "";
+        default: return "";
+    }
+}
 
     // Separate method for edit action
     private void editItem(int row) {
@@ -79,15 +173,6 @@ public class ItemEntry extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error deleting item: " + e.getMessage());
             }
         }
-
-    private void refreshTable() {
-        try {
-            List<Item> itemList = FileHandler.loadItemsFromFile();
-            populateTable(itemList);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error refreshing table: " + e.getMessage());
-        }
-    }
 
     public void populateTable(List<Item> itemList) {
     DefaultTableModel model = (DefaultTableModel) ItemTable.getModel();
@@ -160,6 +245,7 @@ public class ItemEntry extends javax.swing.JFrame {
         addButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ItemTable = new javax.swing.JTable();
+        clearButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(252, 238, 252));
@@ -211,6 +297,7 @@ public class ItemEntry extends javax.swing.JFrame {
             }
         });
 
+        SearchLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         SearchLabel.setText("Search");
 
         addButton.setBackground(new java.awt.Color(255, 153, 153));
@@ -242,6 +329,15 @@ public class ItemEntry extends javax.swing.JFrame {
         ItemTable.setRowHeight(40);
         jScrollPane1.setViewportView(ItemTable);
 
+        clearButton.setBackground(new java.awt.Color(255, 255, 153));
+        clearButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -251,6 +347,8 @@ public class ItemEntry extends javax.swing.JFrame {
                 .addComponent(SearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clearButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(addButton)
                 .addGap(15, 15, 15))
@@ -265,10 +363,12 @@ public class ItemEntry extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(ItemPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addButton)
-                    .addComponent(SearchLabel))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addButton)
+                        .addComponent(SearchLabel))
+                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
@@ -279,9 +379,9 @@ public class ItemEntry extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,6 +404,13 @@ public class ItemEntry extends javax.swing.JFrame {
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        clearButton.addActionListener(e -> {
+            SearchField.setText("");
+            SearchField.requestFocus();
+        });
+    }//GEN-LAST:event_clearButtonActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -349,6 +456,7 @@ public class ItemEntry extends javax.swing.JFrame {
     private javax.swing.JTextField SearchField;
     private javax.swing.JLabel SearchLabel;
     private javax.swing.JButton addButton;
+    private javax.swing.JButton clearButton;
     private javax.swing.JLabel itemTitle;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
