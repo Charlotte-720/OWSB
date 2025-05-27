@@ -1,10 +1,13 @@
 package PurchaseManager;
 
+import java.awt.Color;
+import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class DSIT {        
     public static void loadSupplierData(JTable table) {
@@ -91,45 +94,127 @@ public class DSIT {
         table.setModel(model);
     }
     
-        public static void loadRequisitionData(JTable table){
-            
-            String[] columnNames = {"PR ID", "Item ID", "Item Name", "Quantity", "Price", "Total Amount", "Suppliers ID", "Delivery Date", "Status"};
+    public static void loadRequisitionData(JTable table){
+        String[] columnNames = {"PR ID", "Item ID", "Item Name", "Quantity", "Price", "Total Amount", "Suppliers ID", "Delivery Date", "Status"};
 
-                    List<Object[]> rows = new ArrayList<>();
+        List<Object[]> rows = new ArrayList<>();
 
-            try (BufferedReader br = new BufferedReader(new FileReader("pr.txt"))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    // Assuming Suppliers.txt stores data in CSV format like:
-                    // SupplierID,Name,Contact,IsActive
-                    String[] values = line.split(",");
-                    if (values.length >= 9) {
-                        Object[] row = new Object[9];
-                        for (int i = 0; i < 9; i++) {
-                            row[i] = values[i].trim();
-                        }
-                        rows.add(row);
+        try (BufferedReader br = new BufferedReader(new FileReader("pr.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Assuming Suppliers.txt stores data in CSV format like:
+                // SupplierID,Name,Contact,IsActive
+                String[] values = line.split(",");
+                if (values.length >= 9) {
+                    Object[] row = new Object[9];
+                    for (int i = 0; i < 9; i++) {
+                        row[i] = values[i].trim();
+                    }
+                    rows.add(row);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Convert List to 2D Object array for table model
+        Object[][] data = new Object[rows.size()][];
+        for (int i = 0; i < rows.size(); i++) {
+            data[i] = rows.get(i);
+        }
+
+        // Create model with non-editable cells
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // Set model on the table
+        table.setModel(model);
+    }
+        
+    public static void loadPOData(JTable table) {
+        String[] columnNames = {"PO_ID", "Status"};
+        List<Object[]> rows = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(", ");
+                String poId = "", status = "";
+
+                for (String part : parts) {
+                    if (part.startsWith("PO_ID:")) {
+                        poId = part.substring("PO_ID:".length()).trim();
+                    } else if (part.startsWith("Status:")) {
+                        status = part.substring("Status:".length()).trim();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-            // Convert List to 2D Object array for table model
-            Object[][] data = new Object[rows.size()][];
-            for (int i = 0; i < rows.size(); i++) {
-                data[i] = rows.get(i);
-            }
 
-            // Create model with non-editable cells
-            DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return false;
+                if (!poId.isEmpty() && !status.isEmpty()) {
+                    rows.add(new Object[]{poId, status});
                 }
-            };
-
-            // Set model on the table
-            table.setModel(model);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        Object[][] data = new Object[rows.size()][];
+        for (int i = 0; i < rows.size(); i++) {
+            data[i] = rows.get(i);
+        }
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        table.setModel(model);
+        
+        table.getColumnModel().getColumn(1).setCellRenderer(new StatusColumnCellRenderer());
+    }
+    
+    // Custom renderer for Status column to color text based on status
+    static class StatusColumnCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, 
+               boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            if (value != null) {
+                String status = value.toString().toLowerCase();
+
+                switch (status) {
+                    case "rejected":
+                        c.setForeground(Color.RED);
+                        break;
+                    case "pending":
+                        c.setForeground(new Color(255, 165, 0)); // orange-ish yellow
+                        break;
+                    case "approved":
+                        c.setForeground(new Color(0, 128, 0)); // dark green
+                        break;
+                    default:
+                        c.setForeground(Color.BLACK);
+                        break;
+                }
+            } else {
+                c.setForeground(Color.BLACK);
+            }
+
+            if (isSelected) {
+                c.setBackground(table.getSelectionBackground());
+            } else {
+                c.setBackground(table.getBackground());
+            }
+
+            return c;
+        }
+    }
+    
 }

@@ -36,7 +36,8 @@ public class generateandviewpo extends javax.swing.JPanel {
         add = new PurchaseManager.button();
         back = new PurchaseManager.button();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new java.awt.Color(225, 230, 245));
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         cancel.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         cancel.setForeground(new java.awt.Color(255, 0, 0));
@@ -88,8 +89,8 @@ public class generateandviewpo extends javax.swing.JPanel {
         jTable1.setRowHeight(25);
         jScrollPane1.setViewportView(jTable1);
 
-        edit.setBackground(new java.awt.Color(204, 0, 204));
-        edit.setForeground(new java.awt.Color(255, 255, 255));
+        edit.setBackground(new java.awt.Color(85, 85, 110));
+        edit.setForeground(new java.awt.Color(220, 220, 220));
         edit.setText("Edit");
         edit.setRound(20);
         edit.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -99,8 +100,8 @@ public class generateandviewpo extends javax.swing.JPanel {
             }
         });
 
-        delete.setBackground(new java.awt.Color(204, 0, 204));
-        delete.setForeground(new java.awt.Color(255, 255, 255));
+        delete.setBackground(new java.awt.Color(85, 85, 110));
+        delete.setForeground(new java.awt.Color(220, 220, 220));
         delete.setText("Delete");
         delete.setRound(20);
         delete.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -110,8 +111,8 @@ public class generateandviewpo extends javax.swing.JPanel {
             }
         });
 
-        add.setBackground(new java.awt.Color(204, 0, 204));
-        add.setForeground(new java.awt.Color(255, 255, 255));
+        add.setBackground(new java.awt.Color(85, 85, 110));
+        add.setForeground(new java.awt.Color(220, 220, 220));
         add.setText("Add");
         add.setRound(20);
         add.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -121,8 +122,8 @@ public class generateandviewpo extends javax.swing.JPanel {
             }
         });
 
-        back.setBackground(new java.awt.Color(204, 0, 204));
-        back.setForeground(new java.awt.Color(255, 255, 255));
+        back.setBackground(new java.awt.Color(85, 85, 110));
+        back.setForeground(new java.awt.Color(220, 220, 220));
         back.setText("Back");
         back.setRound(20);
         back.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -146,7 +147,7 @@ public class generateandviewpo extends javax.swing.JPanel {
                         .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(54, 54, 54)
                         .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                         .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
@@ -171,7 +172,7 @@ public class generateandviewpo extends javax.swing.JPanel {
                     .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
