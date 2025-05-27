@@ -328,8 +328,8 @@ public class AdminPage extends javax.swing.JFrame {
     
     // Method to load user data from text file and populate the JTable
         private void loadUserData() {
-            String credentialsFilePath = "src/txtFile/user_credentials.txt";
-            String employeeDataFilePath = "src/txtFile/Employee_data.txt";
+            String credentialsFilePath = "user_credentials.txt";
+            String employeeDataFilePath = "Employee_data.txt";
 
             try (BufferedReader credentialsReader = new BufferedReader(new FileReader(credentialsFilePath))) {
                 String line;
@@ -538,8 +538,8 @@ public class AdminPage extends javax.swing.JFrame {
 
     // This function removes the user from the underlying data source, e.g., a text file or database
     private boolean removeUserFromDataSource(String identifier) {
-        boolean userFoundInEmployeeData = removeUserFromFile(identifier, "src/txtFile/Employee_data.txt");
-        boolean userFoundInCredentials = removeUserFromFile(identifier, "src/txtFile/user_credentials.txt");
+        boolean userFoundInEmployeeData = removeUserFromFile(identifier, "Employee_data.txt");
+        boolean userFoundInCredentials = removeUserFromFile(identifier, "user_credentials.txt");
 
         return userFoundInEmployeeData && userFoundInCredentials;
     }

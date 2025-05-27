@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InventoryManager;
-import Admin.Loginpage1;
 import javax.swing.JFrame;
 
 import InventoryManager.functions.InventoryService;
@@ -13,7 +12,6 @@ import model.PurchaseOrder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,26 +19,10 @@ import javax.swing.JOptionPane;
  */
 public class InventoryManagerDashboard extends javax.swing.JFrame {
 
-    private String employeeID;
-    private String position;
-    
     /**
      * Creates new form InventoryManagerDashboard
      */
-    public InventoryManagerDashboard(String identifier) {
-        String[] parts = identifier.split(":");
-        if (parts.length == 2) {
-            this.employeeID = parts[0];
-            this.position = parts[1];
-        } else {
-            this.employeeID = "Unknown";
-            this.position = "Unknown";
-            System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
-        }
-
-        System.out.println("EmployeeID: " + employeeID);
-        System.out.println("Position: " + position);
-        
+    public InventoryManagerDashboard() {
         setUndecorated(true);
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,6 +74,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         generateStockButton = new javax.swing.JButton();
         logoutButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
+        closeButton = new javax.swing.JLabel();
         welcomeLabel = new javax.swing.JLabel();
         userIdLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -177,6 +160,14 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(235, 247, 255));
 
+        closeButton.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        closeButton.setText("X");
+        closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                closeButtonMouseClicked(evt);
+            }
+        });
+
         welcomeLabel.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         welcomeLabel.setText("WELCOME BACK!");
@@ -243,23 +234,31 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 34, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(76, 76, 76)
+                .addContainerGap()
+                .addComponent(closeButton)
+                .addGap(29, 29, 29)
                 .addComponent(welcomeLabel)
                 .addGap(18, 18, 18)
                 .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -278,7 +277,6 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewItemsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewItemsButtonActionPerformed
@@ -302,25 +300,12 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_generateStockButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        int response = JOptionPane.showConfirmDialog(this, 
-        "Are you sure you want to log out?", 
-        "Logout Confirmation", 
-        JOptionPane.YES_NO_OPTION, 
-        JOptionPane.QUESTION_MESSAGE);
-
-        // Check the user's response
-        if (response == JOptionPane.YES_OPTION) {
-            // Dispose the AdminTest frame
-            this.dispose();
-
-            // Open Loginpage1 frame
-            Loginpage1 loginPage = new Loginpage1();
-            loginPage.setVisible(true);
-            loginPage.pack();
-            loginPage.setLocationRelativeTo(null);
-            loginPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        }
+        System.exit(0);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_closeButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -352,12 +337,13 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
+                new InventoryManagerDashboard().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel closeButton;
     private javax.swing.JButton generateStockButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;

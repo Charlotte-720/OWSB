@@ -148,12 +148,10 @@ public class StockReportExportPopup extends javax.swing.JDialog {
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed

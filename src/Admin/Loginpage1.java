@@ -5,7 +5,6 @@
 package Admin;
 
 import FinanceManager.FinanceManagerPanel;
-import InventoryManager.InventoryManagerDashboard;
 import PurchaseManager.PM;
 import SalesManager.SalesManagerDashboard;
 import java.awt.Color;
@@ -271,7 +270,7 @@ public class Loginpage1 extends javax.swing.JFrame {
         }
 
         // Read and process the user credentials file
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
             String line;
             StringBuilder userBuilder = new StringBuilder();
 
@@ -392,7 +391,7 @@ public class Loginpage1 extends javax.swing.JFrame {
                 openPage(purchasePage);
                 break;
             case "Inventory Manager":
-                InventoryManagerDashboard inventoryPage = new InventoryManagerDashboard(loggedInIdentifier);
+                InventoryManager inventoryPage = new InventoryManager(loggedInIdentifier);
                 openPage(inventoryPage);
                 break;
             case "Finance Manager":
@@ -418,8 +417,8 @@ public class Loginpage1 extends javax.swing.JFrame {
 
     // Increment failed attempts in the credentials file
     try {
-        File inputFile = new File("src/txtFile/user_credentials.txt");
-        File tempFile = new File("src/txtFile/user_credentials_temp.txt");
+        File inputFile = new File("user_credentials.txt");
+        File tempFile = new File("user_credentials_temp.txt");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
@@ -476,8 +475,8 @@ public class Loginpage1 extends javax.swing.JFrame {
 
     
         private void updateUserAccount(String identifier, int failedAttempts, String status) {
-            File inputFile = new File("src/txtFile/user_credentials.txt");
-            File tempFile = new File("src/txtFile/user_credentials_temp.txt");
+            File inputFile = new File("user_credentials.txt");
+            File tempFile = new File("user_credentials_temp.txt");
 
             try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
                  BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {

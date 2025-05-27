@@ -217,12 +217,10 @@ public class POVerification extends javax.swing.JFrame {
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
-        dispose();
+        System.exit(0);
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
@@ -262,7 +260,7 @@ public class POVerification extends javax.swing.JFrame {
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
+        new InventoryManagerDashboard().setVisible(true);
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 

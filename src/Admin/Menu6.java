@@ -4,19 +4,18 @@
  */
 package Admin;
 
-import SalesManager.PROperations;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
  *
  * @author ELYSHA SOPHIA
  */
-public class Menu4 extends javax.swing.JInternalFrame {
+public class Menu6 extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Menu1
      */
-    public Menu4() {
+    public Menu6() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui= (BasicInternalFrameUI)this.getUI();
@@ -40,11 +39,11 @@ public class Menu4 extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(830, 550));
 
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
-        jLabel1.setText("Purchase Requition");
+        jLabel1.setText("Stock Management");
 
         jButton1.setBackground(new java.awt.Color(255, 204, 102));
         jButton1.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
-        jButton1.setText("View Purchase Requition");
+        jButton1.setText("View Stock ");
         jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -54,7 +53,7 @@ public class Menu4 extends javax.swing.JInternalFrame {
 
         jButton2.setBackground(new java.awt.Color(255, 204, 102));
         jButton2.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
-        jButton2.setText("Purchase Requition Management");
+        jButton2.setText("Stock Management");
         jButton2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,10 +65,10 @@ public class Menu4 extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(289, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(280, 280, 280)
                 .addComponent(jLabel1)
-                .addGap(284, 284, 284))
+                .addContainerGap(298, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(66, 66, 66)
@@ -81,12 +80,12 @@ public class Menu4 extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1)
-                .addContainerGap(453, Short.MAX_VALUE))
+                .addContainerGap(457, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(211, 211, 211)
+                    .addGap(212, 212, 212)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -102,8 +101,6 @@ public class Menu4 extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        PROperations pr = new PROperations();
-        pr.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

@@ -5,7 +5,6 @@
 package Admin;
 
 import FinanceManager.FinancialReport;
-import InventoryManager.GenerateStockReport;
 import SalesManager.DailySalesReport;
 import SalesManager.MonthlySalesReport;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -151,7 +150,6 @@ public class Menu7 extends javax.swing.JInternalFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        new GenerateStockReport().setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
