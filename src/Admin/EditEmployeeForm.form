@@ -24,7 +24,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="mainPanel" alignment="0" max="-2" attributes="0"/>
+          <Component id="mainPanel" alignment="0" pref="989" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -96,7 +96,7 @@
                                               <Component id="lblOverview" min="-2" max="-2" attributes="0"/>
                                               <Component id="lblPass" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="117" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="txtPass" max="32767" attributes="0"/>
                                   </Group>
@@ -113,7 +113,7 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="lblJobTitle" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="252" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -123,7 +123,7 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Group type="102" attributes="0">
-                                                  <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                                   <Component id="lblEndDate" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                               <Component id="txtEndDate" max="32767" attributes="0"/>

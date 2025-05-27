@@ -4,6 +4,7 @@
  */
 package Admin;
 
+import InventoryManager.ViewItems;
 import SalesManager.ItemEntry;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -95,10 +96,14 @@ public class Menu2 extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        ViewItems viewItems = new ViewItems();
+        viewItems.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        this.dispose();
         ItemEntry itemEntry = new ItemEntry();
         itemEntry.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed

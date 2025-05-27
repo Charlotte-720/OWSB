@@ -690,7 +690,7 @@ public class Registerpage1 extends javax.swing.JFrame {
             );
 
             // Write the employee data to the Employee_data.txt file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Employee_data.txt", true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/Employee_data.txt", true))) {
                 writer.write(userData);
                 writer.flush();
             } catch (IOException ex) {
@@ -706,7 +706,7 @@ public class Registerpage1 extends javax.swing.JFrame {
                 "EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\nFailedAttempts: %d\n\n",
                 employeeID, username, password, position, "Active", 0 // Set FailedAttempts to 0
             ); 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("user_credentials.txt", true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/user_credentials.txt", true))) {
                 writer.write(credentials);
                 writer.flush();
                 JOptionPane.showMessageDialog(null, "Registration successful");
@@ -832,7 +832,7 @@ public class Registerpage1 extends javax.swing.JFrame {
 
     private String generateNextPassword() {
     int maxPassword = 0;
-    try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("Password: ")) {

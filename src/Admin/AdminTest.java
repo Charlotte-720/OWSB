@@ -4,6 +4,7 @@
  */
 package Admin;
 
+import PurchaseManager.generateandviewpo;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -45,7 +46,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu02.setBackground(DefaultColor);
         Menu03.setBackground(DefaultColor);
         Menu04.setBackground(DefaultColor);
-        Menu06.setBackground(DefaultColor);
         Menu05.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
@@ -81,9 +81,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05 = new javax.swing.JPanel();
         jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
-        Menu06 = new javax.swing.JPanel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
         Menu07 = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
@@ -286,42 +283,6 @@ public class AdminTest extends javax.swing.JFrame {
                 .addComponent(jLabel28))
         );
 
-        Menu06.setBackground(new java.awt.Color(255, 204, 102));
-        Menu06.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
-        Menu06.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Menu06MouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                Menu06MousePressed(evt);
-            }
-        });
-
-        jLabel26.setFont(new java.awt.Font("Bookman Old Style", 1, 10)); // NOI18N
-        jLabel26.setForeground(new java.awt.Color(32, 52, 15));
-        jLabel26.setText("Stock Management");
-
-        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-stock-30.png"))); // NOI18N
-
-        javax.swing.GroupLayout Menu06Layout = new javax.swing.GroupLayout(Menu06);
-        Menu06.setLayout(Menu06Layout);
-        Menu06Layout.setHorizontalGroup(
-            Menu06Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Menu06Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel27)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel26)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Menu06Layout.setVerticalGroup(
-            Menu06Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel27)
-            .addGroup(Menu06Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel26))
-        );
-
         Menu07.setBackground(new java.awt.Color(255, 204, 102));
         Menu07.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
         Menu07.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -421,7 +382,6 @@ public class AdminTest extends javax.swing.JFrame {
                     .addComponent(Menu03, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu04, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu05, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Menu06, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu07, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu08, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu01, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -442,13 +402,11 @@ public class AdminTest extends javax.swing.JFrame {
                 .addComponent(Menu04, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Menu05, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Menu06, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(Menu07, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(Menu08, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(logoutButton)
                 .addGap(33, 33, 33))
         );
@@ -505,7 +463,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
         
@@ -519,7 +476,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(ClickedColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
         
@@ -533,7 +489,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(ClickedColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
         
@@ -547,26 +502,11 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(ClickedColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
         
         MenuName.setText("Purchase Order");
     }//GEN-LAST:event_Menu05MousePressed
-
-    private void Menu06MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu06MousePressed
-        // TODO add your handling code here:
-        Menu01.setBackground(DefaultColor); 
-        Menu02.setBackground(DefaultColor); 
-        Menu03.setBackground(DefaultColor); 
-        Menu04.setBackground(DefaultColor); 
-        Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(ClickedColor);
-        Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
-        
-        MenuName.setText("Stock Management");
-    }//GEN-LAST:event_Menu06MousePressed
 
     private void Menu02MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu02MouseClicked
         // TODO add your handling code here:
@@ -591,17 +531,15 @@ public class AdminTest extends javax.swing.JFrame {
 
     private void Menu05MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu05MouseClicked
         // TODO add your handling code here:
-        Menu5 menu5=new Menu5();
-        jDesktopPanel.removeAll();
-        jDesktopPanel.add(menu5).setVisible(true);
+        this.dispose();
+        
+        JFrame frame = new JFrame("Generate and View PO");
+        frame.setContentPane(new generateandviewpo());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//GEN-LAST:event_Menu05MouseClicked
-
-    private void Menu06MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu06MouseClicked
-        // TODO add your handling code here:
-        Menu6 menu6=new Menu6();
-        jDesktopPanel.removeAll();
-        jDesktopPanel.add(menu6).setVisible(true);
-    }//GEN-LAST:event_Menu06MouseClicked
 
     private void Menu01MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu01MouseClicked
         // TODO add your handling code here:
@@ -622,7 +560,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(DefaultColor);
         
@@ -643,7 +580,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(ClickedColor);
         Menu08.setBackground(DefaultColor);
         
@@ -664,7 +600,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu03.setBackground(DefaultColor); 
         Menu04.setBackground(DefaultColor); 
         Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
         Menu08.setBackground(ClickedColor);
         
@@ -735,7 +670,6 @@ public class AdminTest extends javax.swing.JFrame {
     private javax.swing.JPanel Menu03;
     private javax.swing.JPanel Menu04;
     private javax.swing.JPanel Menu05;
-    private javax.swing.JPanel Menu06;
     private javax.swing.JPanel Menu07;
     private javax.swing.JPanel Menu08;
     private javax.swing.JLabel MenuName;
@@ -748,8 +682,6 @@ public class AdminTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;

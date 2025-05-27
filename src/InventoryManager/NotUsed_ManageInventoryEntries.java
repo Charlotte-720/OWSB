@@ -245,10 +245,12 @@ public class NotUsed_ManageInventoryEntries extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-        this.dispose();
+        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
+        dispose();
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void itemNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameFieldActionPerformed

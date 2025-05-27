@@ -4,7 +4,10 @@
  */
 package Admin;
 
+import PurchaseManager.viewrequisition;
 import SalesManager.PROperations;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -98,6 +101,9 @@ public class Menu4 extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        viewrequisition view = new viewrequisition(parentFrame);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

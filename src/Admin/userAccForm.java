@@ -216,8 +216,8 @@ public class userAccForm extends javax.swing.JFrame {
 
     // Method to load user data from text file and populate the JTable
         private void loadUserData() {
-            String credentialsFilePath = "user_credentials.txt";
-            String employeeDataFilePath = "Employee_data.txt";
+            String credentialsFilePath = "src/txtFile/user_credentials.txt";
+            String employeeDataFilePath = "src/txtFile/Employee_data.txt";
 
             try (BufferedReader credentialsReader = new BufferedReader(new FileReader(credentialsFilePath))) {
                 String line;
@@ -505,7 +505,9 @@ public class userAccForm extends javax.swing.JFrame {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
             }
-
+            
+            //Refresh the table
+            loadUserData();
             // Replace the old file with the updated file
             if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
                 JOptionPane.showMessageDialog(null, "File update error.");

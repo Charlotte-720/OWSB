@@ -175,10 +175,12 @@ public class GenerateStockReport extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-        System.exit(0);
+        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
+        dispose();
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
@@ -211,7 +213,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        new InventoryManagerDashboard().setVisible(true);
+        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 

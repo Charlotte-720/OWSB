@@ -44,7 +44,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
 
         
         // Attempt to load employee data
-        Employee employee = getEmployeeData(identifier, "Employee_data.txt");
+        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
         if (employee != null) {
             loadEmployeeData(identifier); // Load data into the form
         } else {
@@ -57,7 +57,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     
     private void loadEmployeeData(String identifier) {
         System.out.println("Loading employee data for: " + identifier);
-        Employee employee = getEmployeeData(identifier, "Employee_data.txt");
+        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
         if (employee != null) {
             txtFullname.setText(employee.getFullname());
             txtUsername.setText(employee.getUsername());
@@ -86,7 +86,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     }
     
         private String loadCredentialsData(String identifier) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -638,7 +638,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblOverview)
                                             .addComponent(lblPass))
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGap(0, 117, Short.MAX_VALUE))
                                     .addComponent(txtPass)))
                             .addGroup(mainPanelLayout.createSequentialGroup()
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -651,7 +651,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
                                         .addComponent(lblJobTitle)
-                                        .addGap(0, 252, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(mainPanelLayout.createSequentialGroup()
                                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(lblStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -659,7 +659,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(mainPanelLayout.createSequentialGroup()
-                                                .addGap(0, 3, Short.MAX_VALUE)
+                                                .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(lblEndDate))
                                             .addComponent(txtEndDate)))
                                     .addGroup(mainPanelLayout.createSequentialGroup()
@@ -767,11 +767,11 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 989, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, Short.MAX_VALUE)
         );
 
         pack();
@@ -801,6 +801,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
 
     private void txtEmployeeIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmployeeIDActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_txtEmployeeIDActionPerformed
 
     private void txtEmergencyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmergencyActionPerformed
@@ -1052,8 +1053,8 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         );
 
         // Update Employee_data.txt
-        File employeeDataFile = new File("Employee_data.txt");
-        File tempEmployeeFile = new File("Employee_data_temp.txt");
+        File employeeDataFile = new File("src/txtFile/Employee_data.txt");
+        File tempEmployeeFile = new File("src/txtFile/Employee_data_temp.txt");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(employeeDataFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempEmployeeFile))) {
@@ -1067,7 +1068,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                 writer.write(updatedEmployeeData); // Write updated data
                 writer.flush();
                 // Skip lines of the existing employee data
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 21; i++) {
                     reader.readLine(); // skip the next 18 lines after the match line
                 }
                 employeeFound = true;
@@ -1101,8 +1102,8 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         }
 
         // Update user credentials in user_credentials.txt
-        File credentialsFile = new File("user_credentials.txt");
-        File tempCredentialsFile = new File("user_credentials_temp.txt");
+        File credentialsFile = new File("src/txtFile/user_credentials.txt");
+        File tempCredentialsFile = new File("src/txtFile/user_credentials_temp.txt");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(credentialsFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempCredentialsFile))) {
@@ -1112,13 +1113,14 @@ public class EditEmployeeForm extends javax.swing.JFrame {
 
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("EmployeeID: " + currentEmployeeID)) {
-                    writer.write(String.format("EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\n\n",
-                        employeeID, txtUsername.getText(), password, position, "Active"));
+                    writer.write(String.format("EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\nFailedAttempts: %s\n\n",
+                        employeeID, txtUsername.getText(), password, position, "Active","0"));
                     writer.flush();
                     reader.readLine(); // skip username line
                     reader.readLine(); // skip password line
                     reader.readLine(); // skip role line
                     reader.readLine(); // skip status line
+                    reader.readLine(); // skip attempts line
                     userFound = true;
                 } else {
                     // Preserve other user credentials
