@@ -4,6 +4,6 @@ PO_ID: 03, Supplier Name: JV, Item: Papaya, Quantity: 20, Unit Price: 10.00, Tot
 PO_ID: 04, Supplier Name: JVV, Item: Coconut, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 16-05-2025, Status: Rejected
 PO_ID: 05, Supplier Name: jiaxuan, Item: Candy, Quantity: 500, Unit Price: 1.00, Total Price: 500.00, Date: 16-05-2025, Status: Paid
 PO_ID: 06, Supplier Name: JV, Item: Melon, Quantity: 50, Unit Price: 10.00, Total Price: 500.00, Date: 16-05-2025, Status: Received
-PO_ID: 10, Supplier Name: JV2, Item: Apple, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 17-05-2025, Status: Paid
+PO_ID: 10, Supplier Name: JV2, Item: Apple, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 17-05-2025, Status: Received
 PO_ID: 11, Supplier Name: JV2, Item: Orange, Quantity: 40, Unit Price: 10.00, Total Price: 300.00, Date: 27-05-2025, Status: Paid
 PO_ID: 11, Supplier Name: JV2, Item: Bread, Quantity: 70, Unit Price: 4.00, Total Price: 280.00, Date: 27-05-2025, Status: Paid

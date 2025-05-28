@@ -59,26 +59,26 @@ public class POVerification extends javax.swing.JFrame {
     
     
     private void loadItemsOfSelectedPO(int index) {
-    DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
-    model.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
+        model.setRowCount(0);
 
-    PurchaseOrder po = poList.get(index);
-    String itemNameFromPO = po.getItem().toLowerCase().trim();
+        PurchaseOrder po = poList.get(index);
+        String poItemName = po.getItem().trim().toLowerCase();
+        List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
 
-    List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
-
-    for (Item item : allItems) {
-        if (item.getItemName().toLowerCase().contains(itemNameFromPO)) {
-            Object[] row = {
-                item.getItemID(),
-                item.getItemName(),
-                item.getTotalStock(),
-                po.getStatus()
-            };
-            model.addRow(row);
+        for (Item item : allItems) {
+            // Exact match preferred since item names can now overlap
+            if (item.getItemName().trim().equalsIgnoreCase(poItemName)) {
+                Object[] row = {
+                    item.getItemID(),
+                    item.getItemName(),
+                    item.getTotalStock(),
+                    po.getStatus()
+                };
+                model.addRow(row);
+            }
         }
     }
-}
 
 
    
@@ -218,6 +218,7 @@ public class POVerification extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
@@ -233,19 +234,20 @@ public class POVerification extends javax.swing.JFrame {
         if (selectedIndex != -1) {
             PurchaseOrder po = poList.get(selectedIndex);
 
-            if (po.getStatus().equalsIgnoreCase("Approved")) {
+            if (po.getStatus().equalsIgnoreCase("Paid")) {
                 po.setStatus("Received");
 
                 List<Item> inventoryItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
-                for (Item poItem : po.getItems()) {
-                    for (Item stockItem : inventoryItems) {
-                        if (stockItem.getItemID().equals(poItem.getItemID())) {
-                            stockItem.setTotalStock(stockItem.getTotalStock() + poItem.getTotalStock());
-                            break;
-                        }
+                String poItemName = po.getItem().trim().toLowerCase();
+                int quantityToAdd = Integer.parseInt(po.getQuantity());
+
+                for (Item stockItem : inventoryItems) {
+                    if (stockItem.getItemName().trim().equalsIgnoreCase(poItemName)) {
+                        stockItem.increaseStock(quantityToAdd);
+                        stockItem.setUpdatedDate(java.time.LocalDate.now());
+                        break;
                     }
                 }
-
 
                 InventoryService.savePOsToFile(poList, "src/txtFile/po.txt");
                 InventoryService.saveItemsToFile(inventoryItems, "src/txtFile/items.txt");
@@ -256,8 +258,8 @@ public class POVerification extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "PO confirmed and stock updated.");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
-                    "Only Approved POs can be confirmed.\nThis PO is currently: " + po.getStatus(),
-                    "Confirmation Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
+                "Only Paid POs can be verified.\nThis PO is currently: " + po.getStatus(),
+                "Verification Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }
 

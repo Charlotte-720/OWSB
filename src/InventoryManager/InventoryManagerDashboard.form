@@ -6,7 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -241,6 +241,7 @@
                                   <Component id="totalItemsLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="pendingPOsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lastUpdatedLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="thresholdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -261,7 +262,9 @@
                       <Component id="pendingPOsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="lastUpdatedLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="88" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="60" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -281,7 +284,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Total Items in Stock:"/>
+                <Property name="text" type="java.lang.String" value="Unique Items in Stock:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lowStockLabel">
@@ -306,6 +309,14 @@
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Last Updated:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="thresholdLabel">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="12" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Current Low Stock Threshold: "/>
               </Properties>
             </Component>
           </SubComponents>

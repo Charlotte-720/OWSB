@@ -20,7 +20,7 @@ public class InventoryService {
     
     
     // threshold for low stock alert
-    public static final int LOW_STOCK_THRESHOLD = 10;
+    public static int LOW_STOCK_THRESHOLD = 10;
     
     
     // Load Items from txtFile/items.txt
@@ -28,21 +28,20 @@ public class InventoryService {
         List<Item> itemList = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 8) {
-                    itemList.add(new Item(
-                        parts[0],
-                        parts[1],
-                        Double.parseDouble(parts[2]),
-                        parts[3],
-                        LocalDate.parse(parts[4]),
-                        parts[5],
-                        Integer.parseInt(parts[6]),
-                        LocalDate.parse(parts[7])
-                    ));
+                String[] parts = line.split(", ");
+                if (parts.length == 8) {
+                    String itemID = parts[0].split(": ")[1].trim();
+                    String itemName = parts[1].split(": ")[1].trim();
+                    double price = Double.parseDouble(parts[2].split(": ")[1].trim());
+                    String category = parts[3].split(": ")[1].trim();
+                    LocalDate expiredDate = LocalDate.parse(parts[4].split(": ")[1].trim());
+                    String supplierID = parts[5].split(": ")[1].trim();
+                    int totalStock = Integer.parseInt(parts[6].split(": ")[1].trim());
+                    LocalDate updatedDate = LocalDate.parse(parts[7].split(": ")[1].trim());
+
+                    itemList.add(new Item(itemID, itemName, price, category, expiredDate, supplierID, totalStock, updatedDate));
                 }
             }
         } catch (IOException | NullPointerException e) {
@@ -52,19 +51,21 @@ public class InventoryService {
         return itemList;
     }
     
+    
     // Save items to txtFile/items.txt
     public static void saveItemsToFile(List<Item> items, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Item item : items) {
-                String line = String.join(",",
+                String line = String.format(
+                    "Item ID: %s, Item Name: %s, Price: %.2f, Category: %s, Expired Date: %s, Supplier ID: %s, Total Stock: %d, Updated Date: %s",
                     item.getItemID(),
                     item.getItemName(),
-                    String.valueOf(item.getPrice()),
+                    item.getPrice(),
                     item.getCategory(),
-                    item.getExpiredDate().toString(),
+                    item.getExpiredDate(),
                     item.getSupplierID(),
-                    String.valueOf(item.getTotalStock()),
-                    item.getUpdatedDate().toString()
+                    item.getTotalStock(),
+                    item.getUpdatedDate()
                 );
                 writer.write(line);
                 writer.newLine();

@@ -33,6 +33,7 @@ public class StockReportExportPopup extends javax.swing.JDialog {
      */
     public StockReportExportPopup(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        setUndecorated(true);
         initComponents();
         setLocationRelativeTo(parent);
         
@@ -148,6 +149,7 @@ public class StockReportExportPopup extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked

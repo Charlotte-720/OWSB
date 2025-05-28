@@ -71,7 +71,18 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss");
         String formattedDate = LocalDateTime.now().format(formatter);
         lastUpdatedLabel.setText("Last Updated: " + formattedDate);
+        thresholdLabel.setText("Current Threshold: " + InventoryService.LOW_STOCK_THRESHOLD);
     }
+
+    //Use for testing only, simulate log in
+    /* 
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            // Replace with a dummy identifier format expected by the constructor
+            new InventoryManagerDashboard("1007:Inventory Manager").setVisible(true);
+        });
+    }
+    */
 
 
     /**
@@ -99,6 +110,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         lowStockLabel = new javax.swing.JLabel();
         pendingPOsLabel = new javax.swing.JLabel();
         lastUpdatedLabel = new javax.swing.JLabel();
+        thresholdLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -200,7 +212,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         snapshotTitleLabel.setText("Inventory Snapshot");
 
         totalItemsLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        totalItemsLabel.setText("Total Items in Stock:");
+        totalItemsLabel.setText("Unique Items in Stock:");
 
         lowStockLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lowStockLabel.setText("Items Low in Stock:");
@@ -210,6 +222,9 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
 
         lastUpdatedLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lastUpdatedLabel.setText("Last Updated:");
+
+        thresholdLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        thresholdLabel.setText("Current Low Stock Threshold: ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -226,7 +241,8 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
                             .addComponent(lowStockLabel)
                             .addComponent(totalItemsLabel)
                             .addComponent(pendingPOsLabel)
-                            .addComponent(lastUpdatedLabel))))
+                            .addComponent(lastUpdatedLabel)
+                            .addComponent(thresholdLabel))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -242,7 +258,9 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
                 .addComponent(pendingPOsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lastUpdatedLabel)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(thresholdLabel)
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -293,6 +311,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewItemsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewItemsButtonActionPerformed
@@ -341,6 +360,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel pendingPOsLabel;
     private javax.swing.JButton poVerificationButton;
     private javax.swing.JLabel snapshotTitleLabel;
+    private javax.swing.JLabel thresholdLabel;
     private javax.swing.JLabel totalItemsLabel;
     private javax.swing.JLabel userIdLabel;
     private javax.swing.JButton viewItemsButton;
