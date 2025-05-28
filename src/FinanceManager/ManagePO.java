@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import FinanceManager.StatusFormat.StatusCellRenderer;
+import FinanceManager.functions.ManagePOHelper;
 import java.awt.Color;
 import model.PurchaseOrder;
 import java.io.BufferedReader;
@@ -48,27 +49,7 @@ public class ManagePO extends javax.swing.JFrame {
     }
     
     public ArrayList<PurchaseOrder> readPOFile() {
-        ArrayList<PurchaseOrder> poList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(", ");
-                String poID = fields[0].split(": ")[1];
-                String supplierName = fields[1].split(": ")[1];
-                String item = fields[2].split(": ")[1];
-                String quantity = fields[3].split(": ")[1];
-                String unitPrice = fields[4].split(": ")[1];    
-                String totalPrice = fields[5].split(": ")[1];
-                String date = fields[6].split(": ")[1];
-                String status = fields[7].split(": ")[1];
-
-                PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
-                poList.add(po);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return poList;
+        return ManagePOHelper.readPOFile("src/txtFile/po.txt");
     }
     
     public void loadPOData() {
@@ -91,59 +72,19 @@ public class ManagePO extends javax.swing.JFrame {
     }
     
     private void saveTableToFile() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/txtFile/po.txt"))) {
-            for (int i = 0; i < poTable.getRowCount(); i++) {
-                String poID = poTable.getValueAt(i, 0).toString();
-                String supplierName = poTable.getValueAt(i, 1).toString();
-                String item = poTable.getValueAt(i, 2).toString();
-                String quantity = poTable.getValueAt(i, 3).toString();
-                String unitPrice = poTable.getValueAt(i, 4).toString();
-                String totalPrice = poTable.getValueAt(i, 5).toString();
-                String date = poTable.getValueAt(i, 6).toString();
-                String status = poTable.getValueAt(i, 7).toString();
-
-                String line = "PO_ID: " + poID + ", Supplier Name: " + supplierName + ", Item: " + item +
-                              ", Quantity: " + quantity + ", Unit Price: " + unitPrice + ", Total Price: " + totalPrice + ", Date: " + date + ", Status: " + status;
-
-                bw.write(line);
-                bw.newLine();
+        List<List<Object>> tableData = new ArrayList<>();
+        for (int i = 0; i < poTable.getRowCount(); i++) {
+            List<Object> row = new ArrayList<>();
+            for (int j = 0; j < poTable.getColumnCount(); j++) {
+                row.add(poTable.getValueAt(i, j));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error saving changes to file!");
+            tableData.add(row);
         }
+        ManagePOHelper.savePOData(tableData, "src/txtFile/po.txt");
     }
 
     public Map<String, String> loadSupplierNamesWithSupplies() {
-        Map<String, String> supplierMap = new LinkedHashMap<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                String[] parts = line.split(", ");
-                String name = "", active = "", supplies = "";
-
-                for (String part : parts) {
-                    if (part.startsWith("Supplier Name: ")) {
-                        name = part.substring("Supplier Name: ".length()).trim();
-                    } else if (part.startsWith("Supplies: ")) {
-                        supplies = part.substring("Supplies: ".length()).trim();
-                    } else if (part.startsWith("Active: ")) {
-                        active = part.substring("Active: ".length()).trim();
-                    }
-                }
-
-                if (active.equalsIgnoreCase("true") && !name.isEmpty()) {
-                    supplierMap.put(name, supplies);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return supplierMap;
+        return ManagePOHelper.loadSupplierNamesWithSupplies("src/txtFile/suppliers.txt");
     }
 
 

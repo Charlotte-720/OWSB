@@ -4,6 +4,7 @@
  */
 package FinanceManager;
 
+import FinanceManager.functions.PaymentPanelHelper;
 import java.awt.Color;
 import model.PurchaseOrder;
 import java.io.BufferedReader;
@@ -31,37 +32,11 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         TableStyle.styleTableHeader(paymentTable, new Color(120, 157, 188), Color.BLACK);
     }
     
-    public ArrayList<PurchaseOrder> readPOFile() {
-        ArrayList<PurchaseOrder> poList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(", ");
-                String poID = fields[0].split(": ")[1];
-                String supplierName = fields[1].split(": ")[1];
-                String item = fields[2].split(": ")[1];
-                String quantity = fields[3].split(": ")[1];
-                String unitPrice = fields[4].split(": ")[1];
-                String totalPrice = fields[5].split(": ")[1];
-                String date = fields[6].split(": ")[1];
-                String status = fields[7].split(": ")[1];
-
-                if ("Received".equals(status)) {
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
-                    poList.add(po);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return poList;
-    }
-    
     public void loadPOData() {
         DefaultTableModel model = (DefaultTableModel) paymentTable.getModel(); 
         model.setRowCount(0); 
 
-        ArrayList<PurchaseOrder> poList = readPOFile();
+        ArrayList<PurchaseOrder> poList = PaymentPanelHelper.readPaidPOsFromFile("src/txtFile/po.txt");
         for (PurchaseOrder po : poList) {
             model.addRow(new Object[] {
                 po.getPoID(),
@@ -75,37 +50,6 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             });
         }
     }
-    
-    private void updatePOStatusInFile(String poIDToUpdate) {
-        ArrayList<String> updatedLines = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("PO_ID: " + poIDToUpdate)) {
-                    String[] parts = line.split(", ");
-                    if (parts.length >= 8) {
-                        parts[7] = "Status: Paid";
-                        line = String.join(", ", parts);
-                    }
-                }
-                updatedLines.add(line);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
-            return;
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/po.txt"))) {
-            for (String updatedLine : updatedLines) {
-                writer.write(updatedLine);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to write to po.txt.");
-        }
-    }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -276,7 +220,8 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Payment successful.");
             
             String poID = paymentTable.getValueAt(row, 0).toString();
-            updatePOStatusInFile(poID);
+            PaymentPanelHelper.updatePOStatusToPaid("src/txtFile/po.txt", poID);
+
         }
     }//GEN-LAST:event_btnProcessPaymentActionPerformed
 

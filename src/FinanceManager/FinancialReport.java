@@ -4,31 +4,10 @@
  */
 package FinanceManager;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.Image;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfWriter;
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashMap;
+import FinanceManager.functions.ExportHelper;
+import FinanceManager.functions.FinancialReportHelper;
+import FinanceManager.functions.FinancialSummary;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 
 /**
  *
@@ -43,302 +22,47 @@ public class FinancialReport extends javax.swing.JFrame {
     
     public FinancialReport() {
         initComponents();
-        loadDataFromPOFile();
-        topItems = getTopPurchasedItems();
+        
+        FinancialSummary summary = FinancialReportHelper.loadSummary("src/txtFile/po.txt");
+
+        TotalPO.setText(String.valueOf(summary.totalPO));
+        TotalPayment.setText("RM " + String.format("%.2f", summary.totalPayment));
+        OutstandingAmount.setText("RM " + String.format("%.2f", summary.outstandingAmount));
+        PendingApprovals.setText(String.valueOf(summary.pendingApprovals));
+        RejectedOrder.setText(String.valueOf(summary.rejectedOrders));
+
+        topItems = FinancialReportHelper.getTopItems("src/txtFile/po.txt");
         ((BarChartPanel) barChartPanel).setData(topItems);
-        populateMonthComboBox();
-        comboMonthFilter.addActionListener(e -> applyMonthFilter());
 
-    }
-    
-    private void loadDataFromPOFile() {
-        int totalPO = 0;
-        int pendingApprovals = 0;
-        int rejectedOrders = 0;
-        double totalPayment = 0;
-        double outstandingAmount = 0;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                totalPO++; 
-
-                String[] parts = line.split(",");
-                String status = "";
-                double totalPrice = 0;
-
-                for (String part : parts) {
-                    part = part.trim();
-
-                    if (part.startsWith("Total Price:")) {
-                        try {
-                            totalPrice = Double.parseDouble(part.split(":")[1].trim());
-                        } catch (NumberFormatException e) {
-                            totalPrice = 0;
-                        }
-                    } else if (part.startsWith("Status:")) {
-                        status = part.split(":")[1].trim();
-                    }
-                }
-
-                switch (status) {
-                    case "Paid":
-                        totalPayment += totalPrice;
-                        break;
-                    case "Approved":
-                        outstandingAmount += totalPrice;
-                        break;
-                    case "Pending":
-                        pendingApprovals++;
-                        break;
-                    case "Rejected":
-                        rejectedOrders++;
-                        break;
-                }
-            }
-
-            TotalPO.setText(String.valueOf(totalPO));
-            TotalPayment.setText("RM " + String.format("%.2f", totalPayment));
-            OutstandingAmount.setText("RM " + String.format("%.2f", outstandingAmount));
-            PendingApprovals.setText(String.valueOf(pendingApprovals));
-            RejectedOrder.setText(String.valueOf(rejectedOrders));
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to read po.txt.");
-            e.printStackTrace();
-        }
-    }
-    
-    public void exportToPNG(Component panel) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save PNG Report");
-        fileChooser.setSelectedFile(new File("FinancialReport.png"));
-
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-
-            BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2 = image.createGraphics();
-            panel.paint(g2);
-            g2.dispose();
-
-            try {
-                ImageIO.write(image, "png", fileToSave);
-                JOptionPane.showMessageDialog(this, "Report saved as PNG:\n" + fileToSave.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Failed to save PNG.");
-            }
-        }
-    }
-
-    public void exportToPDF(Component panel) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save PDF Report");
-        fileChooser.setSelectedFile(new File("FinancialReport.pdf"));
-
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-
-            try {
-                // 1. Capture panel as image
-                BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
-                Graphics2D g2 = image.createGraphics();
-                panel.paint(g2);
-                g2.dispose();
-
-                // 2. Convert BufferedImage to iText Image
-                Image pdfImage = Image.getInstance(image, null);
-
-                // 3. Set document size based on image size
-                float width = pdfImage.getWidth();
-                float height = pdfImage.getHeight();
-                Document doc = new Document(new Rectangle(width, height), 0, 0, 0, 0);
-                PdfWriter.getInstance(doc, new FileOutputStream(fileToSave));
-                doc.open();
-
-                // 4. Position image (optional centering)
-                pdfImage.setAbsolutePosition(0, 0);
-                doc.add(pdfImage);
-
-                doc.close();
-
-                JOptionPane.showMessageDialog(this, "Report saved as PDF:\n" + fileToSave.getAbsolutePath());
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Failed to save PDF.");
-            }
-        }
-    }
-
-
-    private LinkedHashMap<String, Integer> getTopPurchasedItems() {
-        Map<String, Integer> itemQuantities = new HashMap<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                try {
-                    String[] fields = line.split(", ");
-                    String item = fields[2].split(": ")[1];
-                    int quantity = Integer.parseInt(fields[3].split(": ")[1]);
-
-                    itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
-
-                } catch (Exception e) {
-                    System.out.println("Skipping malformed line: " + line);
-                }
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading po.txt for item count.");
-            e.printStackTrace();
-        }
-
-        return itemQuantities.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(3)
-                .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    Map.Entry::getValue,
-                    (e1, e2) -> e1,
-                    LinkedHashMap::new
-                ));
-    }
-
-    private void populateMonthComboBox() {
         comboMonthFilter.removeAllItems();
         comboMonthFilter.addItem("All Months");
-
-        Set<String> months = new TreeSet<>(Comparator.reverseOrder()); // latest first
-        DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(", ");
-                for (String part : parts) {
-                    if (part.startsWith("Date:")) {
-                        String dateStr = part.split(":")[1].trim();
-                        try {
-                            LocalDate date = LocalDate.parse(dateStr, fileFormat);
-                            months.add(date.format(displayFormat));
-                        } catch (Exception e) {
-                            System.out.println("Skipping invalid date: " + dateStr);
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to read dates from po.txt.");
-            e.printStackTrace();
-        }
-
-        for (String month : months) {
+        for (String month : FinancialReportHelper.extractMonths("src/txtFile/po.txt")) {
             comboMonthFilter.addItem(month);
         }
+
+        
+        comboMonthFilter.addActionListener(e -> applyMonthFilter());
+
     }
 
     private void applyMonthFilter() {
         String selected = (String) comboMonthFilter.getSelectedItem();
         if (selected == null) return;
 
-        int totalPO = 0;
-        int pendingApprovals = 0;
-        int rejectedOrders = 0;
-        double totalPayment = 0;
-        double outstandingAmount = 0;
-        Map<String, Integer> itemQuantities = new HashMap<>();
+        FinancialSummary summary = FinancialReportHelper.filterByMonth("src/txtFile/po.txt", selected);
 
-        DateTimeFormatter fileFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMMM yyyy");
+        // Update UI
+        TotalPO.setText(String.valueOf(summary.totalPO));
+        TotalPayment.setText("RM " + String.format("%.2f", summary.totalPayment));
+        OutstandingAmount.setText("RM " + String.format("%.2f", summary.outstandingAmount));
+        PendingApprovals.setText(String.valueOf(summary.pendingApprovals));
+        RejectedOrder.setText(String.valueOf(summary.rejectedOrders));
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                String[] parts = line.split(", ");
-                String dateStr = "", item = "", status = "";
-                double totalPrice = 0;
-                int quantity = 0;
-
-                for (String part : parts) {
-                    part = part.trim();
-
-                    if (part.startsWith("Date:")) {
-                        dateStr = part.split(":")[1].trim();
-                    } else if (part.startsWith("Item:")) {
-                        item = part.split(":")[1].trim();
-                    } else if (part.startsWith("Quantity:")) {
-                        quantity = Integer.parseInt(part.split(":")[1].trim());
-                    } else if (part.startsWith("Total Price:")) {
-                        totalPrice = Double.parseDouble(part.split(":")[1].trim());
-                    } else if (part.startsWith("Status:")) {
-                        status = part.split(":")[1].trim();
-                    }
-                }
-
-                LocalDate date;
-                try {
-                    date = LocalDate.parse(dateStr, fileFormat);
-                } catch (Exception e) {
-                    continue;
-                }
-
-                String poMonth = date.format(displayFormat);
-
-                // Only count matching month or all
-                if (selected.equals("All Months") || poMonth.equals(selected)) {
-                    totalPO++;
-                    itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
-
-                    switch (status) {
-                        case "Paid": totalPayment += totalPrice; break;
-                        case "Approved": outstandingAmount += totalPrice; break;
-                        case "Pending": pendingApprovals++; break;
-                        case "Rejected": rejectedOrders++; break;
-                    }
-                }
-            }
-
-            // Update labels
-            TotalPO.setText(String.valueOf(totalPO));
-            TotalPayment.setText("RM " + String.format("%.2f", totalPayment));
-            OutstandingAmount.setText("RM " + String.format("%.2f", outstandingAmount));
-            PendingApprovals.setText(String.valueOf(pendingApprovals));
-            RejectedOrder.setText(String.valueOf(rejectedOrders));
-
-            // Update bar chart (top 3)
-            topItems = itemQuantities.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(3)
-                .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    Map.Entry::getValue,
-                    (e1, e2) -> e1,
-                    LinkedHashMap::new
-                ));
-
-            ((BarChartPanel) barChartPanel).setData(topItems);
-            barChartPanel.repaint();
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error filtering data.");
-            e.printStackTrace();
-        }
+        topItems = summary.topItems;
+        ((BarChartPanel) barChartPanel).setData(topItems);
+        barChartPanel.repaint();
     }
+
 
 
 
@@ -626,13 +350,12 @@ public class FinancialReport extends javax.swing.JFrame {
         dialog.setVisible(true);
 
         String format = dialog.getSelectedFormat();
-
         if (format == null) return;
 
         if (format.equals("PDF")) {
-            exportToPDF(reportPanel);  // or pass a report panel
+            ExportHelper.exportToPDF(reportPanel, this);
         } else if (format.equals("PNG")) {
-            exportToPNG(reportPanel);
+            ExportHelper.exportToPNG(reportPanel, this);
         }
     }//GEN-LAST:event_btnGenerateActionPerformed
 

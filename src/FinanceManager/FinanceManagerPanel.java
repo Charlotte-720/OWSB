@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import Admin.Loginpage1;
+import FinanceManager.functions.FinanceSummaryHelper;
 import InventoryManager.POVerification;
 import PurchaseManager.viewrequisition;
 import java.io.BufferedReader;
@@ -63,52 +64,13 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     }
     
     private void loadSelectedMonthSummary(String selectedMonthYear) {
-        int totalPO = 0;
-        double totalPayment = 0;
-        int pendingPO = 0;
+        FinanceSummaryHelper.MonthlySummary summary = FinanceSummaryHelper.loadSummaryFor(selectedMonthYear);
 
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-        DateTimeFormatter fileDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        try {
-            LocalDate targetMonth = LocalDate.parse("01 " + selectedMonthYear, DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-
-            BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/po.txt"));
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                try {
-                    String[] fields = line.split(", ");
-                    String dateStr = fields[6].split(": ")[1];
-                    LocalDate poDate = LocalDate.parse(dateStr, fileDateFormat);
-
-                    if (poDate.getMonth() == targetMonth.getMonth() && poDate.getYear() == targetMonth.getYear()) {
-                        totalPO++;
-
-                        String totalPriceStr = fields[5].split(": ")[1];
-                        String status = fields[7].split(": ")[1];
-                        double totalPrice = Double.parseDouble(totalPriceStr);
-
-                        if (status.equals("Paid")) totalPayment += totalPrice;
-                        if (status.equals("Pending")) pendingPO++;
-                    }
-                } catch (Exception e) {
-                    System.out.println("Skipping malformed line: " + line);
-                }
-            }
-            reader.close();
-
-            displayTotalPO.setText(String.valueOf(totalPO));
-            displayTotalPayment.setText("RM " + String.format("%.2f", totalPayment));
-            displayPending.setText(String.valueOf(pendingPO));
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Failed to load monthly summary.");
-            ex.printStackTrace();
-        }
+        displayTotalPO.setText(String.valueOf(summary.totalPO));
+        displayTotalPayment.setText("RM " + String.format("%.2f", summary.totalPayment));
+        displayPending.setText(String.valueOf(summary.pendingPO));
     }
+
 
  
     /**
@@ -336,7 +298,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
         maincontentPanel.add(jLabel1);
-        jLabel1.setBounds(770, 0, 20, 40);
+        jLabel1.setBounds(760, 10, 20, 40);
 
         MainPanel.add(maincontentPanel, java.awt.BorderLayout.CENTER);
 
@@ -344,14 +306,18 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 798, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(810, 610));
+        setSize(new java.awt.Dimension(800, 600));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
