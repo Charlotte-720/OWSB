@@ -117,7 +117,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
         sidebarPanel.setBackground(new java.awt.Color(134, 167, 136));
 
-        btnManagePurchaseOrder.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - ManagePO btn.png")); // NOI18N
+        btnManagePurchaseOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - ManagePO btn.png"))); // NOI18N
         btnManagePurchaseOrder.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnManagePurchaseOrder.setLabel("Manage Purchase Order");
         btnManagePurchaseOrder.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -131,7 +131,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnVerifyInventoryUpdates.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - inventory.png")); // NOI18N
+        btnVerifyInventoryUpdates.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - inventory.png"))); // NOI18N
         btnVerifyInventoryUpdates.setText("Verify Inventory Updates");
         btnVerifyInventoryUpdates.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnVerifyInventoryUpdates.addActionListener(new java.awt.event.ActionListener() {
@@ -140,7 +140,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnProcessPayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - cashless-payment.png")); // NOI18N
+        btnProcessPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - cashless-payment.png"))); // NOI18N
         btnProcessPayment.setText("Process Payments");
         btnProcessPayment.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnProcessPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -149,7 +149,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnGenerateReports.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - report.png")); // NOI18N
+        btnGenerateReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - report.png"))); // NOI18N
         btnGenerateReports.setText("Generate Reports");
         btnGenerateReports.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnGenerateReports.addActionListener(new java.awt.event.ActionListener() {
@@ -158,21 +158,19 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
             }
         });
 
-        btnLogout.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - logout.png")); // NOI18N
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - logout.png"))); // NOI18N
         btnLogout.setText("Logout");
         btnLogout.setToolTipText("");
         btnLogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnLogout.setPreferredSize(null);
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogoutActionPerformed(evt);
             }
         });
 
-        btnViewProductRequisition.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - shopping-cart.png")); // NOI18N
+        btnViewProductRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - shopping-cart.png"))); // NOI18N
         btnViewProductRequisition.setText("View Product Requisition");
         btnViewProductRequisition.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnViewProductRequisition.setPreferredSize(null);
         btnViewProductRequisition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewProductRequisitionActionPerformed(evt);

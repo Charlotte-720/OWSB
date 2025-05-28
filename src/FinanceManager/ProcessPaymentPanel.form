@@ -107,7 +107,7 @@
               <Font name="Segoe UI" size="36" style="1"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\charl\OneDrive\Documents\NetBeansProjects\OWSB\src\Icons\Icon - send.png"/>
+              <Image iconType="3" name="/Icons/Icon - cashless-payment.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Process Payment"/>
           </Properties>

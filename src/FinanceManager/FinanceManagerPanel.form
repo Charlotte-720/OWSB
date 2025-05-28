@@ -127,6 +127,9 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btnManagePurchaseOrder">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - ManagePO btn.png"/>
+                    </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="label" type="java.lang.String" value="Manage Purchase Order"/>
                   </Properties>
@@ -137,6 +140,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnVerifyInventoryUpdates">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - inventory.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Verify Inventory Updates"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                   </Properties>
@@ -146,6 +152,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnProcessPayment">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - cashless-payment.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Process Payments"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                   </Properties>
@@ -155,6 +164,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnGenerateReports">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - report.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Generate Reports"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                   </Properties>
@@ -164,12 +176,12 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnLogout">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - logout.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Logout"/>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="null"/>
-                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
@@ -177,11 +189,11 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnViewProductRequisition">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Icons/Icon - shopping-cart.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="View Product Requisition"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="null"/>
-                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewProductRequisitionActionPerformed"/>

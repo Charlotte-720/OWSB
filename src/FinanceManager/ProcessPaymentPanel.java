@@ -75,7 +75,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - send.png")); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - cashless-payment.png"))); // NOI18N
         labelTitle.setText("Process Payment");
 
         btnProcessPayment.setBackground(new java.awt.Color(63, 114, 175));

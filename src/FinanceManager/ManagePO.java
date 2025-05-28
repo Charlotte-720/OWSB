@@ -146,7 +146,7 @@ public class ManagePO extends javax.swing.JFrame {
         });
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - checklist.png")); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - checklist.png"))); // NOI18N
         labelTitle.setText("Purchase Order List");
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(

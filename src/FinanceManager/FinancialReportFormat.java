@@ -56,7 +56,7 @@ public class FinancialReportFormat extends javax.swing.JDialog {
         });
 
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        labelTitle.setIcon(new javax.swing.ImageIcon("C:\\Users\\charl\\OneDrive\\Documents\\NetBeansProjects\\OWSB\\src\\Icons\\Icon - export-file.png")); // NOI18N
+        labelTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - export-file.png"))); // NOI18N
         labelTitle.setText("Export Financial Report");
 
         jLabel2.setText("Select report format (PDF/PNG): ");
