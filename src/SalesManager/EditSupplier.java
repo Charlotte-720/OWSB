@@ -45,7 +45,10 @@ public class EditSupplier extends javax.swing.JFrame {
                 supplierName.setEnabled(true);
                 contactNo.setEnabled(true);
                 supplyItem.setEnabled(true);
-
+                
+                this.requestFocus();
+                supplierName.requestFocusInWindow();
+                
                 // Change button text to indicate editing
                 updateButton.setText("Update");
             } else {
@@ -86,7 +89,7 @@ public class EditSupplier extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setFocusableWindowState(false);
+        // setFocusableWindowState(false);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 246, 226));
