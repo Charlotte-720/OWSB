@@ -15,12 +15,7 @@ public class generateandviewpo extends javax.swing.JPanel {
     public generateandviewpo() {
         initComponents();
         loadPOData(); // Load data when the window is opened
-
-        JTableHeader header = jTable1.getTableHeader();
-        header.setBackground(new java.awt.Color(255,255,255)); // Example: Steel Blue
-        header.setForeground(Color.BLACK); // Text color
-        
-        jTable1.getColumnModel().getColumn(7).setCellRenderer(new StatusColumnCellRenderer());
+        jTable1.getColumnModel().getColumn(8).setCellRenderer(new StatusColumnCellRenderer());
     }
 
     @SuppressWarnings("unchecked")
@@ -56,28 +51,28 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO_ ID", "Suppliers Nm ", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
+                "PO ID", "Item ID", "Suppliers ID", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, true, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -142,16 +137,17 @@ public class generateandviewpo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancel))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43)
+                        .addGap(65, 65, 65)
                         .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(54, 54, 54)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                         .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                        .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(cancel)
+                        .addGap(49, 49, 49)
+                        .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
@@ -161,12 +157,12 @@ public class generateandviewpo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(464, 464, 464))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(29, 29, 29)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                        .addGap(29, 29, 29)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,12 +183,7 @@ public class generateandviewpo extends javax.swing.JPanel {
 
     // go to add panel
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-        JFrame frame = new JFrame("Add Purchase Order");
-        frame.setContentPane(new addPO(this));
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        new addPO(this); // Opens the Add Purchase Order JFrame
     }//GEN-LAST:event_addMouseClicked
 
     //edit funcation 
@@ -221,7 +212,7 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         if (selectedRow != -1) {
             String poIdToDelete = (String) jTable1.getValueAt(selectedRow, 0);
-            String status = (String) jTable1.getValueAt(selectedRow, 7);
+            String status = (String) jTable1.getValueAt(selectedRow, 8);
 
             if (!status.equalsIgnoreCase("Pending")) {
                 JOptionPane.showMessageDialog(this, "Cannot delete PO, only Pending can be delete!");
@@ -292,30 +283,31 @@ public class generateandviewpo extends javax.swing.JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, 
                boolean isSelected, boolean hasFocus, int row, int column) {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             if (value != null) {
                 String status = value.toString().toLowerCase();
 
                 switch (status) {
                     case "rejected":
-                        setForeground(Color.RED);
+                        c.setForeground(Color.RED);
                         break;
                     case "pending":
-                        setForeground(new Color(255, 165, 0)); // orange-ish yellow
+                        c.setForeground(new Color(255, 165, 0));
                         break;
                     case "approved":
-                        setForeground(new Color(0, 128, 0)); // dark green
+                        c.setForeground(new Color(0, 128, 0));
                         break;
                     default:
-                        setForeground(Color.BLACK);
+                        c.setForeground(Color.BLACK);
                         break;
                 }
             } else {
-                setForeground(Color.BLACK);
+                c.setForeground(Color.BLACK);
             }
 
-            return this;
+            return c;
         }
     }
 

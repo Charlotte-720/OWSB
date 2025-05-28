@@ -1,253 +1,215 @@
 package PurchaseManager;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import java.awt.Window;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class addPO extends javax.swing.JPanel {  
-    private generateandviewpo generatePOReference;
-    
-    public addPO(generateandviewpo generatePOInstance) {
-        initComponents();
-        this.generatePOReference = generatePOInstance;
+public class addPO extends JFrame {
+
+    private JTable table;
+    private DefaultTableModel model;
+    private JButton saveButton;
+
+    private final String prFilePath = "src/txtFile/pr.txt";
+    private final String poFilePath = "src/txtFile/po.txt";
+
+    private List<String> prLines = new ArrayList<>();
+
+    private generateandviewpo parentFrame; // Match class name exactly
+
+    // Constructor with parent reference
+    public addPO(generateandviewpo   parentFrame) {
+        this.parentFrame  = parentFrame;
+
+        setTitle("Add Purchase Order");
+        setSize(1000, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        String[] columns = {"Select", "Item ID", "Supplier ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Required Delivery Date"};
+
+        model = new DefaultTableModel(columns, 0) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Boolean.class : String.class;
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 0;
+            }
+        };
+
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        saveButton = new JButton("Save PO");
+        saveButton.addActionListener(e -> saveSelectedPRs());
+
+        add(scrollPane, BorderLayout.CENTER);
+        add(saveButton, BorderLayout.SOUTH);
+
+        loadPRData();
+
+        setVisible(true);
     }
-    
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        save = new PurchaseManager.button();
-        cancel = new javax.swing.JLabel();
+    private void loadPRData() {
+        prLines.clear();
+        model.setRowCount(0);
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        try (BufferedReader reader = new BufferedReader(new FileReader(prFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                prLines.add(line);
+                if (line.toLowerCase().contains("status: pending")) {
+                    String itemID = "", supplierID = "", itemName = "", quantity = "", unitPrice = "", totalPrice = "", requiredDeliveryDate = "";
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Item :");
+                    String[] parts = line.split(", ");
+                    for (String part : parts) {
+                        String[] keyValue = part.split(":", 2);
+                        if (keyValue.length < 2) continue;
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Suppliers Name  :");
+                        String key = keyValue[0].trim().toLowerCase();
+                        String value = keyValue[1].trim();
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Quantity :");
+                        switch (key) {
+                            case "item id":
+                                itemID = value;
+                                break;
+                            case "supplier id":
+                                supplierID = value;
+                                break;
+                            case "item name":
+                                itemName = value;
+                                break;
+                            case "quantity":
+                                quantity = value;
+                                break;
+                            case "unit price":
+                                unitPrice = value;
+                                break;
+                            case "total price":
+                                totalPrice = value;
+                                break;
+                            case "required delivery date":
+                                requiredDeliveryDate = value;
+                                break;
+                        }
+                    }
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Unit Price:");
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Date :");
-
-        save.setBackground(new java.awt.Color(204, 0, 204));
-        save.setForeground(new java.awt.Color(255, 255, 255));
-        save.setText("Save");
-        save.setRound(20);
-        save.setShadowColor(new java.awt.Color(0, 0, 0));
-        save.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveActionPerformed(evt);
+                    Object[] row = {
+                        false, itemID, supplierID, itemName, quantity, unitPrice, totalPrice, requiredDeliveryDate
+                    };
+                    model.addRow(row);
+                }
             }
-        });
-
-        cancel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        cancel.setForeground(new java.awt.Color(255, 0, 0));
-        cancel.setText("X");
-        cancel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancelMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancel)
-                .addGap(21, 21, 21))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(41, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    //save data function
-    private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
-        try {
-              String supplierName = jTextField1.getText().trim();
-              String item = jTextField2.getText().trim();
-              String quantityStr = jTextField3.getText().trim();
-              String unitPriceStr = jTextField4.getText().trim();
-              String date = jTextField6.getText().trim();
-
-              // Check for empty fields
-              if (supplierName.isEmpty() || item.isEmpty() || quantityStr.isEmpty() || unitPriceStr.isEmpty() || date.isEmpty()) {
-                  javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields. Fields cannot be empty!");
-                  return; // Stop saving if any field is empty
-              }
-              
-              // Date validation for MM-dd-yyyy
-              SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-              sdf.setLenient(false);
-              try {
-                  sdf.parse(date);
-              } catch (ParseException pe) {
-                  javax.swing.JOptionPane.showMessageDialog(this, "Date must be in MM-dd-yyyy format!");
-                  return;
-              }
-
-              // Parse numeric values
-              int quantity = Integer.parseInt(quantityStr);
-              double unitPrice = Double.parseDouble(unitPriceStr);
-              double totalPrice = quantity * unitPrice;
-              String totalPriceStr = String.format("%.2f", totalPrice);
-
-              java.io.File file = new java.io.File("src/txtFile/po.txt");
-
-              int poID = 1; // Start from 1
-
-              // Check if file exists and calculate the next PO_ID
-              if (file.exists()) {
-                  java.util.Scanner scanner = new java.util.Scanner(file);
-                  while (scanner.hasNextLine()) {
-                      String line = scanner.nextLine();
-                      if (line.startsWith("PO_ID:")) {
-                          poID++; // Increase PO_ID for each line
-                      }
-                  }
-                  scanner.close();
-              }
-
-              // Format the PO_ID (example: 01, 02, 03, etc.)
-              String formattedPoId = String.format("%02d", poID);
-
-              // Compose the new data string with total price included
-              String newData = "PO_ID: " + formattedPoId + 
-                               ", Supplier Name: " + supplierName + 
-                               ", Item: " + item + 
-                               ", Quantity: " + quantity +
-                               ", Unit Price: " + unitPriceStr +
-                               ", Total Price: " + totalPriceStr +   // <-- added total price here
-                               ", Date: " + date + 
-                               ", Status: Pending";
-
-              // Write to the file using FileWriter (create po.txt if doesn't exist)
-              java.io.FileWriter fw = new java.io.FileWriter(file, true);
-              java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
-              bw.write(newData);
-              bw.newLine();
-              bw.close();
-
-              // Show success message
-              javax.swing.JOptionPane.showMessageDialog(this, "Saved Successfully!");
-
-              // Clear fields after saving
-              jTextField1.setText("");
-              jTextField2.setText("");
-              jTextField3.setText("");
-              jTextField4.setText("");
-              jTextField6.setText("");
-
-             // Refresh the table in GeneratePO
-             if (generatePOReference != null) {
-                generatePOReference.loadPOData();
-             }
-
-             // Close this window/form
-             javax.swing.SwingUtilities.getWindowAncestor(this).dispose(); 
-
-        } catch (NumberFormatException nfe) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Quantity and Unit Price must be numbers.");
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Error while saving data!");
-        }   
-    }//GEN-LAST:event_saveActionPerformed
-
-    // back function
-    private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
-        Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-        if (window != null) {
-            window.dispose(); // This will close only the AddPO window
+            JOptionPane.showMessageDialog(this, "Error loading PR data.");
         }
-    }//GEN-LAST:event_cancelMouseClicked
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel cancel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField6;
-    private PurchaseManager.button save;
-    // End of variables declaration//GEN-END:variables
+    private void saveSelectedPRs() {
+        List<Integer> selectedRows = new ArrayList<>();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean selected = (Boolean) model.getValueAt(i, 0);
+            if (Boolean.TRUE.equals(selected)) {
+                selectedRows.add(i);
+            }
+        }
+
+        if (selectedRows.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select at least one PR to save.");
+            return;
+        }
+
+        try (BufferedWriter poWriter = new BufferedWriter(new FileWriter(poFilePath, true))) {
+            for (int row : selectedRows) {
+                String poID = generateNextPOID();
+
+                String poLine = String.format(
+                        "PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: Pending",
+                        poID,
+                        model.getValueAt(row, 1),
+                        model.getValueAt(row, 2),
+                        model.getValueAt(row, 3),
+                        model.getValueAt(row, 4),
+                        model.getValueAt(row, 5),
+                        model.getValueAt(row, 6),
+                        model.getValueAt(row, 7)
+                );
+
+                poWriter.write(poLine);
+                poWriter.newLine();
+
+                updatePRStatusByItemID((String) model.getValueAt(row, 1));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error saving PO data.");
+            return;
+        }
+
+        rewritePRFile();
+
+        JOptionPane.showMessageDialog(this, "PO(s) saved successfully!");
+
+        // 🔁 REFRESH parent table
+        if (parentFrame != null) {
+            parentFrame.loadPOData();
+        }
+
+        dispose();
+    }
+
+    private String generateNextPOID() {
+        int maxID = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(poFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("PO_ID:")) {
+                    String[] parts = line.split(",")[0].split(":");
+                    String idStr = parts[1].trim().replaceAll("[^0-9]", "");
+                    if (!idStr.isEmpty()) {
+                        int id = Integer.parseInt(idStr);
+                        if (id > maxID) maxID = id;
+                    }
+                }
+            }
+        } catch (IOException ignored) {}
+
+        return String.format("%04d", maxID + 1);
+    }
+
+    private void updatePRStatusByItemID(String itemID) {
+        for (int i = 0; i < prLines.size(); i++) {
+            String line = prLines.get(i);
+            if (line.contains("Item ID: " + itemID) && line.contains("Status: Pending")) {
+                prLines.set(i, line.replace("Status: Pending", "Status: Submit"));
+                break;
+            }
+        }
+    }
+
+    private void rewritePRFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(prFilePath))) {
+            for (String line : prLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating PR file.");
+        }
+    }
+
+    // Test launcher
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new addPO(null)); // null if no parent
+    }
 }

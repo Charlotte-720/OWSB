@@ -9,18 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class DSIT {        
+public class DSIT {   
+    private JTable poTable; // your JTable instance
+
+    
     public static void loadSupplierData(JTable table) {
-        String[] columnNames = {"ID", "Name", "Contact", "Active"};
+        String[] columnNames = {"Suppliers ID", "Suppliers Name", "Contact No","Suppliers","Active"};
         List<Object[]> rows = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length >= 4) {
-                    Object[] row = new Object[4];
-                    for (int i = 0; i < 4; i++) {
+                if (values.length >= 5) {
+                    Object[] row = new Object[5];
+                    for (int i = 0; i < 5; i++) {
                         String[] parts = values[i].split(":", 2);
                         row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();
                     }
@@ -45,7 +48,6 @@ public class DSIT {
 
         table.setModel(model);
     }
-
     
     public static void loadItemData(JTable table){
         
@@ -89,7 +91,7 @@ public class DSIT {
     }
     
     public static void loadRequisitionData(JTable table){
-        String[] columnNames = {"PR ID", "Item ID", "Item Name", "Quantity", "Price", "Total Amount", "Suppliers ID", "Delivery Date", "Status"};
+        String[] columnNames = {"PR ID", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Suppliers ID", "Raised By","RD Date","R Date","Status"};
 
         List<Object[]> rows = new ArrayList<>();
 
@@ -100,8 +102,8 @@ public class DSIT {
                 // SupplierID,Name,Contact,IsActive
                 String[] values = line.split(",");
                 if (values.length >= 9) {
-                    Object[] row = new Object[9];
-                    for (int i = 0; i < 9; i++) {
+                    Object[] row = new Object[11];
+                    for (int i = 0; i < 11; i++) {
                         String[] parts = values[i].split(":", 2);
                         row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();                       }
                     rows.add(row);
@@ -129,7 +131,7 @@ public class DSIT {
         table.setModel(model);
     }
         
-    public static void loadPOData(JTable table) {
+    public static void loadstatusPOData(JTable table) {
         String[] columnNames = {"PO_ID", "Status"};
         List<Object[]> rows = new ArrayList<>();
 
@@ -171,7 +173,7 @@ public class DSIT {
         
         table.getColumnModel().getColumn(1).setCellRenderer(new StatusColumnCellRenderer());
     }
-    
+   
     // Custom renderer for Status column to color text based on status
     static class StatusColumnCellRenderer extends DefaultTableCellRenderer {
         @Override

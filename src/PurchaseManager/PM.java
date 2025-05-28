@@ -30,9 +30,8 @@ public class PM extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
-        DSIT.loadPOData(jTable1);
+        DSIT.loadstatusPOData(jTable1);
         readAndCountStatuses(); // Add this call here
-
     }
 
     @SuppressWarnings("unchecked")
@@ -267,7 +266,7 @@ public class PM extends javax.swing.JFrame {
                     .addComponent(Approve)
                     .addComponent(Pending)
                     .addComponent(Paid))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(105, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,13 +298,15 @@ public class PM extends javax.swing.JFrame {
         wlcLayout.setHorizontalGroup(
             wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wlcLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(wlcLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(wlcLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(wlcLayout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(wlcLayout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -364,7 +365,7 @@ public class PM extends javax.swing.JFrame {
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
         // TODO add your handling code here:
-            int response = JOptionPane.showConfirmDialog(this, 
+        int response = JOptionPane.showConfirmDialog(this, 
         "Are you sure you want to log out?", 
         "Logout Confirmation", 
         JOptionPane.YES_NO_OPTION, 

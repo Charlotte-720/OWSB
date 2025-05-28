@@ -81,11 +81,11 @@
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="isActive" alignment="0" max="32767" attributes="0"/>
                           <Component id="contactNo" alignment="0" pref="91" max="32767" attributes="0"/>
-                          <Component id="supplierName" alignment="0" max="32767" attributes="0"/>
                           <Component id="supplyItem" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="supplierName" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="67" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -93,10 +93,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="supplierNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="supplierName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="supplierNameLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="supplierName" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -113,7 +113,7 @@
                       <Component id="activeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="isActive" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="34" max="32767" attributes="0"/>
+                  <EmptySpace pref="37" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="updateButton" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
                       <Component id="clearButton" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
@@ -189,14 +189,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplyItemActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="supplierName">
-          <Properties>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierNameActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JTextField" name="contactNo">
         </Component>
         <Component class="javax.swing.JCheckBox" name="isActive">
@@ -260,6 +252,11 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JTextField" name="supplierName">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
