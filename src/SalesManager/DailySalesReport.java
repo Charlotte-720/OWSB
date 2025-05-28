@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import InventoryManager.functions.InventoryService;
 
 public class DailySalesReport extends javax.swing.JFrame {
     private List<String> lowStockAlerts = new ArrayList<>();
+    private static final int LOW_STOCK_THRESHOLD = InventoryService.LOW_STOCK_THRESHOLD;
 
     public DailySalesReport() {
         initComponents();
@@ -54,6 +55,9 @@ public class DailySalesReport extends javax.swing.JFrame {
     double totalSalesAmount = 0.0;
     lowStockAlerts.clear();
 
+    // Set to track items already checked for low stock
+    java.util.Set<String> checkedItems = new java.util.HashSet<>();
+        
     try {
         List<String[]> salesRecords = FileHandler.readSalesRecords();
         String today = LocalDate.now().toString();
@@ -84,41 +88,57 @@ public class DailySalesReport extends javax.swing.JFrame {
             
             totalSalesAmount += totalAmount;
             
-            if (totalStock < 10) { 
-                lowStockAlerts.add("Low Stock Alert!\nItem: "
-                    + itemName + " (ID: " + itemID + ")\nStock left: " + totalStock);
+            if (totalStock < LOW_STOCK_THRESHOLD && !checkedItems.contains(itemID)) { 
+                    lowStockAlerts.add("Item ID: " + itemName + " (" + itemID + ")\nStock left: " + totalStock);
+                    checkedItems.add(itemID); // Mark this item as checked
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error loading sales data", 
+                "File Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
-    } catch (IOException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, 
-            "Error loading sales data", 
-            "File Error", 
-            JOptionPane.ERROR_MESSAGE);
-    }
-
-    this.totalAmount.setText(String.format("%.2f", totalSalesAmount));
-}
+            this.totalAmount.setText(String.format("%.2f", totalSalesAmount));
+        }
     
     public void refreshSalesData() {
-    loadSalesRecords();  // Reload data from file
+    loadSalesRecords(); 
     
     try {
-        // Clear any cached data
-        loadSalesRecords();  // Reload sales data from file
+        loadSalesRecords(); 
     } catch (Exception e) {
         System.out.println("Error in refreshSalesData: " + e.getMessage());
         e.printStackTrace();
     }
-    
-    // Show any new low stock alerts
-    for (String alert : lowStockAlerts) {
-        JOptionPane.showMessageDialog(this, 
-            alert,
-            "Low Stock Warning",
-            JOptionPane.WARNING_MESSAGE);
+        showLowStockAlerts();
     }
-}
+    
+    private void showLowStockAlerts() {
+            if (!lowStockAlerts.isEmpty()) {
+                StringBuilder alertMessage = new StringBuilder();
+                alertMessage.append("LOW STOCK WARNINGS:\n\n");
+
+                for (int i = 0; i < lowStockAlerts.size(); i++) {
+                    alertMessage.append(i + 1).append(". ").append(lowStockAlerts.get(i)).append("\n\n");
+                }
+
+                JOptionPane.showMessageDialog(this, 
+                    alertMessage.toString(),
+                    "Low Stock Warning - Inventory Alert",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    
+    public List<String> getLowStockAlerts() {
+        return new ArrayList<>(lowStockAlerts);
+    }
+    
+    public boolean hasLowStockAlerts() {
+        return !lowStockAlerts.isEmpty();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

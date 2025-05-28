@@ -1,4 +1,3 @@
-
 package SalesManager;
 
 import model.SalesRecord;
@@ -9,7 +8,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-
 
 public class AddDailySales extends javax.swing.JFrame {
 private java.util.List<Item> itemList;
@@ -48,18 +46,50 @@ private DailySalesReport parentFrame;
     }
 }
     private void updateItemName() {
-    String selectedItemID = (String) itemID.getSelectedItem();
-    for (Item item : itemList) {
-        if (item.getItemID().equals(selectedItemID)) {
-            itemName.setText(item.getItemName());
-            return;
+        String selectedItemID = (String) itemID.getSelectedItem();
+        for (Item item : itemList) {
+            if (item.getItemID().equals(selectedItemID)) {
+                // Display item name with available stock
+                String displayText = String.format("%s (Stock: %d)", 
+                    item.getItemName(), item.getTotalStock());
+                itemName.setText(item.getItemName());
+                stockAvailable.setText(displayText);
+                return;
+            }
+        }
+        stockAvailable.setText(""); // Clear if not found
+    }
+    
+    private void validateQuantityInRealTime() {
+        try {
+            String quantityText = quantitySold.getText().trim();
+            if (quantityText.isEmpty()) {
+                return; // Don't validate empty input
+            }
+
+            int requestedQuantity = Integer.parseInt(quantityText);
+            String selectedID = (String) itemID.getSelectedItem();
+
+            if (selectedID != null) {
+                Item item = getItemById(selectedID);
+                if (item != null && requestedQuantity > item.getTotalStock()) {
+                    // Change text field background to indicate error
+                    quantitySold.setBackground(new java.awt.Color(255, 200, 200)); // Light red
+                    quantitySold.setToolTipText("Quantity exceeds available stock (" + 
+                        item.getTotalStock() + ")");
+                } else {
+                    // Reset to normal background
+                    quantitySold.setBackground(java.awt.Color.WHITE);
+                    quantitySold.setToolTipText(null);
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Invalid number format, but don't show error yet
+            quantitySold.setBackground(java.awt.Color.WHITE);
+            quantitySold.setToolTipText(null);
         }
     }
-    itemName.setText(""); // Clear if not found
-}
-    
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -77,6 +107,8 @@ private DailySalesReport parentFrame;
         itemID = new javax.swing.JComboBox<>();
         quantitySold = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        stockAvailable = new javax.swing.JLabel();
+        stockAvailableLabel = new javax.swing.JLabel();
         itemName = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -93,6 +125,7 @@ private DailySalesReport parentFrame;
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
+        jPanel3.setBackground(new java.awt.Color(252, 239, 239));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 204));
@@ -112,29 +145,28 @@ private DailySalesReport parentFrame;
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(78, 78, 78)
+                .addGap(79, 79, 79)
                 .addComponent(DailySalesReportTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(DailySalesReportTitle)
-                .addContainerGap(26, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(DailySalesReportTitle)
+                .addGap(0, 27, Short.MAX_VALUE))
         );
 
         itemIDLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        itemIDLabel.setText("Item ID");
+        itemIDLabel.setText("Item ID :");
 
         quantitySoldLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        quantitySoldLabel.setText("Quantity Sold");
+        quantitySoldLabel.setText("Quantity Sold :");
 
         dateLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         dateLabel.setText("Date:");
@@ -162,80 +194,92 @@ private DailySalesReport parentFrame;
         });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("Item Name");
+        jLabel1.setText("Item Name :");
+
+        stockAvailable.setText(" ");
+
+        stockAvailableLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        stockAvailableLabel.setText("Stock Available :");
+
+        itemName.setText(" ");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(quantitySoldLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(quantitySold, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(itemIDLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGap(34, 34, 34)
-                                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGap(33, 33, 33)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(106, 106, 106)
+                        .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(itemIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                        .addComponent(stockAvailableLabel)
+                                        .addGap(23, 23, 23))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(quantitySoldLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(quantitySold, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(stockAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(65, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateLabel)
-                    .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateLabel))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(itemIDLabel)
                     .addComponent(itemID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(itemName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(stockAvailableLabel)
+                    .addComponent(stockAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quantitySoldLabel)
                     .addComponent(quantitySold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(24, 24, 24))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -243,8 +287,8 @@ private DailySalesReport parentFrame;
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-         try {
-            String selectedID = (String) itemID.getSelectedItem();
+        try {
+        String selectedID = (String) itemID.getSelectedItem();
         if (selectedID == null || selectedID.isEmpty()) {
             throw new IllegalArgumentException("Please select an item");
         }
@@ -265,15 +309,25 @@ private DailySalesReport parentFrame;
             throw new IllegalArgumentException("Selected item not found");
         }
         
-        // Check stock availability
+        // stock availability check with detailed message
         Item item = getItemById(selectedID);
-        if (item != null && item.getTotalStock() < quantity) {
-            throw new IllegalArgumentException("Not enough stock available");
+        if (item != null) {
+            int availableStock = item.getTotalStock();
+            if (availableStock < quantity) {
+                String errorMessage = String.format(
+                    "Insufficient stock!\n" +
+                    "Requested quantity: %d\n" +
+                    "Available stock: %d\n" +
+                    "Please enter a quantity of %d or less.",
+                    quantity, availableStock, availableStock
+                );
+                throw new IllegalArgumentException(errorMessage);
+            }
         }
         
         // Create and save sales record
         SalesRecord newSale = new SalesRecord(
-            FileHandler.generateSalesID(),  // Use FileHandler's method
+            FileHandler.generateSalesID(),
             selectedID,
             quantity,
             LocalDate.now(),
@@ -289,8 +343,6 @@ private DailySalesReport parentFrame;
         } catch (IOException e) {
             System.out.println("Error reloading item list: " + e.getMessage());
         }
-        
-        Item itemAfter = getItemById(selectedID);
         
         // Show success message
         JOptionPane.showMessageDialog(this,
@@ -339,17 +391,35 @@ private DailySalesReport parentFrame;
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void quantitySoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantitySoldActionPerformed
-        // TODO add your handling code here:
+        validateQuantityInRealTime();
     }//GEN-LAST:event_quantitySoldActionPerformed
 
     private void itemIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemIDActionPerformed
         updateItemName();
+        updateStockDisplay();
     }//GEN-LAST:event_itemIDActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
-
+    private void updateStockDisplay() {
+    String selectedItemID = (String) itemID.getSelectedItem();
+    for (Item item : itemList) {
+        if (item.getItemID().equals(selectedItemID)) {
+            if (stockAvailable != null) {
+                stockAvailable.setText(" " + item.getTotalStock());
+                stockAvailable.setForeground(
+                    item.getTotalStock() > 0 ? java.awt.Color.BLACK : java.awt.Color.RED
+                );
+            }
+            return;
+        }
+    }
+    if (stockAvailable!= null) {
+        stockAvailable.setText("0");
+        stockAvailable.setForeground(java.awt.Color.RED);
+    }
+}
     
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
@@ -397,6 +467,8 @@ private DailySalesReport parentFrame;
     private javax.swing.JTextField quantitySold;
     private javax.swing.JLabel quantitySoldLabel;
     private javax.swing.JLabel saleDate;
+    private javax.swing.JLabel stockAvailable;
+    private javax.swing.JLabel stockAvailableLabel;
     private javax.swing.JButton submitButton;
     // End of variables declaration//GEN-END:variables
 }
