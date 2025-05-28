@@ -1,6 +1,5 @@
 package SalesManager;
 
-import java.awt.Component;
 import model.PurchaseRequisition;
 import model.SalesRecord;
 import model.Item;
@@ -11,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import java.util.Map;
 
 public class FileHandler {
 
@@ -769,6 +768,7 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
         // Write each item as a single line with all PR and item information including item name
         for (PRItem item : pr.getItems()) {
             String itemData = "PR ID: " + pr.getPrID() +
+                            ", PR Type: " + pr.getPrType() + 
                             ", Item ID: " + item.getItemID() +
                             ", Item Name: " + item.getItemName() +  // Add item name here
                             ", Quantity: " + item.getQuantity() +
@@ -826,48 +826,49 @@ public static void savePurchaseRequisition(PurchaseRequisition pr) throws IOExce
 }
 
     public static List<String[]> readPurchaseRequisitions() throws IOException {
-    List<String[]> records = new ArrayList<>();
-    if (!new File(PR_FILE).exists()) {
-        return records;
-    }
+        List<String[]> records = new ArrayList<>();
+        if (!new File(PR_FILE).exists()) {
+            return records;
+        }
 
-     try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (!line.trim().isEmpty()) {
-                String[] keys = {"PR ID", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
-                String[] parts;
-                
-                if (line.contains(": ")) {
-                    parts = parseFormattedLine(line, keys);
-                } else {
-                    parts = line.split(",", -1);
-                }
-                
-                if (parts.length >= 11) {
-                    records.add(parts);
-                }
-            }
-    }
-    return records;
-}}
+        try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
+           String line;
+           while ((line = reader.readLine()) != null) {
+               if (!line.trim().isEmpty()) {
+                   String[] keys = {"PR ID", "PR Type", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
+                   String[] parts;
+
+                   if (line.contains(": ")) {
+                       parts = parseFormattedLine(line, keys);
+                   } else {
+                       parts = line.split(",", -1);
+                   }
+
+                   if (parts.length >= 12) {
+                       records.add(parts);
+                   }
+               }
+       }
+       return records;
+   }}
     
     public static List<String[]> readPurchaseRequisitionsForTable() throws IOException {
         List<String[]> tableRecords = new ArrayList<>();
         List<String[]> allRecords = readPurchaseRequisitions();
 
         for (String[] record : allRecords) {
-            if (record.length >= 11) {
-                String[] tableRow = new String[10];  
+            if (record.length >= 12) {
+                String[] tableRow = new String[11];  
                 tableRow[0] = record[0]; // PR ID
-                tableRow[1] = record[1]; // Item ID
-                tableRow[2] = record[3]; // Quantity
-                tableRow[3] = record[4]; // Unit Price
-                tableRow[4] = record[5]; // Total Price
-                tableRow[5] = record[8]; // Required Delivery Date
-                tableRow[6] = record[6]; // Supplier ID
-                tableRow[7] = record[9]; // Request Date
-                tableRow[8] = record[10]; // Status
+                tableRow[1] = record[1]; // PR Type
+                tableRow[2] = record[2]; // Item ID
+                tableRow[3] = record[4]; // Quantity
+                tableRow[4] = record[5]; // Unit Price
+                tableRow[5] = record[6]; // Total Price
+                tableRow[6] = record[9]; // Required Delivery Date
+                tableRow[7] = record[7]; // Supplier ID
+                tableRow[8] = record[10]; // Request Date
+                tableRow[9] = record[11]; // Status
                 
                 tableRecords.add(tableRow);
             }
@@ -930,62 +931,54 @@ public static boolean deletePurchaseRequisition(String prID) throws IOException 
 
         try (BufferedReader reader = new BufferedReader(new FileReader(PR_FILE))) {
             String line;
-            PurchaseRequisition currentPR = null;
-            List<PRItem> currentItems = new ArrayList<>();
+            Map<String, PurchaseRequisition> prMap = new HashMap<>(); // Use map to group by PR ID
 
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                // Parse the line to determine if it's a header or item line
-                String[] keys;
+                // Parse each line as a complete PR item entry
+                String[] keys = {"PR ID", "PR Type", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
                 String[] parts;
 
-                if (line.contains("Raised By: ")) {
-                    // This is a PR header line
-                    keys = new String[]{"PR ID", "Raised By", "Request Date", "Required Delivery Date", "Status"};
+                if (line.contains(": ")) {
                     parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
 
-                    // Save previous PR if exists
-                    if (currentPR != null) {
-                        currentPR.setItems(new ArrayList<>(currentItems));
-                        prList.add(currentPR);
-                        currentItems.clear();
-                    }
+                if (parts.length >= 12) {
+                    String prID = parts[0].trim();
+                    String prType = parts[1].trim();
 
-                    if (parts.length >= 5) {
-                        currentPR = new PurchaseRequisition(
-                            parts[0].trim(), // prID
-                            parts[1].trim(), // raisedBy
-                            LocalDate.parse(parts[2].trim()), // requestDate
-                            LocalDate.parse(parts[3].trim()), // requiredDeliveryDate
-                            parts[4].trim(), // status
-                            new ArrayList<>() // items will be set later
+                    // Get or create PR
+                    PurchaseRequisition pr = prMap.get(prID);
+                    if (pr == null) {
+                        pr = new PurchaseRequisition(
+                            prID,                                    // prID
+                            prType,                                  // prType
+                            parts[8].trim(),                        // raisedBy
+                            LocalDate.parse(parts[10].trim()),      // requestDate
+                            LocalDate.parse(parts[9].trim()),       // requiredDeliveryDate
+                            parts[11].trim(),                       // status
+                            new ArrayList<>()                       // items
                         );
+                        prMap.put(prID, pr);
                     }
-                } else if (line.contains("Item ID: ") && currentPR != null) {
-                    // This is a PR item line - updated to include Item Name
-                    keys = new String[]{"PR ID", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Required Delivery Date"};
-                    parts = parseFormattedLine(line, keys);
 
-                    if (parts.length >= 8) {
-                        PRItem item = new PRItem(
-                            parts[1].trim(), // itemID
-                            Integer.parseInt(parts[3].trim()), // quantity
-                            parts[6].trim(), // supplierID
-                            parts[2].trim(), // itemName
-                            Double.parseDouble(parts[4].trim()), // unitPrice
-                            LocalDate.parse(parts[7].trim()) // requiredDeliveryDate
-                        );
-                        currentItems.add(item);
-                    }
+                    // Create and add PRItem
+                    PRItem item = new PRItem(
+                        parts[2].trim(),                           // itemID
+                        Integer.parseInt(parts[4].trim()),         // quantity
+                        parts[3].trim(),                           // itemName
+                        parts[7].trim(),                           // supplierID
+                        Double.parseDouble(parts[5].trim()),       // unitPrice
+                        LocalDate.parse(parts[9].trim())           // requiredDeliveryDate
+                    );
+                    pr.getItems().add(item);
                 }
             }
 
-            // Add the last PR if exists
-            if (currentPR != null) {
-                currentPR.setItems(new ArrayList<>(currentItems));
-                prList.add(currentPR);
-            }
+            prList.addAll(prMap.values());
         }
 
         return prList;
@@ -1036,11 +1029,38 @@ public static String[] getPurchaseRequisitionById(String prID) throws IOExceptio
             }
             
             if (currentPRID.equals(prID)) {
-                String[] keys = {"PR ID", "Item ID","Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
-                if (line.contains(": ")) {
-                    return parseFormattedLine(line, keys);
+                // Check if line contains PR Type or not
+                if (line.contains("PR Type: ")) {
+                    // New format with PR Type: PR ID, PR Type, Item ID, Item Name, Quantity, Unit Price, Total Price, Supplier ID, Raised By, Required Delivery Date, Request Date, Status
+                    String[] keys = {"PR ID", "PR Type", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
+                    if (line.contains(": ")) {
+                        return parseFormattedLine(line, keys);
+                    } else {
+                        return line.split(",", -1);
+                    }
                 } else {
-                    return line.split(",", -1);
+                    // Old format without PR Type: PR ID, Item ID, Item Name, Quantity, Unit Price, Total Price, Supplier ID, Raised By, Required Delivery Date, Request Date, Status
+                    String[] keys = {"PR ID", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
+                    String[] parts;
+                    
+                    if (line.contains(": ")) {
+                        parts = parseFormattedLine(line, keys);
+                    } else {
+                        parts = line.split(",", -1);
+                    }
+                    
+                    // Create new array with PR Type inserted at index 1
+                    // Default PR Type based on some logic or just "RESTOCK"
+                    String[] result = new String[parts.length + 1];
+                    result[0] = parts[0]; // PR ID
+                    result[1] = "RESTOCK"; // Default PR Type - you can modify this logic
+                    
+                    // Copy the rest of the data, shifting indices by 1
+                    for (int i = 1; i < parts.length; i++) {
+                        result[i + 1] = parts[i];
+                    }
+                    
+                    return result;
                 }
             }
         }
@@ -1048,9 +1068,9 @@ public static String[] getPurchaseRequisitionById(String prID) throws IOExceptio
     return null;
 }
 
-public static boolean updatePurchaseRequisition(String prID, String itemID, int quantity, 
-    double price, double totalPrice, LocalDate creationDate, String supplierID, 
-    LocalDate requiredDeliveryDate, String status) throws IOException {
+public static boolean updatePurchaseRequisition(String prID, String prType, String itemID, String itemName, 
+    int quantity, double price, double totalPrice, String supplierID, String raisedBy,
+    LocalDate requiredDeliveryDate, LocalDate requestDate, String status) throws IOException {
 
     List<String> lines = new ArrayList<>();
     boolean found = false;
@@ -1073,16 +1093,18 @@ public static boolean updatePurchaseRequisition(String prID, String itemID, int 
             
             if (currentPRID.equals(prID)) {
                 found = true;
-                // Create updated line in new formatted style
+                // Create updated line with PR Type
                 line = "PR ID: " + prID +
+                      ", PR Type: " + prType +
                       ", Item ID: " + itemID +
+                      ", Item Name: " + itemName +
                       ", Quantity: " + quantity +
                       ", Unit Price: " + String.format("%.2f", price) +
                       ", Total Price: " + String.format("%.2f", totalPrice) +
                       ", Supplier ID: " + supplierID +
-                      ", Raised By: " + "Updated" + // You may want to get this from existing data
+                      ", Raised By: " + raisedBy +
                       ", Required Delivery Date: " + requiredDeliveryDate +
-                      ", Request Date: " + creationDate +
+                      ", Request Date: " + requestDate +
                       ", Status: " + status;
             }
             lines.add(line);
@@ -1096,6 +1118,7 @@ public static boolean updatePurchaseRequisition(String prID, String itemID, int 
     
     return false;
 }
+
     public static List<Supplier> loadActiveSuppliers() throws IOException {
         List<Supplier> activeSuppliers = new ArrayList<>();
         List<Supplier> allSuppliers = loadAllSuppliers();
@@ -1133,7 +1156,7 @@ public static boolean updatePurchaseRequisition(String prID, String itemID, int 
                     found = true;
 
                     // Parse existing line to get current values
-                    String[] keys = {"PR ID", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
+                    String[] keys = {"PR ID", "PR Type", "Item ID", "Quantity", "Unit Price", "Total Price", "Supplier ID", "Raised By", "Required Delivery Date", "Request Date", "Status"};
                     String[] parts;
 
                     if (line.contains(": ")) {
@@ -1142,18 +1165,20 @@ public static boolean updatePurchaseRequisition(String prID, String itemID, int 
                         parts = line.split(",", -1);
                     }
 
-                    if (parts.length >= 10) {
+                    if (parts.length >= 12) {
                         // Reconstruct line with new status in the new format
                         line = "PR ID: " + parts[0] +
-                              ", Item ID: " + parts[1] +
-                              ", Quantity: " + parts[2] +
-                              ", Unit Price: " + parts[3] +
-                              ", Total Price: " + parts[4] +
-                              ", Supplier ID: " + parts[5] +
-                              ", Raised By: " + parts[6] +
-                              ", Required Delivery Date: " + parts[7] +
-                              ", Request Date: " + parts[8] +
-                              ", Status: " + newStatus;
+                          ", PR Type: " + parts[1] +  // Preserve PR Type
+                          ", Item ID: " + parts[2] +
+                          ", Item Name: " + parts[3] +
+                          ", Quantity: " + parts[4] +
+                          ", Unit Price: " + parts[5] +
+                          ", Total Price: " + parts[6] +
+                          ", Supplier ID: " + parts[7] +
+                          ", Raised By: " + parts[8] +
+                          ", Required Delivery Date: " + parts[9] +
+                          ", Request Date: " + parts[10] +
+                          ", Status: " + newStatus;
                     }
                 }
                 lines.add(line);

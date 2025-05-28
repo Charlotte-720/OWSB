@@ -22,15 +22,12 @@ public class EditSupplier extends javax.swing.JFrame {
     
     // Modify your loadSupplierForEditing method
     private void loadSupplierForEditing() {
-        System.out.println("Loading supplier with ID: " + currentSupplierID);
         if (currentSupplierID == null) {
-            System.out.println("Current supplier ID is null!");
             return;
         }
 
         try {
             Supplier supplier = FileHandler.getSupplierById(currentSupplierID);
-            System.out.println("Loaded supplier: " + supplier); // This will tell us if the supplier is found
 
             if (supplier != null) {
                 supplierName.setText(supplier.getSupplierName());
@@ -52,7 +49,6 @@ public class EditSupplier extends javax.swing.JFrame {
                 // Change button text to indicate editing
                 updateButton.setText("Update");
             } else {
-                System.out.println("Supplier not found for ID: " + currentSupplierID);
                 JOptionPane.showMessageDialog(this, 
                     "Supplier not found!", 
                     "Error", 
@@ -260,8 +256,8 @@ public class EditSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        String newName = supplierName.getText().trim(); // Add trim() to remove whitespace
-        String newContactNo = contactNo.getText().trim(); // Add trim() to remove whitespace
+        String newName = supplierName.getText().trim(); 
+        String newContactNo = contactNo.getText().trim();
         String newSupplies = supplyItem.getText().trim();
         boolean newIsActive = isActive.isSelected();
 

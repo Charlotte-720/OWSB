@@ -45,37 +45,81 @@ public class PROperations extends javax.swing.JFrame {
         }
     }
     
-    private void editPR(int row) {
-    DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-    String salesManagerID = getCurrentSalesManagerID();
     
-    if (model.getValueAt(row, 0) != null) {
-        String prID = model.getValueAt(row, 0).toString();
-        
-        try {
-            EditPR editForm = new EditPR(prID, salesManagerID);
-            editForm.setVisible(true);
-            
-            editForm.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent e) {
-                    loadPurchaseRequisition(); 
+    private void editPR(int row) {
+        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+        String salesManagerID = getCurrentSalesManagerID();
+
+        if (model.getValueAt(row, 0) != null) {
+            String prID = model.getValueAt(row, 0).toString();
+
+            try {
+                // Get the full PR data to determine the PR Type
+                String[] prData = FileHandler.getPurchaseRequisitionById(prID);
+
+                if (prData != null && prData.length >= 11) {
+                    // Determine PR Type - check if PR Type field exists
+                    String prType = "RESTOCK"; // Default to RESTOCK
+
+                    if (prData.length >= 12 && prData[1] != null && !prData[1].trim().isEmpty()) {
+                        // PR Type exists at index 1
+                        prType = prData[1].trim();
+                    } else {
+                        // No PR Type field, try to determine from context or default to RESTOCK
+                        prType = "RESTOCK"; // Default assumption
+                    }
+
+                    System.out.println("Editing PR: " + prID + ", Type: " + prType);
+
+                    // Open the appropriate edit form based on PR Type
+                    if ("NEW_ITEM".equalsIgnoreCase(prType)) {
+                        // Open EditPRNewItem for new item PRs
+                        System.out.println("Opening EditPRNewItem for PR: " + prID);
+                        EditPRNewItem editForm = new EditPRNewItem(prID, salesManagerID);
+                        editForm.setVisible(true);
+
+                        editForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosed(java.awt.event.WindowEvent e) {
+                                loadPurchaseRequisition(); // Refresh table
+                            }
+                        });
+
+                    } else {
+                        // Default to EditPRRestock for RESTOCK or unknown types
+                        System.out.println("Opening EditPRRestock for PR: " + prID);
+                        EditPRRestock editForm = new EditPRRestock(prID, salesManagerID);
+                        editForm.setVisible(true);
+
+                        editForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosed(java.awt.event.WindowEvent e) {
+                                loadPurchaseRequisition(); // Refresh table
+                            }
+                        });
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "Could not retrieve PR data for PR ID: " + prID,
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, 
+                    "Error opening Edit form: " + e.getMessage(),
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
             JOptionPane.showMessageDialog(this, 
-                "Error opening Edit form: " + e.getMessage(),
+                "No PR ID found at the selected row",
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            "No PR ID found at the selected row",
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
     }
-}
 
     private void deletePR(int row) {
         if (prTable.isEditing()) {
@@ -123,17 +167,17 @@ public class PROperations extends javax.swing.JFrame {
     try {
         List<String[]> records = FileHandler.readPurchaseRequisitions();
         for (String[] parts : records) {
-            if (parts.length >= 11) { 
+            if (parts.length >= 12) { 
                 String prID = parts[0];           
-                String itemName = parts[2];   
-                String quantity = parts[3];      
-                String unitPrice = parts[4];     
-                String totalPrice = parts[5];     
-                String supplierID = parts[6]; 
-                String raisedBy = parts[7];       
-                String requiredDeliveryDate = parts[8]; 
-                String requestDate = parts[9];    
-                String status = parts[10];     
+                String itemName = parts[3];   
+                String quantity = parts[4];      
+                String unitPrice = parts[5];     
+                String totalPrice = parts[6];     
+                String supplierID = parts[7]; 
+                String raisedBy = parts[8];       
+                String requiredDeliveryDate = parts[9]; 
+                String requestDate = parts[10];    
+                String status = parts[11];     
                 
                 model.addRow(new Object[]{
                     prID,                   
@@ -326,7 +370,7 @@ public class PROperations extends javax.swing.JFrame {
     private void RestockExistingItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestockExistingItemButtonActionPerformed
         String salesManagerID = getCurrentSalesManagerID();
     
-        PRExistingItem addPRDialog = new PRExistingItem(salesManagerID);
+        AddPRRestock addPRDialog = new AddPRRestock(salesManagerID);
             addPRDialog.setVisible(true); 
             // Add listener to refresh table when AddPR dialog is closed
         addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -344,7 +388,7 @@ public class PROperations extends javax.swing.JFrame {
     private void PurchaseNewItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PurchaseNewItemButtonActionPerformed
         String salesManagerID = getCurrentSalesManagerID();
     
-        PRNewItem addPRDialog = new PRNewItem(salesManagerID);
+        AddPRNewItem addPRDialog = new AddPRNewItem(salesManagerID);
             addPRDialog.setVisible(true);
             
         addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
