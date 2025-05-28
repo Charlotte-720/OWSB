@@ -4,6 +4,7 @@
  */
 package Admin;
 
+import PurchaseManager.viewrequisition;
 import SalesManager.PROperations;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -102,8 +103,9 @@ public class Menu4 extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        PROperations pr = new PROperations();
-        pr.setVisible(true);
+        //this.setVisible(false);
+        //viewrequisition view = new viewrequisition(this);
+        //view.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

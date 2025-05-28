@@ -393,9 +393,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
     private void btnVerifyInventoryUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifyInventoryUpdatesActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        POVerification poVerification = new POVerification(this);
-        poVerification.setVisible(true);
+//        this.setVisible(false);
+//        POVerification poVerification = new POVerification(this);
+//        poVerification.setVisible(true);
     }//GEN-LAST:event_btnVerifyInventoryUpdatesActionPerformed
 
     private void btnManagePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderActionPerformed

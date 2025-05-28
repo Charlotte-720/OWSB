@@ -211,7 +211,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        new InventoryManagerDashboard().setVisible(true);
+        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 

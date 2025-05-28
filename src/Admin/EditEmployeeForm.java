@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class EditEmployeeForm extends javax.swing.JFrame {
     
-    private String employeeID;
+    private String employeeID; 
     private String position;
 
     public EditEmployeeForm(String identifier) {
@@ -44,7 +44,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
 
         
         // Attempt to load employee data
-        Employee employee = getEmployeeData(identifier, "Employee_data.txt");
+        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
         if (employee != null) {
             loadEmployeeData(identifier); // Load data into the form
         } else {
@@ -57,7 +57,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     
     private void loadEmployeeData(String identifier) {
         System.out.println("Loading employee data for: " + identifier);
-        Employee employee = getEmployeeData(identifier, "Employee_data.txt");
+        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
         if (employee != null) {
             txtFullname.setText(employee.getFullname());
             txtUsername.setText(employee.getUsername());
@@ -86,7 +86,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     }
     
         private String loadCredentialsData(String identifier) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -272,6 +272,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         txtUsername = new javax.swing.JTextField();
         btnClear1 = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
+        lblMyKad1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -593,6 +594,10 @@ public class EditEmployeeForm extends javax.swing.JFrame {
             }
         });
 
+        lblMyKad1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblMyKad1.setForeground(new java.awt.Color(72, 89, 4));
+        lblMyKad1.setText("Work Experinced ");
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -649,9 +654,6 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                                     .addComponent(txtMyKad))
                                 .addGap(40, 40, 40)
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                                        .addComponent(lblJobTitle)
-                                        .addGap(0, 252, Short.MAX_VALUE))
                                     .addGroup(mainPanelLayout.createSequentialGroup()
                                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(lblStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -665,7 +667,12 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                                     .addGroup(mainPanelLayout.createSequentialGroup()
                                         .addComponent(lblCompany)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtCompany)))))
+                                        .addComponent(txtCompany))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblJobTitle, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblMyKad1, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -681,7 +688,8 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFullname)
-                    .addComponent(lblMyKad))
+                    .addComponent(lblMyKad)
+                    .addComponent(lblMyKad1))
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -771,7 +779,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, Short.MAX_VALUE)
         );
 
         pack();
@@ -1052,8 +1060,8 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         );
 
         // Update Employee_data.txt
-        File employeeDataFile = new File("Employee_data.txt");
-        File tempEmployeeFile = new File("Employee_data_temp.txt");
+        File employeeDataFile = new File("src/txtFile/Employee_data.txt");
+        File tempEmployeeFile = new File("src/txtFile/Employee_data_temp.txt");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(employeeDataFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempEmployeeFile))) {
@@ -1067,7 +1075,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
                 writer.write(updatedEmployeeData); // Write updated data
                 writer.flush();
                 // Skip lines of the existing employee data
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 21; i++) {
                     reader.readLine(); // skip the next 18 lines after the match line
                 }
                 employeeFound = true;
@@ -1101,8 +1109,8 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         }
 
         // Update user credentials in user_credentials.txt
-        File credentialsFile = new File("user_credentials.txt");
-        File tempCredentialsFile = new File("user_credentials_temp.txt");
+        File credentialsFile = new File("src/txtFile/user_credentials.txt");
+        File tempCredentialsFile = new File("src/txtFile/user_credentials_temp.txt");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(credentialsFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempCredentialsFile))) {
@@ -1112,13 +1120,14 @@ public class EditEmployeeForm extends javax.swing.JFrame {
 
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("EmployeeID: " + currentEmployeeID)) {
-                    writer.write(String.format("EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\n\n",
-                        employeeID, txtUsername.getText(), password, position, "Active"));
+                    writer.write(String.format("EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\nFailedAttempts: %s\n\n",
+                        employeeID, txtUsername.getText(), password, position, "Active", "0"));
                     writer.flush();
                     reader.readLine(); // skip username line
                     reader.readLine(); // skip password line
                     reader.readLine(); // skip role line
                     reader.readLine(); // skip status line
+                    reader.readLine(); // skip failed attempts line
                     userFound = true;
                 } else {
                     // Preserve other user credentials
@@ -1181,6 +1190,7 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblGrossSalary;
     private javax.swing.JLabel lblJobTitle;
     private javax.swing.JLabel lblMyKad;
+    private javax.swing.JLabel lblMyKad1;
     private javax.swing.JLabel lblOverview;
     private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblPhoneNo;
