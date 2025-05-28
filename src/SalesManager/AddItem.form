@@ -203,17 +203,26 @@
         </Container>
         <Component class="javax.swing.JLabel" name="NameLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Name"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="PriceLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Price (RM)"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Price (RM) :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="QuantityLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Quantity"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Quantity :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="expiredDate">
@@ -223,12 +232,18 @@
         </Component>
         <Component class="javax.swing.JLabel" name="CategoryLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Category"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Category :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ExpiredDateLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Expired Date"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Expired Date :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="saveButton">
@@ -247,7 +262,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="SupplierLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Supplier Name"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Supplier Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="ClearButton">

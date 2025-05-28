@@ -295,11 +295,14 @@ public class AddItem extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        NameLabel.setText("Name");
+        NameLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        NameLabel.setText("Name :");
 
-        PriceLabel.setText("Price (RM)");
+        PriceLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        PriceLabel.setText("Price (RM) :");
 
-        QuantityLabel.setText("Quantity");
+        QuantityLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        QuantityLabel.setText("Quantity :");
 
         expiredDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -307,9 +310,11 @@ public class AddItem extends javax.swing.JFrame {
             }
         });
 
-        CategoryLabel.setText("Category");
+        CategoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        CategoryLabel.setText("Category :");
 
-        ExpiredDateLabel.setText("Expired Date");
+        ExpiredDateLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        ExpiredDateLabel.setText("Expired Date :");
 
         saveButton.setBackground(new java.awt.Color(255, 153, 153));
         saveButton.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
@@ -320,7 +325,8 @@ public class AddItem extends javax.swing.JFrame {
             }
         });
 
-        SupplierLabel.setText("Supplier Name");
+        SupplierLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        SupplierLabel.setText("Supplier Name :");
 
         ClearButton.setBackground(new java.awt.Color(153, 204, 255));
         ClearButton.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N

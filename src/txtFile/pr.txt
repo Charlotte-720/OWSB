@@ -2,3 +2,4 @@ PR ID: PR001, Item ID: ITM13, Item Name: Biscuits, Quantity: 20, Unit Price: 13.
 PR ID: PR002, Item ID: ITM13, Item Name: croissant, Quantity: 10, Unit Price: 12.00, Total Price: 120.00, Supplier ID: S10, Raised By: 1002, Required Delivery Date: 2025-05-30, Request Date: 2025-05-28, Status: Pending
 PR ID: PR003, Item ID: ITM13, Item Name: meat, Quantity: 10, Unit Price: 12.00, Total Price: 120.00, Supplier ID: S09, Raised By: 1002, Required Delivery Date: 2026-05-30, Request Date: 2025-05-28, Status: Pending
 PR ID: PR005, Item ID: ITM08, Item Name: Melon, Quantity: 2, Unit Price: 10.00, Total Price: 20.00, Supplier ID: S04, Raised By: 1002, Required Delivery Date: 2025-06-30, Request Date: 2025-05-28, Status: Pending
+PR ID: PR006, Item ID: ITM13, Item Name: milk tea, Quantity: 50, Unit Price: 8.00, Total Price: 400.00, Supplier ID: S09, Raised By: 1002, Required Delivery Date: 2025-06-01, Request Date: 2025-05-28, Status: Pending

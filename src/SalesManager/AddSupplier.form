@@ -53,18 +53,11 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="contactNoLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="supplierNameLabel" min="-2" pref="63" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                                  <Component id="supplyItemLabel" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="contactNoLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="supplyItemLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="supplierNameLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="43" pref="43" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -80,7 +73,7 @@
                           <Component id="saveButton" min="-2" pref="96" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="80" max="32767" attributes="0"/>
+                  <EmptySpace pref="73" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -94,17 +87,17 @@
                       <Component id="supplierNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="supplierName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="contactNoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="ContactNo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="supplyItemLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="supplyItem" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="35" max="32767" attributes="0"/>
+                  <EmptySpace pref="40" max="32767" attributes="0"/>
                   <Component id="saveButton" min="-2" pref="49" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               </Group>
@@ -117,7 +110,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Contact No (+60)"/>
+            <Property name="text" type="java.lang.String" value="Contact No (+60) :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="supplierName">
@@ -132,7 +125,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Name"/>
+            <Property name="text" type="java.lang.String" value="Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="saveButton">
@@ -154,7 +147,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Supply Item"/>
+            <Property name="text" type="java.lang.String" value="Supply Item :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="supplyItem">

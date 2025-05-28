@@ -111,8 +111,10 @@ public class MonthlySalesReport extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 222, 222));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         monthlyPanel.setBackground(new java.awt.Color(255, 102, 153));
 

@@ -61,9 +61,9 @@
                           <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ExpiredDateLabel" min="-2" pref="77" max="-2" attributes="0"/>
-                                      <Component id="SupplierLabel" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="SupplierLabel" max="32767" attributes="0"/>
+                                      <Component id="ExpiredDateLabel" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -168,27 +168,42 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="QuantityLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Quantity"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Quantity :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="CategoryLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Category"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Category :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="ExpiredDateLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Expired Date"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Expired Date :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="SupplierLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Supplier Name"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Supplier Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="PriceLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Price (RM)"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Price (RM) :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="ClearButton">
@@ -278,7 +293,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="NameLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Name"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Name :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="expiredDate">
