@@ -10,9 +10,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import model.PurchaseOrder;
 
 /**
@@ -43,35 +46,68 @@ public class ManagePOHelper {
         return poList;
     }
 
-    public static Map<String, String> loadSupplierNamesWithSupplies(String filePath) {
-        Map<String, String> supplierMap = new LinkedHashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+    public static List<String> loadActiveSuppliersForItem(String itemName) {
+        List<String> validSuppliers = new ArrayList<>();
+
+        try (BufferedReader supplierReader = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"));
+             BufferedReader prReader = new BufferedReader(new FileReader("src/txtFile/pr.txt"))) {
+
+            Map<String, String> idToName = new HashMap<>(); // Supplier ID -> Supplier Name
+            Set<String> activeIDs = new HashSet<>();
+
+            // Step 1: Read active suppliers and store mapping
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = supplierReader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
+                String supplierID = "", supplierName = "", isActive = "";
                 String[] parts = line.split(", ");
-                String name = "", active = "", supplies = "";
-
                 for (String part : parts) {
-                    if (part.startsWith("Supplier Name: ")) {
-                        name = part.substring("Supplier Name: ".length()).trim();
-                    } else if (part.startsWith("Supplies: ")) {
-                        supplies = part.substring("Supplies: ".length()).trim();
+                    if (part.startsWith("Supplier ID: ")) {
+                        supplierID = part.substring("Supplier ID: ".length()).trim();
+                    } else if (part.startsWith("Supplier Name: ")) {
+                        supplierName = part.substring("Supplier Name: ".length()).trim();
                     } else if (part.startsWith("Active: ")) {
-                        active = part.substring("Active: ".length()).trim();
+                        isActive = part.substring("Active: ".length()).trim();
                     }
                 }
 
-                if (active.equalsIgnoreCase("true") && !name.isEmpty()) {
-                    supplierMap.put(name, supplies);
+                if (isActive.equalsIgnoreCase("true")) {
+                    activeIDs.add(supplierID);
+                    idToName.put(supplierID, supplierName);
                 }
             }
+
+            // Step 2: Find supplier IDs that supply this item
+            while ((line = prReader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String supplierID = "", item = "";
+                String[] parts = line.split(", ");
+                for (String part : parts) {
+                    if (part.startsWith("Supplier ID: ")) {
+                        supplierID = part.substring("Supplier ID: ".length()).trim();
+                    } else if (part.startsWith("Item Name: ")) {
+                        item = part.substring("Item Name: ".length()).trim();
+                    }
+                }
+
+                if (item.equalsIgnoreCase(itemName) && activeIDs.contains(supplierID)) {
+                    String name = idToName.get(supplierID);
+                    if (name != null && !validSuppliers.contains(name)) {
+                        validSuppliers.add(name);
+                    }
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return supplierMap;
+
+        return validSuppliers;
     }
+
+
 
     public static void savePOData(List<List<Object>> tableData, String filePath) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {

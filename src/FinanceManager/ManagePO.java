@@ -8,13 +8,7 @@ import FinanceManager.StatusFormat.StatusCellRenderer;
 import FinanceManager.functions.ManagePOHelper;
 import java.awt.Color;
 import model.PurchaseOrder;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -82,12 +76,6 @@ public class ManagePO extends javax.swing.JFrame {
         }
         ManagePOHelper.savePOData(tableData, "src/txtFile/po.txt");
     }
-
-    public Map<String, String> loadSupplierNamesWithSupplies() {
-        return ManagePOHelper.loadSupplierNamesWithSupplies("src/txtFile/suppliers.txt");
-    }
-
-
 
     private void filterPOByStatus(String statusFilter) {
         DefaultTableModel model = (DefaultTableModel) poTable.getModel();
@@ -288,43 +276,45 @@ public class ManagePO extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a row.");
             return;
         }
-        
+
         String currentStatus = poTable.getValueAt(row, 7).toString();
-        if (currentStatus.equalsIgnoreCase("Approved") || currentStatus.equalsIgnoreCase("Rejected") || currentStatus.equalsIgnoreCase("Paid")) {
+        if (currentStatus.equalsIgnoreCase("Approved") || 
+            currentStatus.equalsIgnoreCase("Rejected") || 
+            currentStatus.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been " + currentStatus + ", so you cannot edit it.");
             return;
         }
 
+        // Extract PO data
         String item = poTable.getValueAt(row, 2).toString();
         String quantity = poTable.getValueAt(row, 3).toString();
         String unitPrice = poTable.getValueAt(row, 4).toString();
-        String supplier = poTable.getValueAt(row, 1).toString(); 
-        
-        Map<String, String> supplierMap = loadSupplierNamesWithSupplies();
-        List<String> filteredSuppliers = new ArrayList<>();
-        for (Map.Entry<String, String> entry : supplierMap.entrySet()) {
-            if (entry.getValue().equalsIgnoreCase(item)) {
-                filteredSuppliers.add(entry.getKey());  // key = supplier name
-            }
-        }
-        
+        String supplier = poTable.getValueAt(row, 1).toString();
+
+        // Load valid suppliers for this item
+        List<String> filteredSuppliers = ManagePOHelper.loadActiveSuppliersForItem(item);
+
         if (filteredSuppliers.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No active suppliers found for this item.");
             return;
         }
-        
+
         String[] suppliers = filteredSuppliers.toArray(new String[0]);
 
-        EditPOForm dialog = new EditPOForm(this, true); 
+        // Show the Edit PO dialog
+        EditPOForm dialog = new EditPOForm(this, true);
         dialog.setPOData(item, quantity, unitPrice, supplier, suppliers);
-        dialog.setLocationRelativeTo(this); 
-        dialog.setVisible(true); 
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
 
+        // Update table if user confirms edit
         if (dialog.isConfirmed()) {
             poTable.setValueAt(dialog.getSelectedSupplier(), row, 1);
             poTable.setValueAt(dialog.getUpdatedQuantity(), row, 3);
             poTable.setValueAt(dialog.getUpdatedTotalPrice(), row, 5);
             saveTableToFile();
+            JOptionPane.showMessageDialog(this, "Purchase Order updated successfully.");
+
         }
 
     }//GEN-LAST:event_btnEditActionPerformed

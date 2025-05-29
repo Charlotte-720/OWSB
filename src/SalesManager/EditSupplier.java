@@ -32,16 +32,13 @@ public class EditSupplier extends javax.swing.JFrame {
             if (supplier != null) {
                 supplierName.setText(supplier.getSupplierName());
                 contactNo.setText(supplier.getContactNo());
-                supplyItem.setText(supplier.getSupplies());
                 isActive.setSelected(supplier.isActive());
 
                 // Make sure fields are editable (add these lines)
                 supplierName.setEditable(true);
                 contactNo.setEditable(true);
-                supplyItem.setEditable(true);
                 supplierName.setEnabled(true);
                 contactNo.setEnabled(true);
-                supplyItem.setEnabled(true);
                 
                 this.requestFocus();
                 supplierName.requestFocusInWindow();
@@ -75,17 +72,15 @@ public class EditSupplier extends javax.swing.JFrame {
         clearButton = new javax.swing.JButton();
         activeLabel = new javax.swing.JLabel();
         updateButton = new javax.swing.JButton();
-        supplyItemLabel = new javax.swing.JLabel();
-        supplyItem = new javax.swing.JTextField();
-        supplierName = new javax.swing.JTextField();
         contactNo = new javax.swing.JTextField();
         isActive = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel40 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        supplierName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        // setFocusableWindowState(false);
+        setFocusableWindowState(false);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 246, 226));
@@ -115,22 +110,6 @@ public class EditSupplier extends javax.swing.JFrame {
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
-            }
-        });
-
-        supplyItemLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        supplyItemLabel.setText("Supply Item");
-
-        supplyItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplyItemActionPerformed(evt);
-            }
-        });
-
-        supplierName.setToolTipText("");
-        supplierName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierNameActionPerformed(evt);
             }
         });
 
@@ -167,10 +146,12 @@ public class EditSupplier extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(jLabel40)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
+
+        supplierName.setToolTipText("");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -186,8 +167,7 @@ public class EditSupplier extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(contactNoLabel)
                             .addComponent(supplierNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(activeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(supplyItemLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(activeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -196,18 +176,17 @@ public class EditSupplier extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(isActive, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(contactNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                         .addComponent(supplierName, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(supplyItem)))
+                        .addComponent(isActive, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(contactNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(30, 30, 30)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(supplierNameLabel)
                     .addComponent(supplierName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -216,13 +195,9 @@ public class EditSupplier extends javax.swing.JFrame {
                     .addComponent(contactNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(supplyItemLabel)
-                    .addComponent(supplyItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(activeLabel)
                     .addComponent(isActive))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -258,7 +233,6 @@ public class EditSupplier extends javax.swing.JFrame {
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         String newName = supplierName.getText().trim(); 
         String newContactNo = contactNo.getText().trim();
-        String newSupplies = supplyItem.getText().trim();
         boolean newIsActive = isActive.isSelected();
 
         // Validate inputs
@@ -289,12 +263,11 @@ public class EditSupplier extends javax.swing.JFrame {
             }
 
             // Create updated supplier object
-            Supplier updatedSupplier = new Supplier(currentSupplierID, newName, newContactNo, newSupplies, newIsActive);
+            Supplier updatedSupplier = new Supplier(currentSupplierID, newName, newContactNo, newIsActive);
             FileHandler.updateSupplier(
                 updatedSupplier.getSupplierID(),
                 updatedSupplier.getSupplierName(),
                 updatedSupplier.getContactNo(),
-                updatedSupplier.getSupplies(),
                 updatedSupplier.isActive()
             );
 
@@ -313,13 +286,8 @@ public class EditSupplier extends javax.swing.JFrame {
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         supplierName.setText("");
         contactNo.setText("");
-        supplyItem.setText("");
         isActive.setSelected(false);
     }//GEN-LAST:event_clearButtonActionPerformed
-
-    private void supplyItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplyItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_supplyItemActionPerformed
 
     private void supplierNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierNameActionPerformed
         // TODO add your handling code here:
@@ -370,8 +338,6 @@ public class EditSupplier extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField supplierName;
     private javax.swing.JLabel supplierNameLabel;
-    private javax.swing.JTextField supplyItem;
-    private javax.swing.JLabel supplyItemLabel;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

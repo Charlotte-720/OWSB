@@ -19,7 +19,7 @@ public class SupplierEntry extends javax.swing.JFrame {
             List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
             populateTable(supplierList);
             
-            if (supplierTable.getColumnCount() >= 6) {
+            if (supplierTable.getColumnCount() >= 5) {
                 TableActionEvent event = new TableActionEvent() {
                     @Override
                     public void editButton(int row) {
@@ -34,8 +34,8 @@ public class SupplierEntry extends javax.swing.JFrame {
                     }
                 };
 
-                supplierTable.getColumnModel().getColumn(5).setCellRenderer(new TableActionCellRender());
-                supplierTable.getColumnModel().getColumn(5).setCellEditor(new TableActionCellEditor(event));
+                supplierTable.getColumnModel().getColumn(4).setCellRenderer(new TableActionCellRender());
+                supplierTable.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(event));
             } else {
                 System.err.println("Table doesn't have enough columns for actions");
             }
@@ -108,7 +108,6 @@ public class SupplierEntry extends javax.swing.JFrame {
                 supplier.getSupplierID(),
                 supplier.getSupplierName(),
                 supplier.getContactNo(),
-                supplier.getSupplies(),
                 supplier.isActive(),
             });
         }
@@ -179,17 +178,17 @@ public class SupplierEntry extends javax.swing.JFrame {
 
         supplierTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Supplier ID", "Name", "Contact No", "Supplies", "Is Active", "Actions"
+                "Supplier ID", "Name", "Contact No", "Is Active", "Actions"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

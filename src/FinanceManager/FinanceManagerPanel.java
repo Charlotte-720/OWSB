@@ -102,7 +102,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         displayTotalPayment = new javax.swing.JLabel();
         displayPending = new javax.swing.JLabel();
         comboMonth = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -288,16 +287,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         maincontentPanel.add(summaryPanel);
         summaryPanel.setBounds(270, 220, 390, 240);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel1.setText("X");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
-            }
-        });
-        maincontentPanel.add(jLabel1);
-        jLabel1.setBounds(760, 10, 20, 40);
-
         MainPanel.add(maincontentPanel, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -381,11 +370,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnManagePurchaseOrderMouseClicked
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_jLabel1MouseClicked
-
     /**
      * @param args the command line arguments
      */
@@ -402,7 +386,6 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private javax.swing.JLabel displayPending;
     private javax.swing.JLabel displayTotalPO;
     private javax.swing.JLabel displayTotalPayment;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelFinancialSummary;
     private javax.swing.JLabel labelPending;
     private javax.swing.JLabel labelRole;

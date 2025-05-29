@@ -1,7 +1,9 @@
-Supplier ID: S04, Supplier Name: Goh, Contact No: 0125478523, Supplies: Melon, Active: true
-Supplier ID: S06, Supplier Name: dwdw, Contact No: 601245263, Supplies: Melon, Active: false
-Supplier ID: S07, Supplier Name: How, Contact No: 0145829636, Supplies: Melon, Active: true
-Supplier ID: S08, Supplier Name: Irene, Contact No: 0125468596, Supplies: Banana, Active: true
-Supplier ID: S09, Supplier Name: Charlotte, Contact No: 0172589633, Supplies: Banana, Active: true
-Supplier ID: S10, Supplier Name: SC, Contact No: 0125896396, Supplies: Melon, Grape: true
-Supplier ID: S11, Supplier Name: ss, Contact No: 0125435252, Supplies: Melon, Active: true
+Supplier ID: S04, Supplier Name: Goh, Contact No: 0125478523, Active: true
+Supplier ID: S06, Supplier Name: dwdw, Contact No: 601245263, Active: true
+Supplier ID: S07, Supplier Name: How, Contact No: 0145829636, Active: true
+Supplier ID: S08, Supplier Name: Irene, Contact No: 0125468596, Active: true
+Supplier ID: S09, Supplier Name: Charlotte, Contact No: 0172589633, Active: true
+Supplier ID: S10, Supplier Name: SC, Contact No: 0125896396, Active: true
+Supplier ID: S11, Supplier Name: ss, Contact No: 0125435252, Active: true
+Supplier ID: S12, Supplier Name: How1, Contact No: 0123456212, Active: true
+Supplier ID: S13, Supplier Name: xiao, Contact No: 012345678, Active: true
