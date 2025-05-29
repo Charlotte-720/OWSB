@@ -11,6 +11,7 @@ import InventoryManager.functions.ReportExporter;
 
 import java.util.List;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +29,78 @@ public class GenerateStockReport extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         loadStockReportTable();
+        setupFilterListeners();
+    }
+    
+    private void setupFilterListeners() {
+        filterTypeComboBox.addActionListener(e -> updateFilterValues());
+        filterValueComboBox.addActionListener(e -> loadFilteredStockReport());
+    }
+    
+    private void updateFilterValues() {
+        String filterType = (String) filterTypeComboBox.getSelectedItem();
+        filterValueComboBox.removeAllItems();  // Clear previous options
+
+        if (filterType.equals("All")) {
+            filterValueComboBox.setEnabled(false);  // No need for selection
+            loadFilteredStockReport();  // Show all
+        } else {
+            filterValueComboBox.setEnabled(true);
+            List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+
+            if (filterType.equals("By Item")) {
+                items.stream()
+                    .map(Item::getItemName)
+                    .distinct()
+                    .forEach(filterValueComboBox::addItem);
+            } else if (filterType.equals("By Supplier")) {
+                items.stream()
+                    .map(Item::getSupplierID)
+                    .distinct()
+                    .forEach(filterValueComboBox::addItem);
+            }
+        }
+    }
+    
+    private void loadFilteredStockReport() {
+        String filterType = (String) filterTypeComboBox.getSelectedItem();
+        String selectedValue = (String) filterValueComboBox.getSelectedItem();
+
+        List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+        List<Item> filteredItems = new ArrayList<>();
+
+        if (filterType.equals("All") || selectedValue == null) {
+            filteredItems = allItems;
+        } else if (filterType.equals("By Item")) {
+            for (Item item : allItems) {
+                if (item.getItemName().equalsIgnoreCase(selectedValue)) {
+                    filteredItems.add(item);
+                }
+            }
+        } else if (filterType.equals("By Supplier")) {
+            for (Item item : allItems) {
+                if (item.getSupplierID().equalsIgnoreCase(selectedValue)) {
+                    filteredItems.add(item);
+                }
+            }
+        }
+
+        // Now populate the table
+        DefaultTableModel model = (DefaultTableModel) stockReportTable.getModel();
+        model.setRowCount(0);
+
+        for (Item item : filteredItems) {
+            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK";
+            Object[] row = {
+                item.getItemID(),
+                item.getItemName(),
+                item.getCategory(),
+                item.getTotalStock(),
+                InventoryService.LOW_STOCK_THRESHOLD,
+                status
+            };
+            model.addRow(row);
+        }
     }
 
     private void loadStockReportTable() {
@@ -48,6 +121,24 @@ public class GenerateStockReport extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
+    
+    private List<Item> getItemsFromTable() {
+        List<Item> itemList = new ArrayList<>();
+        DefaultTableModel model = (DefaultTableModel) stockReportTable.getModel();
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String itemID = model.getValueAt(i, 0).toString();
+            String itemName = model.getValueAt(i, 1).toString();
+            String category = model.getValueAt(i, 2).toString();
+            int quantity = Integer.parseInt(model.getValueAt(i, 3).toString());
+
+            // You can leave price, supplier, date out since report doesn’t need them
+            Item item = new Item(itemID, itemName, 0.0, category, null, null, quantity, null);
+            itemList.add(item);
+        }
+
+        return itemList;
+    }
 
     
     /**
@@ -67,6 +158,10 @@ public class GenerateStockReport extends javax.swing.JFrame {
         stockReportTable = new javax.swing.JTable();
         exportButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
+        filterTypeComboBox = new javax.swing.JComboBox<>();
+        filterValueComboBox = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,40 +219,71 @@ public class GenerateStockReport extends javax.swing.JFrame {
             }
         });
 
+        filterTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "By Item", "By Supplier" }));
+        filterTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTypeComboBoxActionPerformed(evt);
+            }
+        });
+
+        filterValueComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterValueComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Filter by:");
+
+        jLabel2.setText("Select Value:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(exportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 88, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(75, 75, 75)
-                            .addComponent(exportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(44, 44, 44)
-                            .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(43, 43, 43)
-                            .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addGap(24, 24, 24)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(221, 221, 221)
-                        .addComponent(titleLabel)))
-                .addGap(0, 26, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filterValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(titleLabel)
+                                .addGap(193, 193, 193)
+                                .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(closeButton)
-                .addGap(10, 10, 10)
-                .addComponent(titleLabel)
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(closeButton)
+                    .addComponent(titleLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(filterValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -194,14 +320,15 @@ public class GenerateStockReport extends javax.swing.JFrame {
 
         String format = popup.getSelectedFormat();
         if (format != null) {
-            List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+            List<Item> currentTableItems = getItemsFromTable(); // get only filtered items
+
             try {
                 switch (format) {
                     case "PDF":
-                        ReportExporter.exportStockReportAsPDF(items);
+                        ReportExporter.exportStockReportAsPDF(currentTableItems);
                         break;
                     case "PNG":
-                        ReportExporter.exportStockReportAsPNG(items); // Stub or real
+                        ReportExporter.exportStockReportAsPNG(currentTableItems);
                         break;
                     default:
                         javax.swing.JOptionPane.showMessageDialog(this, "Unsupported format.");
@@ -218,6 +345,14 @@ public class GenerateStockReport extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    private void filterTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterTypeComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filterTypeComboBoxActionPerformed
+
+    private void filterValueComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterValueComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filterValueComboBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -226,7 +361,11 @@ public class GenerateStockReport extends javax.swing.JFrame {
     private javax.swing.JButton backButton;
     private javax.swing.JLabel closeButton;
     private javax.swing.JButton exportButton;
+    private javax.swing.JComboBox<String> filterTypeComboBox;
+    private javax.swing.JComboBox<String> filterValueComboBox;
     private javax.swing.JButton generateButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable stockReportTable;

@@ -75,7 +75,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     }
 
     //Use for testing only, simulate log in
-    /* 
+    /*
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
             // Replace with a dummy identifier format expected by the constructor
