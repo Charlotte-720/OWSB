@@ -6,6 +6,7 @@ package Admin;
 
 import FinanceManager.ProcessPaymentPanel;
 import SalesManager.SupplierEntry;
+import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -124,9 +125,11 @@ public class Menu3 extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        ProcessPaymentPanel processpanel = new ProcessPaymentPanel();
-        processpanel.setVisible(true);
+        this.setVisible(false);
+        java.awt.Component parent = javax.swing.SwingUtilities.getWindowAncestor(this);
+        ProcessPaymentPanel processPaymentPanel = new ProcessPaymentPanel(this);
+        processPaymentPanel.setVisible(true);
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
 

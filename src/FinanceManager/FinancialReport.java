@@ -7,6 +7,7 @@ package FinanceManager;
 import FinanceManager.functions.ExportHelper;
 import FinanceManager.functions.FinancialReportHelper;
 import FinanceManager.functions.FinancialSummary;
+import java.awt.Component;
 import java.util.LinkedHashMap;
 
 /**
@@ -19,10 +20,11 @@ public class FinancialReport extends javax.swing.JFrame {
      * Creates new form FinancialReport
      */ 
     private LinkedHashMap<String, Integer> topItems;
+    private Component previousComponent;
     
-    public FinancialReport() {
+    public FinancialReport(Component previousComponent) {
         initComponents();
-        
+        this.previousComponent = previousComponent;
         FinancialSummary summary = FinancialReportHelper.loadSummary("src/txtFile/po.txt");
 
         TotalPO.setText(String.valueOf(summary.totalPO));
@@ -332,15 +334,17 @@ public class FinancialReport extends javax.swing.JFrame {
     private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
         // TODO add your handling code here:
         this.dispose();
-        FinanceManagerPanel fmg = new FinanceManagerPanel("Unexpected position value: ");
-        fmg.setVisible(true);
+         if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel12MouseClicked
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        FinanceManagerPanel fmg = new FinanceManagerPanel("exampleFinanceManager");
-        fmg.setVisible(true);
+         if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed

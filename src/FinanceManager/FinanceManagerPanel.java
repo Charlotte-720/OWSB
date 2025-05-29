@@ -8,8 +8,6 @@ import Admin.Loginpage1;
 import FinanceManager.functions.FinanceSummaryHelper;
 import InventoryManager.POVerification;
 import PurchaseManager.viewrequisition;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
@@ -332,29 +330,29 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
 
     private void btnGenerateReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateReportsActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        FinancialReport financialReport = new FinancialReport();
+        this.setVisible(false);
+        FinancialReport financialReport = new FinancialReport(this);
         financialReport.setVisible(true);
     }//GEN-LAST:event_btnGenerateReportsActionPerformed
 
     private void btnProcessPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPaymentActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        ProcessPaymentPanel processpanel = new ProcessPaymentPanel();
-        processpanel.setVisible(true);
+        this.setVisible(false);
+        ProcessPaymentPanel processPaymentPanel = new ProcessPaymentPanel(this);
+        processPaymentPanel.setVisible(true);
     }//GEN-LAST:event_btnProcessPaymentActionPerformed
 
     private void btnVerifyInventoryUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifyInventoryUpdatesActionPerformed
         // TODO add your handling code here:
-//        this.setVisible(false);
-//        POVerification poVerification = new POVerification(this);
-//        poVerification.setVisible(true);
+        this.setVisible(false);
+        POVerification poVerification = new POVerification(this);
+        poVerification.setVisible(true);
     }//GEN-LAST:event_btnVerifyInventoryUpdatesActionPerformed
 
     private void btnManagePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        ManagePO managePO = new ManagePO();
+        this.setVisible(false);
+        ManagePO managePO = new ManagePO(this);
         managePO.setVisible(true);
     }//GEN-LAST:event_btnManagePurchaseOrderActionPerformed
 

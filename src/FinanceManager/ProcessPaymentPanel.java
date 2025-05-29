@@ -6,12 +6,8 @@ package FinanceManager;
 
 import FinanceManager.functions.PaymentPanelHelper;
 import java.awt.Color;
+import java.awt.Component;
 import model.PurchaseOrder;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -25,8 +21,11 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     /**
      * Creates new form ProcessPaymentPanel
      */
-    public ProcessPaymentPanel() {
+    private Component previousComponent;
+    
+    public ProcessPaymentPanel(Component previousComponent) {
         initComponents();
+        this.previousComponent = previousComponent;
         loadPOData();
         paymentTable.getColumnModel().getColumn(7).setCellRenderer(new StatusFormat.StatusCellRenderer());
         TableStyle.styleTableHeader(paymentTable, new Color(120, 157, 188), Color.BLACK);
@@ -228,8 +227,10 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         // TODO add your handling code here:
         this.dispose();
-        FinanceManagerPanel fmg = new FinanceManagerPanel("exampleFinanceManager");
-        fmg.setVisible(true);
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
+
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**

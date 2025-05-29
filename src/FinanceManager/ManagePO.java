@@ -7,10 +7,11 @@ package FinanceManager;
 import FinanceManager.StatusFormat.StatusCellRenderer;
 import FinanceManager.functions.ManagePOHelper;
 import java.awt.Color;
+import java.awt.Component;
 import model.PurchaseOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,7 +24,10 @@ public class ManagePO extends javax.swing.JFrame {
     /**
      * Creates new form ManagerPO
      */
-    public ManagePO() {
+    private Component previousComponent;
+    
+    public ManagePO(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         loadPOData();
         poTable.getColumnModel().getColumn(7).setCellRenderer(new StatusCellRenderer());
@@ -385,16 +389,18 @@ public class ManagePO extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
          this.dispose();
-         FinanceManagerPanel fmg = new FinanceManagerPanel("exampleFinanceManager");
-         fmg.setVisible(true);
+         if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
          
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         // TODO add your handling code here:
         this.dispose();
-        FinanceManagerPanel fmg = new FinanceManagerPanel("exampleFinanceManager");
-        fmg.setVisible(true);
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void comboFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFilterActionPerformed

@@ -5,6 +5,7 @@
 package Admin;
 
 import FinanceManager.FinancialReport;
+import FinanceManager.ProcessPaymentPanel;
 import SalesManager.DailySalesReport;
 import SalesManager.MonthlySalesReport;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -154,8 +155,9 @@ public class Menu7 extends javax.swing.JInternalFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        FinancialReport financialReport = new FinancialReport();
+        this.setVisible(false);
+        java.awt.Component parent = javax.swing.SwingUtilities.getWindowAncestor(this);
+        FinancialReport financialReport = new FinancialReport(this);
         financialReport.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
