@@ -5,7 +5,6 @@
 package Admin;
 
 import FinanceManager.FinancialReport;
-import FinanceManager.ProcessPaymentPanel;
 import SalesManager.DailySalesReport;
 import SalesManager.MonthlySalesReport;
 import javax.swing.plaf.basic.BasicInternalFrameUI;

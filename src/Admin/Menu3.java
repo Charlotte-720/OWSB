@@ -6,7 +6,6 @@ package Admin;
 
 import FinanceManager.ProcessPaymentPanel;
 import SalesManager.SupplierEntry;
-import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
