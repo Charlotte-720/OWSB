@@ -234,7 +234,7 @@ public class POVerification extends javax.swing.JFrame {
         if (selectedIndex != -1) {
             PurchaseOrder po = poList.get(selectedIndex);
 
-            if (po.getStatus().equalsIgnoreCase("Paid")) {
+            if (po.getStatus().equalsIgnoreCase("Approved")) {
                 po.setStatus("Received");
 
                 List<Item> inventoryItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
@@ -258,7 +258,7 @@ public class POVerification extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "PO confirmed and stock updated.");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
-                "Only Paid POs can be verified.\nThis PO is currently: " + po.getStatus(),
+                "Only Approved POs can be verified.\nThis PO is currently: " + po.getStatus(),
                 "Verification Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
         }
