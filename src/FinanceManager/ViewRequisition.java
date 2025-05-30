@@ -5,6 +5,7 @@
 package FinanceManager;
 
 import FinanceManager.functions.ViewRequisitionHelper;
+import java.awt.Color;
 import java.awt.Component;
 
 /**
@@ -21,17 +22,21 @@ public class ViewRequisition extends javax.swing.JFrame {
     public ViewRequisition(Component previousComponent) {
         initComponents();
         this.previousComponent = previousComponent;
-        comboStatusFilter.addItem("All");
-        comboStatusFilter.addItem("Pending");
-        comboStatusFilter.addItem("Approved");
-        comboStatusFilter.addItem("Rejected");
+        ViewRequisitionHelper.loadPRTable(prTable, "src/txtFile/pr.txt", "All");
+        prTable.getColumnModel().getColumn(11).setCellRenderer(new StatusFormat.StatusCellRenderer());
+        TableStyle.styleTableHeader(prTable, new Color(166, 214, 214), Color.BLACK);
+        
+        statusFilter.addItem("All");
+        statusFilter.addItem("Pending");
+        statusFilter.addItem("Approved");
+        statusFilter.addItem("Rejected");
 
-        comboStatusFilter.addActionListener(e -> {
-            String selectedStatus = (String) comboStatusFilter.getSelectedItem();
+        statusFilter.addActionListener(e -> {
+            String selectedStatus = (String) statusFilter.getSelectedItem();
             ViewRequisitionHelper.loadPRTable(prTable, "src/txtFile/pr.txt", selectedStatus);
         });
 
-    ViewRequisitionHelper.loadPRTable(prTable, "src/txtFile/pr.txt", "All");
+    
     }
 
     /**
@@ -48,7 +53,7 @@ public class ViewRequisition extends javax.swing.JFrame {
         exitBtn = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         prTable = new javax.swing.JTable();
-        comboStatusFilter = new javax.swing.JComboBox<>();
+        statusFilter = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -70,18 +75,25 @@ public class ViewRequisition extends javax.swing.JFrame {
 
         prTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PRID", "ItemID", "ItemName", "Quantity", "Unit Price", "Total Price", "SupplierID", "Raised By", "Delivery Time", "Date", "Status"
+                "PRID", "PR Type", "ItemID", "ItemName", "Quantity", "Unit Price", "Total Price", "SupplierID", "Raised By", "Delivery Time", "Date", "Status"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -99,7 +111,7 @@ public class ViewRequisition extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(prtListTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(179, 179, 179)
-                        .addComponent(comboStatusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(statusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 968, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exitBtn))
                 .addGap(24, 24, 24))
@@ -112,7 +124,7 @@ public class ViewRequisition extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addComponent(comboStatusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -149,11 +161,11 @@ public class ViewRequisition extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> comboStatusFilter;
     private javax.swing.JLabel exitBtn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable prTable;
     private javax.swing.JLabel prtListTitle;
+    private javax.swing.JComboBox<String> statusFilter;
     // End of variables declaration//GEN-END:variables
 }

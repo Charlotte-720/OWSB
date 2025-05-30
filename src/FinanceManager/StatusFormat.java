@@ -46,7 +46,8 @@ public class StatusFormat {
                     break;
                 default:
                     cell.setBackground(Color.WHITE);
-            }
+            } 
+            
 
             // Maintain selection highlight
             if (isSelected) {
