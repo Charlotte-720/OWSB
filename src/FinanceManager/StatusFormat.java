@@ -32,6 +32,15 @@ public class StatusFormat {
                 case "rejected":
                     cell.setBackground(new Color(255, 204, 204)); // Light Red
                     break;
+                case "verified":
+                    cell.setBackground(new Color(183, 177, 242)); // Light purple
+                    break;
+                case "flagged":
+                    cell.setBackground(new Color(255, 220, 220)); // Light pink
+                    break;
+                case "received":
+                    cell.setBackground(new Color(255, 253, 246)); // 
+                    break;
                 case "paid":
                     cell.setBackground(new Color(204, 229, 255)); // Light Blue
                     break;

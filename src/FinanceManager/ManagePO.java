@@ -11,7 +11,6 @@ import java.awt.Component;
 import model.PurchaseOrder;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,6 +36,9 @@ public class ManagePO extends javax.swing.JFrame {
         comboFilter.addItem("Pending");
         comboFilter.addItem("Approved");
         comboFilter.addItem("Rejected");
+        comboFilter.addItem("Verified");
+        comboFilter.addItem("Flagged");
+        comboFilter.addItem("Received");
         comboFilter.addItem("Paid");
 
         comboFilter.addActionListener(e -> {
@@ -284,8 +286,11 @@ public class ManagePO extends javax.swing.JFrame {
         String currentStatus = poTable.getValueAt(row, 7).toString();
         if (currentStatus.equalsIgnoreCase("Approved") || 
             currentStatus.equalsIgnoreCase("Rejected") || 
+            currentStatus.equalsIgnoreCase("Verified") ||
+            currentStatus.equalsIgnoreCase("Flagged") ||
+            currentStatus.equalsIgnoreCase("Received") ||
             currentStatus.equalsIgnoreCase("Paid")) {
-            JOptionPane.showMessageDialog(this, "This Purchase Order has been " + currentStatus + ", so you cannot edit it.");
+            JOptionPane.showMessageDialog(this, "This PO has been " + currentStatus + ", so you cannot edit it. Only Pending PO can be edited!");
             return;
         }
 
@@ -338,7 +343,16 @@ public class ManagePO extends javax.swing.JFrame {
         } else if (currentStatus.equalsIgnoreCase("Rejected")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been rejected. Cannot approve.");
             return;
-        } else if (currentStatus.equalsIgnoreCase("Paid")) {
+        } else if (currentStatus.equalsIgnoreCase("Verified")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been verified. Cannot approve.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Flagged")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been flagged. Cannot approve.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Received")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been received. Cannot approve.");
+            return;
+        }else if (currentStatus.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been paid. Cannot approve.");
             return;
         }
@@ -369,6 +383,15 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         } else if (currentStatus.equalsIgnoreCase("Approved")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been approved. Cannot reject.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Verified")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been verified. Cannot reject.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Flagged")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been flagged. Cannot reject.");
+            return;
+        } else if (currentStatus.equalsIgnoreCase("Received")) {
+            JOptionPane.showMessageDialog(this, "This Purchase Order has been received. Cannot reject.");
             return;
         } else if (currentStatus.equalsIgnoreCase("Paid")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order has been paid. Cannot reject.");

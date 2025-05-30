@@ -1,14 +1,14 @@
 package PurchaseManager.GUI;
 
 import PurchaseManager.Function.updatedata;
-import javax.swing.JFrame;
+import java.awt.Component;
 
 public class viewrequisition extends javax.swing.JFrame {
 
-    private JFrame previousFrame;
+    private Component previousComponent;
     
-    public viewrequisition(JFrame parentFrame) {
-        this.previousFrame = parentFrame;
+    public viewrequisition(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         updatedata.loadRequisitionData(jTable1);
     }
@@ -32,7 +32,6 @@ public class viewrequisition extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - checklist.png"))); // NOI18N
         jLabel1.setText("List of Requisition");
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
@@ -140,10 +139,16 @@ public class viewrequisition extends javax.swing.JFrame {
 
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_backActionPerformed
 
 

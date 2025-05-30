@@ -6,8 +6,6 @@ package FinanceManager;
 
 import Admin.Loginpage1;
 import FinanceManager.functions.FinanceSummaryHelper;
-import InventoryManager.POVerification;
-import PurchaseManager.viewrequisition;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
@@ -291,18 +289,14 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 798, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 798, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 598, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(800, 600));
+        setSize(new java.awt.Dimension(798, 598));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -345,8 +339,8 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private void btnVerifyInventoryUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifyInventoryUpdatesActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        POVerification poVerification = new POVerification(this);
-        poVerification.setVisible(true);
+        VerifyInventoryUpdates verifyInventoryUpdates = new VerifyInventoryUpdates(this);
+        verifyInventoryUpdates.setVisible(true);
     }//GEN-LAST:event_btnVerifyInventoryUpdatesActionPerformed
 
     private void btnManagePurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagePurchaseOrderActionPerformed
@@ -359,8 +353,8 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private void btnViewProductRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewProductRequisitionActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        viewrequisition view = new viewrequisition(this);
-        view.setVisible(true);
+        ViewRequisition viewPR = new ViewRequisition(this);
+        viewPR.setVisible(true);
 
     }//GEN-LAST:event_btnViewProductRequisitionActionPerformed
 

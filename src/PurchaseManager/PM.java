@@ -1,4 +1,4 @@
-package PurchaseManager.GUI;
+package PurchaseManager;
 
 import PurchaseManager.Function.updatedata;
 import PurchaseManager.GUI.viewitem;
