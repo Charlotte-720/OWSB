@@ -349,6 +349,12 @@ public class generateandviewpo extends javax.swing.JPanel {
                     case "received":
                         c.setForeground(new Color(0,102,255));
                         break;
+                    case "verified":
+                        c.setForeground(new Color(255,0,255));
+                        break;
+                    case "flagged":
+                        c.setForeground(new Color(0,153,153));
+                        break;
                     default:
                         c.setForeground(Color.BLACK);
                         break;

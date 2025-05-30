@@ -60,40 +60,40 @@ public class addPO extends JFrame {
         setVisible(true);
     }
 
-private void loadPRData() {
-    prLines = addFC.loadAllPRs(prFilePath);
-    model.setRowCount(0);
+    private void loadPRData() {
+        prLines = addFC.loadAllPRs(prFilePath);
+        model.setRowCount(0);
 
-    for (String line : prLines) {
-        if (!line.contains("Status: Pending")) {
-            continue;  // skip lines not pending
-        }
-
-        String itemID = "", supplierID = "", itemName = "", quantity = "", unitPrice = "", totalPrice = "", requiredDeliveryDate = "";
-
-        String[] parts = line.split(", ");
-        for (String part : parts) {
-            String[] keyValue = part.split(":", 2);
-            if (keyValue.length < 2) continue;
-
-            String key = keyValue[0].trim().toLowerCase();
-            String value = keyValue[1].trim();
-
-            switch (key) {
-                case "item id" -> itemID = value;
-                case "supplier id" -> supplierID = value;
-                case "item name" -> itemName = value;
-                case "quantity" -> quantity = value;
-                case "unit price" -> unitPrice = value;
-                case "total price" -> totalPrice = value;
-                case "required delivery date" -> requiredDeliveryDate = value;
+        for (String line : prLines) {
+            if (!line.contains("Status: Pending")) {
+                continue;  // skip lines not pending
             }
-        }
 
-        Object[] row = {false, itemID, supplierID, itemName, quantity, unitPrice, totalPrice, requiredDeliveryDate};
-        model.addRow(row);
+            String itemID = "", supplierID = "", itemName = "", quantity = "", unitPrice = "", totalPrice = "", requiredDeliveryDate = "";
+
+            String[] parts = line.split(", ");
+            for (String part : parts) {
+                String[] keyValue = part.split(":", 2);
+                if (keyValue.length < 2) continue;
+
+                String key = keyValue[0].trim().toLowerCase();
+                String value = keyValue[1].trim();
+
+                switch (key) {
+                    case "item id" -> itemID = value;
+                    case "supplier id" -> supplierID = value;
+                    case "item name" -> itemName = value;
+                    case "quantity" -> quantity = value;
+                    case "unit price" -> unitPrice = value;
+                    case "total price" -> totalPrice = value;
+                    case "required delivery date" -> requiredDeliveryDate = value;
+                }
+            }
+
+            Object[] row = {false, itemID, supplierID, itemName, quantity, unitPrice, totalPrice, requiredDeliveryDate};
+            model.addRow(row);
+        }
     }
-}
 
 
     private void saveSelectedPRs() {
@@ -101,6 +101,7 @@ private void loadPRData() {
         List<String> itemIDsToUpdate = new ArrayList<>();
         List<String> poLines = new ArrayList<>();
 
+        // First, collect selected rows
         for (int i = 0; i < model.getRowCount(); i++) {
             Boolean selected = (Boolean) model.getValueAt(i, 0);
             if (Boolean.TRUE.equals(selected)) {
@@ -114,8 +115,26 @@ private void loadPRData() {
         }
 
         try {
+            // Load existing PO_IDs for all suppliers in the PO file once
+            Map<String, String> existingPOs = addFC.loadSupplierPOMap(poFilePath); // You need to implement this method
+
+            Map<String, String> supplierPOMap = new HashMap<>(existingPOs); // Copy existing mappings
+
             for (int row : selectedRows) {
-                String poID = addFC.generateNextPOID(poFilePath);
+                String supplierID = (String) model.getValueAt(row, 2);
+
+                if (!supplierPOMap.containsKey(supplierID)) {
+                    // Generate a new PO_ID for this supplier
+                    String newPOID = addFC.generateNextPOID(poFilePath);
+                    supplierPOMap.put(supplierID, newPOID);
+                }
+            }
+
+            // Now build PO lines
+            for (int row : selectedRows) {
+                String supplierID = (String) model.getValueAt(row, 2);
+                String poID = supplierPOMap.get(supplierID);
+
                 String itemID = (String) model.getValueAt(row, 1);
                 itemIDsToUpdate.add(itemID);
 
@@ -123,7 +142,7 @@ private void loadPRData() {
                         "PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: Pending",
                         poID,
                         itemID,
-                        model.getValueAt(row, 2),
+                        supplierID,
                         model.getValueAt(row, 3),
                         model.getValueAt(row, 4),
                         model.getValueAt(row, 5),
@@ -149,5 +168,5 @@ private void loadPRData() {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error saving PO data.");
         }
-    }
+    }    
 }

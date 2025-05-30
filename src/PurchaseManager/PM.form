@@ -292,6 +292,8 @@
                           <Component id="Pending" min="-2" max="-2" attributes="0"/>
                           <Component id="Paid" min="-2" max="-2" attributes="0"/>
                           <Component id="Received" min="-2" max="-2" attributes="0"/>
+                          <Component id="Flagged" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="Verified" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="105" max="32767" attributes="0"/>
                   </Group>
@@ -319,6 +321,10 @@
                               <Component id="Paid" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="Received" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="Verified" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="Flagged" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane1" min="-2" pref="265" max="-2" attributes="0"/>
                       </Group>
@@ -385,7 +391,7 @@
                   <Color blue="dc" green="dc" red="dc" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Rejected    :"/>
+                <Property name="text" type="java.lang.String" value="Rejected     :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="Approve">
@@ -452,6 +458,30 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Received     :"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="Verified">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="15" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="dc" green="dc" red="dc" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Verified      :"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="Flagged">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="15" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="dc" green="dc" red="dc" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Flagged      :"/>
               </Properties>
             </Component>
           </SubComponents>

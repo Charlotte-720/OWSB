@@ -64,6 +64,8 @@ public class PM extends javax.swing.JFrame {
         Paid = new javax.swing.JLabel();
         moredetail = new PurchaseManager.button();
         Received = new javax.swing.JLabel();
+        Verified = new javax.swing.JLabel();
+        Flagged = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -230,7 +232,7 @@ public class PM extends javax.swing.JFrame {
         Reject.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         Reject.setForeground(new java.awt.Color(220, 220, 220));
         Reject.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Reject.setText("Rejected    :");
+        Reject.setText("Rejected     :");
 
         Approve.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         Approve.setForeground(new java.awt.Color(220, 220, 220));
@@ -263,6 +265,16 @@ public class PM extends javax.swing.JFrame {
         Received.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Received.setText("Received     :");
 
+        Verified.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        Verified.setForeground(new java.awt.Color(220, 220, 220));
+        Verified.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Verified.setText("Verified      :");
+
+        Flagged.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        Flagged.setForeground(new java.awt.Color(220, 220, 220));
+        Flagged.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Flagged.setText("Flagged      :");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -277,7 +289,9 @@ public class PM extends javax.swing.JFrame {
                     .addComponent(Approve)
                     .addComponent(Pending)
                     .addComponent(Paid)
-                    .addComponent(Received))
+                    .addComponent(Received)
+                    .addComponent(Flagged)
+                    .addComponent(Verified))
                 .addContainerGap(105, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -300,7 +314,11 @@ public class PM extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(Paid)
                         .addGap(18, 18, 18)
-                        .addComponent(Received))
+                        .addComponent(Received)
+                        .addGap(18, 18, 18)
+                        .addComponent(Verified)
+                        .addGap(18, 18, 18)
+                        .addComponent(Flagged))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -420,7 +438,9 @@ public class PM extends javax.swing.JFrame {
     int countPaid = 0;
     int countPending = 0;
     int countReceived = 0;
-
+    int countVerified = 0;
+    int countFlagged  = 0;
+    
     try {
         // Read all lines from po.txt
         List<String> lines = Files.readAllLines(Paths.get("src/txtFile/po.txt"));
@@ -452,8 +472,13 @@ public class PM extends javax.swing.JFrame {
                         countPaid++;
                         break;
                     case "receive":
-                    case "received":
                         countReceived++;
+                        break;
+                    case "verified":
+                        countVerified++;               
+                        break;
+                    case "flagged":
+                        countFlagged++;
                         break;
                 }
             }
@@ -465,7 +490,9 @@ public class PM extends javax.swing.JFrame {
         Paid.setText("Paid           : " + countPaid);
         Pending.setText("Pending    : " + countPending);
         Received.setText("Received    : " + countReceived);
-
+        Verified.setText("Virified       :" + countVerified);
+        Flagged.setText("Flagged      :" + countFlagged);
+        
     } catch (IOException e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage());
@@ -474,12 +501,14 @@ public class PM extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Approve;
+    private javax.swing.JLabel Flagged;
     private PurchaseManager.button GenerateViewPO;
     private javax.swing.JLabel PO;
     private javax.swing.JLabel Paid;
     private javax.swing.JLabel Pending;
     private javax.swing.JLabel Received;
     private javax.swing.JLabel Reject;
+    private javax.swing.JLabel Verified;
     private PurchaseManager.button ViewItem;
     private PurchaseManager.button ViewRequisition;
     private PurchaseManager.button ViewSuppliers;

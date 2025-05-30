@@ -195,6 +195,12 @@ public class updatedata {
                     case "received":
                         c.setForeground(new Color(0,102,255)); // dark green
                         break;
+                    case "verified":
+                        c.setForeground(new Color(255,0,255)); // dark green
+                        break;
+                    case "flagged":
+                        c.setForeground(new Color(0,153,153)); // dark green
+                        break;
                     default:
                         c.setForeground(Color.BLACK);
                         break;

@@ -1,15 +1,14 @@
 package PurchaseManager;
 
 import PurchaseManager.Function.updatedata;
-import java.awt.Component;
 import javax.swing.JFrame;
 
 public class viewrequisition extends javax.swing.JFrame {
 
-    private Component previousComponent;
+    private JFrame previousFrame;
     
-    public viewrequisition(Component previousComponent) {
-        this.previousComponent = previousComponent;
+    public viewrequisition(JFrame parentFrame) {
+        this.previousFrame = parentFrame;
         initComponents();
         updatedata.loadRequisitionData(jTable1);
     }
@@ -141,16 +140,10 @@ public class viewrequisition extends javax.swing.JFrame {
 
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
-        if (previousComponent != null) {
-            previousComponent.setVisible(true);
-        }
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
-        if (previousComponent != null) {
-            previousComponent.setVisible(true);
-        }
     }//GEN-LAST:event_backActionPerformed
 
 
