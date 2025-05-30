@@ -4,7 +4,7 @@
  */
 package Admin;
 
-import PurchaseManager.GUI.viewrequisition;
+import PurchaseManager.viewrequisition;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
