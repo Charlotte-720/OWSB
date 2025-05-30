@@ -1,18 +1,16 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
-import static SalesManager.FileHandler.generateItemID;
+import SalesManager.DataHandlers.PRFileHandler;
+import SalesManager.Functions.prFunction;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import model.Supplier;
 import model.PurchaseRequisition;
-import model.PRItem; 
 
 public class AddPRNewItem extends javax.swing.JFrame {
+    private prFunction prFunction;
     private String currentSalesManagerID;
     private List<Supplier> activeSuppliers;
     
@@ -25,6 +23,7 @@ public class AddPRNewItem extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.currentSalesManagerID = salesManagerID;
+        this.prFunction = new prFunction();
         salesManager.setText(salesManagerID);
         initializeForm();
     }
@@ -33,41 +32,27 @@ public class AddPRNewItem extends javax.swing.JFrame {
         if (currentSalesManagerID != null) {
             salesManager.setText(currentSalesManagerID);
         }
+        if (prFunction == null) {
+            prFunction = new prFunction();
+        }
         loadActiveSuppliers();
         clearForm();
     }
     
     private void loadActiveSuppliers() {
         try {
-            // Get all suppliers and filter for active ones
-            List<Supplier> allSuppliers = FileHandler.loadAllSuppliers();
-            activeSuppliers = new ArrayList<>();
+            // Load active suppliers using PRFunction
+            activeSuppliers = PRFileHandler.loadAndFormatActiveSuppliers();
             
-            for (Supplier supplier : allSuppliers) {
-                if (supplier.isActive()) {
-                    activeSuppliers.add(supplier);
-                }
-            }
+            // Format suppliers for display using PRFunction
+            String[] supplierDisplayNames = prFunction.formatSuppliersForDisplay(activeSuppliers);
             
-            // Create combo box model with active suppliers
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            
-            if (activeSuppliers.isEmpty()) {
-                model.addElement("No active suppliers available");
-            } else {
-                for (Supplier supplier : activeSuppliers) {
-                    // Display format: "ID - Name"
-                    model.addElement(supplier.getSupplierID() + " - " + supplier.getSupplierName());
-                }
-            }
-            
+            // Create and set combo box model
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(supplierDisplayNames);
             supplierID.setModel(model);
             
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error loading suppliers: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            showError("Error loading suppliers: " + e.getMessage());
             
             // Set default model if error occurs
             DefaultComboBoxModel<String> errorModel = new DefaultComboBoxModel<>();
@@ -77,159 +62,20 @@ public class AddPRNewItem extends javax.swing.JFrame {
     }
     
     private String getSelectedSupplierID() {
-        if (activeSuppliers.isEmpty()) {
-            return null;
-        }
-        
         int selectedIndex = supplierID.getSelectedIndex();
-        if (selectedIndex >= 0 && selectedIndex < activeSuppliers.size()) {
-            return activeSuppliers.get(selectedIndex).getSupplierID();
-        }
-        
-        return null;
-    }
-    
-    private boolean isDuplicateItem(String itemNameToCheck) {
-    try {
-        return FileHandler.isItemNameDuplicate(itemNameToCheck);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error checking for duplicate items: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        return false; // Assume no duplicate if there's an error
-    }
-}
-        
-    private boolean validateInput() {
-        if (itemName.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter item name", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemName.requestFocus();
-            return false;
-        }
-        
-        // Check for duplicate item name
-        if (isDuplicateItem(itemName.getText().trim())) {
-            JOptionPane.showMessageDialog(this, 
-                "Item with this name already exists. Please use a different name.", 
-                "Duplicate Item", 
-                JOptionPane.WARNING_MESSAGE);
-            itemName.requestFocus();
-            return false;
-        }
-        
-        if (itemQuantity.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter quantity", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemQuantity.requestFocus();
-            return false;
-        }
-        
-        if (itemPrice.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter price", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemPrice.requestFocus();
-            return false;
-        }
-        
-        if (requiredDeliveryDate.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter required delivery date", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            requiredDeliveryDate.requestFocus();
-            return false;
-        }
-        
-        try {
-            int quantity = Integer.parseInt(itemQuantity.getText().trim());
-            if (quantity <= 0) {
-                JOptionPane.showMessageDialog(this, "Quantity must be a positive number", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                itemQuantity.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid quantity (numbers only)", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemQuantity.requestFocus();
-            return false;
-        }
-        
-        try {
-            double price = Double.parseDouble(itemPrice.getText().trim());
-            if (price < 0) {
-                JOptionPane.showMessageDialog(this, "Price cannot be negative", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                itemPrice.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid price (numbers only)", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemPrice.requestFocus();
-            return false;
-        }
-        
-        try {
-            LocalDate deliveryDate = validateDeliveryDate();
-            if (deliveryDate == null) 
-                return false;
-        } catch (Exception e) {
-            showError("Invalid number or date format");
-            return false;
-        }
-        return true;
-    }
-    
-    private LocalDate validateDeliveryDate() {
-        try {
-            String dateText = requiredDeliveryDate.getText().trim();
-            if (dateText.isEmpty()) {
-                showError("Please enter delivery date (yyyy-MM-dd)");
-                return null;
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate deliveryDate = LocalDate.parse(dateText, formatter);
-            LocalDate today = LocalDate.now();
-
-            if (deliveryDate.isBefore(today)) {
-                showError("Delivery date cannot be in the past!");
-                return null;
-            }
-            return deliveryDate;
-        } catch (Exception e) {
-            showError("Invalid date format. Please use YYYY-MM-DD.");
-            return null;
-        }
+        return prFunction.getSupplierIDFromSelection(activeSuppliers, selectedIndex);
     }
     
     private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
-        
-    private PRItem createPRItemFromInput() throws IOException {
-        String newItemID = generateItemID();
-        String name = itemName.getText().trim();
-        double price = Double.parseDouble(itemPrice.getText().trim());
-        int quantity = Integer.parseInt(itemQuantity.getText().trim());
-        LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText().trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String selectedSupplierID = getSelectedSupplierID();
-
-        // Create PRItem with the new item details including item name
-        PRItem prItem = new PRItem(
-            newItemID, 
-            quantity, 
-            name,               
-            selectedSupplierID, 
-            price, 
-            deliveryDate
-        );
-        return prItem;
+    
+    private void showWarning(String message) {
+        JOptionPane.showMessageDialog(this, message, "Validation Error", JOptionPane.WARNING_MESSAGE);
     }
     
-    private PurchaseRequisition createPurchaseRequisition(PRItem item) throws IOException {
-        String prID = FileHandler.generatePRID();
-        String prType = PurchaseRequisition.TYPE_NEW_ITEM;
-        LocalDate requestDate = LocalDate.now();
-        LocalDate requiredDate = item.getRequiredDeliveryDate();
-        String status = "Pending";
-        
-        List<PRItem> items = new ArrayList<>();
-        items.add(item);
-        
-        return new PurchaseRequisition(prID, prType, currentSalesManagerID, requestDate, requiredDate, status, items);
+    private void showSuccess(String message) {
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
         
     @SuppressWarnings("unchecked")
@@ -453,41 +299,53 @@ public class AddPRNewItem extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         try {
-            // Validate and collect input data
-            if (!validateInput()) {
+            // Get input values
+            String itemNameText = itemName.getText().trim();
+            String quantityText = itemQuantity.getText().trim();
+            String priceText = itemPrice.getText().trim();
+            String deliveryDateText = requiredDeliveryDate.getText().trim();
+            String selectedSupplierID = getSelectedSupplierID();
+            
+            // Validate supplier selection
+            if (selectedSupplierID == null) {
+                showWarning("Please select a valid supplier");
                 return;
             }
             
-            PRItem newItem = createPRItemFromInput();
-            PurchaseRequisition pr = createPurchaseRequisition(newItem);
+            // Use PRFunction to create and save the Purchase Requisition
+            PurchaseRequisition pr = prFunction.createAndSaveNewItemPR(
+                itemNameText, 
+                quantityText, 
+                priceText, 
+                deliveryDateText, 
+                selectedSupplierID, 
+                currentSalesManagerID
+            );
             
-            FileHandler.savePurchaseRequisition(pr);
-            
-            JOptionPane.showMessageDialog(this, 
-                "Purchase Requisition created successfully!\nPR ID: " + pr.getPrID() + 
-                "\nItem: " + itemName.getText().trim() +
-                "\nQuantity: " + itemQuantity.getText().trim() +
-                "\nStatus: Pending", 
-                "Success", 
-                JOptionPane.INFORMATION_MESSAGE);
+            // Show success message
+            showSuccess("Purchase Requisition created successfully!\n" +
+                       "PR ID: " + pr.getPrID() + 
+                       "\nItem: " + itemNameText +
+                       "\nQuantity: " + quantityText +
+                       "\nStatus: Pending");
             
             // Clear form after successful submission
             clearForm();
             
-        }catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error saving Purchase Requisition: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            showWarning(e.getMessage());
+        } catch (IOException e) {
+            // Handle file operation errors
+            showError("Error saving Purchase Requisition: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            // Handle unexpected errors
+            showError("Unexpected error: " + e.getMessage());
             e.printStackTrace();
         }
-    }//GEN-LAST:event_submitButtonActionPerformed
+    }                                            
+    
     private void clearForm() {
         itemName.setText("");
         itemQuantity.setText("");
@@ -496,8 +354,9 @@ public class AddPRNewItem extends javax.swing.JFrame {
         if (supplierID.getItemCount() > 0) {
             supplierID.setSelectedIndex(0);
         }
-        itemName.requestFocus(); // Focus on first field
-    }
+        itemName.requestFocus(); 
+    }//GEN-LAST:event_submitButtonActionPerformed
+   
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         clearForm();
     }//GEN-LAST:event_clearButtonActionPerformed

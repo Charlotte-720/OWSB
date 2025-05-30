@@ -1,8 +1,14 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
+import SalesManager.Interfaces.EditPRRestock;
+import SalesManager.Interfaces.AddPRRestock;
+import SalesManager.Interfaces.EditPRNewItem;
+import SalesManager.Interfaces.AddPRNewItem;
 import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionEvent;
+import SalesManager.DataHandlers.PRFileHandler;
+import SalesManager.Functions.prFunction;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,13 +18,19 @@ import javax.swing.table.DefaultTableModel;
 
 public class PROperations extends javax.swing.JFrame {
     private String currentSalesManagerID;
+    private prFunction prFunc;
     
     public PROperations(String salesManagerID) {
         this.currentSalesManagerID = salesManagerID;
+        this.prFunc = new prFunction();
         initComponents();
-        loadPurchaseRequisition();
-        setupActionColumn();
+        initializeUI();
         date.setText(LocalDate.now().toString());
+    }
+    
+    private void initializeUI() {
+        loadPurchaseRequisitions();
+        setupActionColumn();
     }
         
     private void setupActionColumn() {
@@ -26,12 +38,12 @@ public class PROperations extends javax.swing.JFrame {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void editButton(int row) {
-                editPR(row);
+                handleEditPR(row);
             }
 
             @Override
             public void deleteButton(int row) {
-                deletePR(row);
+                handleDeletePR(row);
             }
         };
         
@@ -45,167 +57,150 @@ public class PROperations extends javax.swing.JFrame {
         }
     }
     
-    
-    private void editPR(int row) {
-        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        String salesManagerID = getCurrentSalesManagerID();
-
-        if (model.getValueAt(row, 0) != null) {
-            String prID = model.getValueAt(row, 0).toString();
-
-            try {
-                // Get the full PR data to determine the PR Type
-                String[] prData = FileHandler.getPurchaseRequisitionById(prID);
-
-                if (prData != null && prData.length >= 11) {
-                    // Determine PR Type - check if PR Type field exists
-                    String prType = "RESTOCK"; // Default to RESTOCK
-
-                    if (prData.length >= 12 && prData[1] != null && !prData[1].trim().isEmpty()) {
-                        // PR Type exists at index 1
-                        prType = prData[1].trim();
-                    } else {
-                        // No PR Type field, try to determine from context or default to RESTOCK
-                        prType = "RESTOCK"; // Default assumption
-                    }
-
-                    System.out.println("Editing PR: " + prID + ", Type: " + prType);
-
-                    // Open the appropriate edit form based on PR Type
-                    if ("NEW_ITEM".equalsIgnoreCase(prType)) {
-                        // Open EditPRNewItem for new item PRs
-                        System.out.println("Opening EditPRNewItem for PR: " + prID);
-                        EditPRNewItem editForm = new EditPRNewItem(prID, salesManagerID);
-                        editForm.setVisible(true);
-
-                        editForm.addWindowListener(new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosed(java.awt.event.WindowEvent e) {
-                                loadPurchaseRequisition(); // Refresh table
-                            }
-                        });
-
-                    } else {
-                        // Default to EditPRRestock for RESTOCK or unknown types
-                        System.out.println("Opening EditPRRestock for PR: " + prID);
-                        EditPRRestock editForm = new EditPRRestock(prID, salesManagerID);
-                        editForm.setVisible(true);
-
-                        editForm.addWindowListener(new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosed(java.awt.event.WindowEvent e) {
-                                loadPurchaseRequisition(); // Refresh table
-                            }
-                        });
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(this, 
-                        "Could not retrieve PR data for PR ID: " + prID,
-                        "Error", 
-                        JOptionPane.ERROR_MESSAGE);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, 
-                    "Error opening Edit form: " + e.getMessage(),
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+    private void loadPurchaseRequisitions() {
+        try {
+            DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+            model.setRowCount(0);
+            
+            // Use prFunction to load and process data
+            List<String[]> records = prFunc.loadPurchaseRequisitions();
+            List<Object[]> tableData = prFunc.processRecordsForTable(records);
+            
+            // Populate table with processed data
+            for (Object[] rowData : tableData) {
+                model.addRow(rowData);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "No PR ID found at the selected row",
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            
+        } catch (IOException e) {
+            handleException("Error loading Purchase Requisitions", e);
         }
     }
-
-    private void deletePR(int row) {
-        if (prTable.isEditing()) {
-            prTable.getCellEditor().stopCellEditing();
-        }
-
+    
+    private String getPRIDFromTable(int row) {
         DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-        String prID = (String) model.getValueAt(row, 0);
-
+        Object value = model.getValueAt(row, 0);
+        return value != null ? value.toString() : null;
+    }
+    
+    
+    private void handleEditPR(int row) {
+        try {
+            String prID = getPRIDFromTable(row);
+            if (prID == null) {
+                showErrorMessage("No PR ID found at the selected row");
+                return;
+            }
+            
+            // Load PR data using business logic
+            String[] prData = prFunc.loadPRData(prID);
+            if (prData == null || prData.length < 12) {
+                showErrorMessage("Could not retrieve PR data for PR ID: " + prID);
+                return;
+            }
+            
+            // Determine PR type and open appropriate edit form
+            String prType = prFunc.determinePRType(prData);
+            openEditForm(prID, prType);
+            
+        } catch (IOException e) {
+            handleException("Error loading PR data", e);
+        } catch (Exception e) {
+            handleException("Error opening Edit form", e);
+        }
+    }
+    
+    private void openEditForm(String prID, String prType) {
+        String salesManagerID = getCurrentSalesManagerID();
+        
+        if ("NEW_ITEM".equalsIgnoreCase(prType)) {
+            openEditPRNewItem(prID, salesManagerID);
+        } else {
+            openEditPRRestock(prID, salesManagerID);
+        }
+    }
+    
+    private void openEditPRNewItem(String prID, String salesManagerID) {
+        EditPRNewItem editForm = new EditPRNewItem(prID, salesManagerID);
+        editForm.setVisible(true);
+        editForm.addWindowListener(createRefreshTableListener());
+    }
+    
+    private void openEditPRRestock(String prID, String salesManagerID) {
+        EditPRRestock editForm = new EditPRRestock(prID, salesManagerID);
+        editForm.setVisible(true);
+        editForm.addWindowListener(createRefreshTableListener());
+    }
+     
+    private void handleDeletePR(int row) {
+        try {
+            if (prTable.isEditing()) {
+                prTable.getCellEditor().stopCellEditing();
+            }
+            
+            String prID = getPRIDFromTable(row);
+            if (prID == null) {
+                showErrorMessage("No PR ID found at the selected row");
+                return;
+            }
+            
+            // Delegate to prFunction
+            prFunc.handleDeletePROperation(prID, 
+                this::confirmDeletion, 
+                this::showSuccessMessage, 
+                this::showErrorMessage,
+                this::loadPurchaseRequisitions);
+            
+        } catch (Exception e) {
+            handleException("Error during deletion", e);
+        }
+    }
+    
+    private boolean confirmDeletion(String prID) {
         int confirm = JOptionPane.showConfirmDialog(
             this, 
             "Delete Purchase Requisition " + prID + "?", 
             "Confirm Delete", 
             JOptionPane.YES_NO_OPTION
         );
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                // Use FileHandler to delete PR
-                boolean deleted = FileHandler.deletePurchaseRequisition(prID);
-                if (deleted) {
-                    loadPurchaseRequisition(); // Refresh table
-                    JOptionPane.showMessageDialog(this, 
-                        "Purchase Requisition deleted successfully",
-                        "Success", 
-                        JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, 
-                        "Failed to delete Purchase Requisition",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, 
-                    "Error deleting Purchase Requisition: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            }
+        return confirm == JOptionPane.YES_OPTION;
+    }
+    
+    private void performDeletion(String prID) throws IOException {
+        boolean deleted = SalesManager.DataHandlers.PRFileHandler.deletePurchaseRequisition(prID);
+        
+        if (deleted) {
+            loadPurchaseRequisitions(); 
+            showSuccessMessage("Purchase Requisition deleted successfully");
+        } else {
+            showErrorMessage("Failed to delete Purchase Requisition");
         }
     }
-    private void loadPurchaseRequisition() {
-    DefaultTableModel model = (DefaultTableModel) prTable.getModel();
-    model.setRowCount(0); 
-
-    try {
-        List<String[]> records = FileHandler.readPurchaseRequisitions();
-        for (String[] parts : records) {
-            if (parts.length >= 12) { 
-                String prID = parts[0];           
-                String itemName = parts[3];   
-                String quantity = parts[4];      
-                String unitPrice = parts[5];     
-                String totalPrice = parts[6];     
-                String supplierID = parts[7]; 
-                String raisedBy = parts[8];       
-                String requiredDeliveryDate = parts[9]; 
-                String requestDate = parts[10];    
-                String status = parts[11];     
-                
-                model.addRow(new Object[]{
-                    prID,                   
-                    itemName,                
-                    quantity,               
-                    unitPrice,               
-                    totalPrice,             
-                    requestDate,             
-                    supplierID,             
-                    requiredDeliveryDate,    
-                    status,                  
-                    ""                       
-                });
+     
+    private java.awt.event.WindowAdapter createRefreshTableListener() {
+        return new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                loadPurchaseRequisitions();
             }
-        }
-    } catch (IOException e) {
+        };
+    }
+    
+    private void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void handleException(String context, Exception e) {
         e.printStackTrace();
-        JOptionPane.showMessageDialog(this, 
-            "Error loading Purchase Requisitions: " + e.getMessage(),
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(context + ": " + e.getMessage());
     }
-}
+    
     private String getCurrentSalesManagerID() {
         return this.currentSalesManagerID != null ? this.currentSalesManagerID : "DEFAULT_SM";
     }
-
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -368,17 +363,10 @@ public class PROperations extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RestockExistingItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestockExistingItemButtonActionPerformed
-        String salesManagerID = getCurrentSalesManagerID();
-    
+       String salesManagerID = getCurrentSalesManagerID();
         AddPRRestock addPRDialog = new AddPRRestock(salesManagerID);
-            addPRDialog.setVisible(true); 
-            // Add listener to refresh table when AddPR dialog is closed
-        addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                loadPurchaseRequisition(); // Refresh table after adding new PR
-            }
-        });
+        addPRDialog.setVisible(true);
+        addPRDialog.addWindowListener(createRefreshTableListener());
     }//GEN-LAST:event_RestockExistingItemButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
@@ -387,52 +375,10 @@ public class PROperations extends javax.swing.JFrame {
 
     private void PurchaseNewItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PurchaseNewItemButtonActionPerformed
         String salesManagerID = getCurrentSalesManagerID();
-    
         AddPRNewItem addPRDialog = new AddPRNewItem(salesManagerID);
-            addPRDialog.setVisible(true);
-            
-        addPRDialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                loadPurchaseRequisition(); // Refresh table after adding new PR
-            }
-        });
+        addPRDialog.setVisible(true);
+        addPRDialog.addWindowListener(createRefreshTableListener());
     }//GEN-LAST:event_PurchaseNewItemButtonActionPerformed
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(PROperations.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(PROperations.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(PROperations.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(PROperations.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new PROperations().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PRPanel;

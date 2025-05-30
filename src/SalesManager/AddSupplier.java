@@ -1,5 +1,6 @@
 package SalesManager;
 
+import SalesManager.DataHandlers.SupplierFileHandler;
 import model.Supplier;
 import java.io.IOException;
 import javax.swing.JOptionPane;                                                                                                                                             
@@ -69,7 +70,7 @@ public class AddSupplier extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(252, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -105,7 +106,7 @@ public class AddSupplier extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(107, 107, 107)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,18 +123,20 @@ public class AddSupplier extends javax.swing.JFrame {
                     .addComponent(ContactNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -163,7 +166,7 @@ public class AddSupplier extends javax.swing.JFrame {
                 return;
             }
             
-            if (FileHandler.isSupplierNameDuplicate(name, "")) {
+            if (SupplierFileHandler.isSupplierNameDuplicate(name, "")) {
                 JOptionPane.showMessageDialog(this, 
                     "Duplicate supplier name detected!", 
                     "Duplicate Error", 
@@ -173,13 +176,13 @@ public class AddSupplier extends javax.swing.JFrame {
                 
             // Create and save supplier
             Supplier newSupplier = new Supplier(
-                FileHandler.generateSupplierID(),
+                SupplierFileHandler.generateSupplierID(),
                 name,
                 contact,
                 true // isActive
             );
             
-            FileHandler.saveSupplier(newSupplier);
+            SupplierFileHandler.saveSupplier(newSupplier);
             JOptionPane.showMessageDialog(this, "Supplier added successfully!");
             clearFields();
             

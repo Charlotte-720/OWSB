@@ -1,13 +1,15 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
-import model.SalesRecord;
+import SalesManager.Interfaces.DailySalesReport;
+import SalesManager.DataHandlers.ItemFileHandler;
+import SalesManager.DataHandlers.SalesRecordFileHandler;
+import SalesManager.Functions.salesFunction;
 import model.Item;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import model.SalesRecord;
 
 public class AddDailySales extends javax.swing.JFrame {
 private java.util.List<Item> itemList;
@@ -15,8 +17,9 @@ private DailySalesReport parentFrame;
     
     public AddDailySales(DailySalesReport parent) {
         this.parentFrame = parent;
+        
         try {
-            itemList = FileHandler.loadAllItems();
+            itemList = ItemFileHandler.loadAllItems();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, 
                 "Error loading items: " + e.getMessage(),
@@ -29,22 +32,17 @@ private DailySalesReport parentFrame;
         populateItemIDs();
     }
     
-    private double getPrice(String itemID) {
-    for (Item item : itemList) {
-        if (item.getItemID().equals(itemID)) {
-            return item.getPrice();
-        }
+    private double getPrice(String itemID) throws IOException {
+        return salesFunction.getItemPrice(itemID);
     }
-    return 0.0; // Item not found
-    }
-    
     
     private void populateItemIDs() {
-    itemID.removeAllItems(); // Clear existing
+    itemID.removeAllItems(); 
     for (Item item : itemList) {
-        itemID.addItem(item.getItemID());
+        itemID.addItem(item.getItemID()); 
     }
 }
+    
     private void updateItemName() {
         String selectedItemID = (String) itemID.getSelectedItem();
         for (Item item : itemList) {
@@ -57,34 +55,30 @@ private DailySalesReport parentFrame;
                 return;
             }
         }
-        stockAvailable.setText(""); // Clear if not found
+        stockAvailable.setText(""); 
     }
     
     private void validateQuantityInRealTime() {
         try {
             String quantityText = quantitySold.getText().trim();
             if (quantityText.isEmpty()) {
-                return; // Don't validate empty input
+                return;
             }
 
             int requestedQuantity = Integer.parseInt(quantityText);
             String selectedID = (String) itemID.getSelectedItem();
 
             if (selectedID != null) {
-                Item item = getItemById(selectedID);
-                if (item != null && requestedQuantity > item.getTotalStock()) {
-                    // Change text field background to indicate error
-                    quantitySold.setBackground(new java.awt.Color(255, 200, 200)); // Light red
-                    quantitySold.setToolTipText("Quantity exceeds available stock (" + 
-                        item.getTotalStock() + ")");
+                int availableStock = salesFunction.getAvailableStock(selectedID);
+                if (requestedQuantity > availableStock) {
+                    quantitySold.setBackground(new java.awt.Color(255, 200, 200));
+                    quantitySold.setToolTipText("Quantity exceeds available stock (" + availableStock + ")");
                 } else {
-                    // Reset to normal background
                     quantitySold.setBackground(java.awt.Color.WHITE);
                     quantitySold.setToolTipText(null);
                 }
             }
-        } catch (NumberFormatException e) {
-            // Invalid number format, but don't show error yet
+        } catch (NumberFormatException | IOException e) {
             quantitySold.setBackground(java.awt.Color.WHITE);
             quantitySold.setToolTipText(null);
         }
@@ -291,105 +285,52 @@ private DailySalesReport parentFrame;
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         try {
-        String selectedID = (String) itemID.getSelectedItem();
-        if (selectedID == null || selectedID.isEmpty()) {
-            throw new IllegalArgumentException("Please select an item");
-        }
-        
-        int quantity;
-        try {
-            quantity = Integer.parseInt(quantitySold.getText());
-            if (quantity <= 0) {
-                throw new IllegalArgumentException("Quantity must be positive");
+            String selectedID = (String) itemID.getSelectedItem();
+            String quantityText = quantitySold.getText().trim();
+
+            // Validate input - this returns an int (validated quantity)
+            int validatedQuantity = salesFunction.validateSaleInput(selectedID, quantityText);
+
+            // Process the sale - this returns a SalesRecord object
+            SalesRecord saleRecord = salesFunction.processSale(selectedID, validatedQuantity);
+
+            try {
+                itemList = salesFunction.loadAllItems();
+            } catch (IOException e) {
+                System.out.println("Error reloading item list: " + e.getMessage());
             }
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Please enter a valid quantity");
-        }
-        
-        // Get item price
-        double price = getPrice(selectedID);
-        if (price == 0.0) {
-            throw new IllegalArgumentException("Selected item not found");
-        }
-        
-        // stock availability check with detailed message
-        Item item = getItemById(selectedID);
-        if (item != null) {
-            int availableStock = item.getTotalStock();
-            if (availableStock < quantity) {
-                String errorMessage = String.format(
-                    "Insufficient stock!\n" +
-                    "Requested quantity: %d\n" +
-                    "Available stock: %d\n" +
-                    "Please enter a quantity of %d or less.",
-                    quantity, availableStock, availableStock
-                );
-                throw new IllegalArgumentException(errorMessage);
+
+            // Show success message
+            JOptionPane.showMessageDialog(this,
+                String.format("Sale processed successfully!\nSale ID: %s\nTotal Amount: RM%.2f", 
+                             saleRecord.getSaleID(), saleRecord.getTotalAmount()),
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+            // Notify parent and close
+            if (parentFrame != null) {
+                parentFrame.refreshSalesData();
             }
-        }
-        
-        // Create and save sales record
-        SalesRecord newSale = new SalesRecord(
-            FileHandler.generateSalesID(),
-            selectedID,
-            quantity,
-            LocalDate.now(),
-            price
-        );
-        
-        FileHandler.saveSalesRecord(newSale);
-        FileHandler.updateItemStockAfterSale(selectedID, quantity);
-        
-        // Reload item list to get fresh data
-        try {
-            itemList = FileHandler.loadAllItems();
+
+            quantitySold.setText("");
+            this.dispose();
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this,
+                e.getMessage(),
+                "Input Error",
+                JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
-            System.out.println("Error reloading item list: " + e.getMessage());
+            JOptionPane.showMessageDialog(this,
+                "Error processing sale: " + e.getMessage(),
+                "File Error",
+                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Unexpected error: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-        
-        // Show success message
-        JOptionPane.showMessageDialog(this,
-            "Sale recorded successfully!",
-            "Success",
-            JOptionPane.INFORMATION_MESSAGE);
-        
-        // Notify the parent frame to refresh
-        if (parentFrame != null) {
-            parentFrame.refreshSalesData();
-        }
-        
-        quantitySold.setText("");
-        this.dispose();
-        
-    } catch (IllegalArgumentException e) {
-        JOptionPane.showMessageDialog(this,
-            e.getMessage(),
-            "Input Error",
-            JOptionPane.ERROR_MESSAGE);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this,
-            "Error saving sales record: " + e.getMessage(),
-            "File Error",
-            JOptionPane.ERROR_MESSAGE);
-    }
-}
-        
-    
-    private Item getItemById(String itemId) {
-        try {
-            // Force reload from file instead of using cached itemList
-            return FileHandler.getItemById(itemId);
-        } catch (IOException e) {
-            System.out.println("ERROR in getItemById: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
-    private String generateSaleID() {
-        return "SR" + LocalDate.now().toString().replace("-", "") 
-             + "-" + (int)(Math.random() * 10000);
-    
 
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -423,39 +364,6 @@ private DailySalesReport parentFrame;
         stockAvailable.setForeground(java.awt.Color.RED);
     }
 }
-    
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AddDailySales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AddDailySales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AddDailySales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AddDailySales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AddDailySales().setVisible(true);
-//            }
-//        });
-//    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel DailySalesReportTitle;
     private javax.swing.JLabel dateLabel;

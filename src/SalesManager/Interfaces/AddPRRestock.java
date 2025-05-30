@@ -1,5 +1,7 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
+import SalesManager.DataHandlers.ItemFileHandler;
+import SalesManager.DataHandlers.PRFileHandler;
 import model.Item;
 import model.PurchaseRequisition;
 import model.PRItem;
@@ -48,7 +50,7 @@ public class AddPRRestock extends javax.swing.JFrame {
     private java.util.List<Item> loadItemsFromFile() {
         try {
             // Use FileHandler to load items
-            return FileHandler.loadAllItems();
+            return ItemFileHandler.loadAllItems();
         } catch (IOException e) {
             System.err.println("Error loading items: " + e.getMessage());
             e.printStackTrace();
@@ -507,7 +509,7 @@ public class AddPRRestock extends javax.swing.JFrame {
         
         try {
             // Generate PR ID using FileHandler
-            String prNumber = FileHandler.generatePRID();
+            String prNumber = PRFileHandler.generatePRID();
             String prType = PurchaseRequisition.TYPE_RESTOCK; // Add PR Type
             LocalDate creationDate = LocalDate.now();
             String status = "Pending";
@@ -572,7 +574,7 @@ public class AddPRRestock extends javax.swing.JFrame {
             );
             
             // Save using FileHandler
-            FileHandler.savePurchaseRequisition(pr);
+            PRFileHandler.savePurchaseRequisition(pr);
             
             javax.swing.JOptionPane.showMessageDialog(this, 
                 "Purchase Requisition " + prNumber + " saved successfully!\n" +

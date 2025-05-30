@@ -4,6 +4,7 @@ import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
+import SalesManager.DataHandlers.SupplierFileHandler;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -16,7 +17,7 @@ public class SupplierEntry extends javax.swing.JFrame {
     public SupplierEntry() {
         initComponents();
         try {
-            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
+            List<Supplier> supplierList = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); 
             populateTable(supplierList);
             
             if (supplierTable.getColumnCount() >= 5) {
@@ -78,7 +79,7 @@ public class SupplierEntry extends javax.swing.JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                FileHandler.deleteSupplier(supplierID); // using FileHandler
+                SupplierFileHandler.deleteSupplier(supplierID); 
                 model.removeRow(row);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, 
@@ -91,7 +92,7 @@ public class SupplierEntry extends javax.swing.JFrame {
 
     private void refreshTable() {
         try {
-            List<Supplier> supplierList = FileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); // using FileHandler
+            List<Supplier> supplierList = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); 
             populateTable(supplierList);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error refreshing suppliers: " + e.getMessage(),

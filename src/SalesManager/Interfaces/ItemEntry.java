@@ -1,10 +1,14 @@
 
-package SalesManager;
+package SalesManager.Interfaces;
 
+import SalesManager.Interfaces.AddItem;
+import SalesManager.Interfaces.EditItem;
 import model.Item;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
+import SalesManager.DataHandlers.ItemFileHandler;
+import SalesManager.Functions.itemFunction;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
@@ -21,7 +25,7 @@ private List<Item> allItems = new ArrayList<>();
     public ItemEntry() {
         initComponents();
         try {
-            allItems = FileHandler.loadItemsFromFile();
+            allItems = ItemFileHandler.loadAllItems();
             populateTable(allItems);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading items: " + e.getMessage());
@@ -50,55 +54,60 @@ private List<Item> allItems = new ArrayList<>();
         });
     }
     private void performSearch() {
-        String searchText = SearchField.getText().trim().toLowerCase();
+        String searchText = SearchField.getText().trim();
 
-        if (searchText.isEmpty()) {
-            // If search field is empty, show all items
+        try {
+            // Use the new search method from ItemFileHandler
+            List<Item> filteredItems = itemFunction.searchItems(searchText);
+            populateTable(filteredItems);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error performing search: " + e.getMessage());
+            // Fallback to showing all items
             populateTable(allItems);
-            return;
         }
-
-        // Filter items based on search text
-        List<Item> filteredItems = new ArrayList<>();
-
-        for (Item item : allItems) {
-            if (matchesSearchCriteria(item, searchText)) {
-                filteredItems.add(item);
-            }
-        }
-
-        // Update table with filtered results
+    }
+    private void filterByCategory(String category) {
+    try {
+        List<Item> filteredItems = itemFunction.getItemsByCategory(category);
         populateTable(filteredItems);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error filtering by category: " + e.getMessage());
     }
+}
 
-    // New method to check if an item matches search criteria
-    private boolean matchesSearchCriteria(Item item, String searchText) {
-        // Check all fields of the item
-        String[] searchableFields = {
-            item.getItemID() != null ? item.getItemID().toLowerCase() : "",
-            item.getItemName() != null ? item.getItemName().toLowerCase() : "",
-            String.valueOf(item.getPrice()).toLowerCase(),
-            item.getCategory() != null ? item.getCategory().toLowerCase() : "",
-            item.getExpiredDate() != null ? item.getExpiredDate().toString().toLowerCase() : "",
-            item.getSupplierID() != null ? item.getSupplierID().toLowerCase() : "",
-            String.valueOf(item.getTotalStock()).toLowerCase(),
-            item.getUpdatedDate() != null ? item.getUpdatedDate().toString().toLowerCase() : ""
-        };
-
-        // Check if search text is found in any field
-        for (String field : searchableFields) {
-            if (field.contains(searchText)) {
-                return true;
-            }
+private void showLowStockItems(int threshold) {
+    try {
+        List<Item> lowStockItems = itemFunction.getLowStockItems(threshold);
+        populateTable(lowStockItems);
+        
+        if (lowStockItems.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No items with stock below " + threshold);
         }
-
-        return false;
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error getting low stock items: " + e.getMessage());
     }
+}
+
+private void showExpiringItems(int days) {
+    try {
+        List<Item> expiringItems = itemFunction.getItemsExpiringWithin(days);
+        populateTable(expiringItems);
+        
+        if (expiringItems.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No items expiring within " + days + " days");
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                expiringItems.size() + " items expiring within " + days + " days");
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error getting expiring items: " + e.getMessage());
+    }
+}
     
     // Modified refreshTable method to maintain search results
     private void refreshTable() {
         try {
-            allItems = FileHandler.loadItemsFromFile();
+            allItems = ItemFileHandler.loadAllItems();
             // Re-apply current search if any
             performSearch();
         } catch (IOException e) {
@@ -111,20 +120,6 @@ private List<Item> allItems = new ArrayList<>();
         SearchField.setText("");
         populateTable(allItems);
     }
-
-    private String getFieldValueByIndex(Item item, int columnIndex) {
-    switch (columnIndex) {
-        case 0: return item.getItemID() != null ? item.getItemID() : "";
-        case 1: return item.getItemName() != null ? item.getItemName() : "";
-        case 2: return String.valueOf(item.getPrice());
-        case 3: return item.getCategory() != null ? item.getCategory() : "";
-        case 4: return item.getExpiredDate() != null ? item.getExpiredDate().toString() : "";
-        case 5: return item.getSupplierID() != null ? item.getSupplierID() : "";
-        case 6: return String.valueOf(item.getTotalStock());
-        case 7: return item.getUpdatedDate() != null ? item.getUpdatedDate().toString() : "";
-        default: return "";
-    }
-}
 
     // Separate method for edit action
     private void editItem(int row) {
@@ -168,7 +163,7 @@ private List<Item> allItems = new ArrayList<>();
 
     private void deleteFromFile(String itemID) {
             try {
-                FileHandler.deleteItemFromFile(itemID);
+                ItemFileHandler.deleteItem(itemID);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error deleting item: " + e.getMessage());
             }
@@ -212,7 +207,7 @@ private List<Item> allItems = new ArrayList<>();
         DefaultTableModel model = (DefaultTableModel) ItemTable.getModel();
         model.setRowCount(0); // clear existing data
         try {
-            List<Item> items = FileHandler.loadAllItems(); // or from your source
+            List<Item> items = ItemFileHandler.loadAllItems(); // or from your source
             for (Item item : items) {
                 Object[] rowData = {
                     item.getItemID(),

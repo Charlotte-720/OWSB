@@ -1,12 +1,9 @@
 
-package SalesManager;
+package SalesManager.Interfaces;
 
-import model.Item;
-import java.io.IOException;
+import SalesManager.DataHandlers.SalesRecordFileHandler;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MonthlySalesReportPanel extends javax.swing.JPanel {
@@ -29,53 +26,17 @@ public class MonthlySalesReportPanel extends javax.swing.JPanel {
     private void loadMonthlySalesData() {
         DefaultTableModel model = (DefaultTableModel) monthlyTable.getModel();
         model.setRowCount(0);
-        totalMonthlyAmount = 0.0;
-        
-        try {
-            // Get all items first
-            List<Item> allItems = FileHandler.getMonthlySalesItems();
-            List<String[]> salesRecords = FileHandler.getMonthlySalesRecords();
-            String monthFilter = currentMonth.format(monthFileFormat);
-            
-            // For each item, calculate its monthly sales
-            for (Item item : allItems) {
-                String itemID = item.getItemID();
-                String itemName = item.getItemName();
-                double price = item.getPrice();
-                int totalQuantitySold = 0;
-                
-                // Find all sales for this item in the current month
-                for (String[] saleParts : salesRecords) {
-                    if (saleParts[1].equals(itemID) && saleParts[3].startsWith(monthFilter)) {
-                        int quantitySold = Integer.parseInt(saleParts[2]);
-                        totalQuantitySold += quantitySold;
-                        totalMonthlyAmount += (price * quantitySold);
-                    }
-                }
-                
-                // Only add items that had sales this month
-                if (totalQuantitySold > 0) {
-                    double itemTotalAmount = price * totalQuantitySold;
-                    model.addRow(new Object[]{
-                        itemID,
-                        itemName,
-                        totalQuantitySold,
-                        price,
-                        itemTotalAmount,
-                        String.format("RM%.2f", price),
-                        String.format("RM%.2f", itemTotalAmount)    
-                    });
-                }
-            }
-            totalSales.setText(String.format("RM%.2f", totalMonthlyAmount));
-            
-        }catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error loading sales data: " + e.getMessage(), 
-                "Data Error", 
-                JOptionPane.ERROR_MESSAGE);
+
+        SalesRecordFileHandler.MonthlySalesData monthlyData = 
+            SalesRecordFileHandler.loadDailyGroupedSales(currentMonth);
+
+        for (Object[] row : monthlyData.getSalesData()) {
+            model.addRow(row);
         }
+
+        totalSales.setText(String.format("RM%.2f", monthlyData.getTotalAmount()));
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -114,15 +75,23 @@ public class MonthlySalesReportPanel extends javax.swing.JPanel {
 
         monthlyTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Item ID", "Item Name", "Total Quantity", "Price", "Total Amount"
+                "Sale ID", "Sale Date", "Total Amount"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         monthlyTable.setRowHeight(40);
         jScrollPane1.setViewportView(monthlyTable);
 
@@ -133,7 +102,7 @@ public class MonthlySalesReportPanel extends javax.swing.JPanel {
         jLabel1.setText("Total Sales Amount:");
 
         totalSales.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        totalSales.setText("jLabel2");
+        totalSales.setText(" ");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -145,9 +114,9 @@ public class MonthlySalesReportPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(totalSales)
-                        .addGap(15, 15, 15)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(totalSales, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)))
                 .addGap(19, 19, 19))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(130, 130, 130)
@@ -207,7 +176,6 @@ public class MonthlySalesReportPanel extends javax.swing.JPanel {
         updateMonthDisplay();
         loadMonthlySalesData();
     }//GEN-LAST:event_nextButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

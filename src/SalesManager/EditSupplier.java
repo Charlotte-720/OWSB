@@ -1,5 +1,6 @@
 package SalesManager;
 
+import SalesManager.DataHandlers.SupplierFileHandler;
 import model.Supplier;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -27,7 +28,7 @@ public class EditSupplier extends javax.swing.JFrame {
         }
 
         try {
-            Supplier supplier = FileHandler.getSupplierById(currentSupplierID);
+            Supplier supplier = SupplierFileHandler.getSupplierById(currentSupplierID);
 
             if (supplier != null) {
                 supplierName.setText(supplier.getSupplierName());
@@ -80,7 +81,7 @@ public class EditSupplier extends javax.swing.JFrame {
         supplierName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setFocusableWindowState(false);
+        // setFocusableWindowState(false);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 246, 226));
@@ -132,21 +133,21 @@ public class EditSupplier extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(79, 79, 79)
                 .addComponent(jLabel40)
                 .addContainerGap(86, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(16, 16, 16))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jLabel40)
                 .addGap(29, 29, 29))
         );
@@ -185,7 +186,7 @@ public class EditSupplier extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(48, 48, 48)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(supplierNameLabel)
                     .addComponent(supplierName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -197,7 +198,7 @@ public class EditSupplier extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(activeLabel)
                     .addComponent(isActive))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -254,7 +255,7 @@ public class EditSupplier extends javax.swing.JFrame {
 
         try {
             // Check for duplicate supplier name (excluding the current supplier)
-            if (FileHandler.isSupplierNameDuplicate(newName, currentSupplierID)) {
+            if (SupplierFileHandler.isSupplierNameDuplicate(newName, currentSupplierID)) {
                 JOptionPane.showMessageDialog(this,
                     "Supplier name already exists!",
                     "Error",
@@ -264,7 +265,7 @@ public class EditSupplier extends javax.swing.JFrame {
 
             // Create updated supplier object
             Supplier updatedSupplier = new Supplier(currentSupplierID, newName, newContactNo, newIsActive);
-            FileHandler.updateSupplier(
+            SupplierFileHandler.updateSupplier(
                 updatedSupplier.getSupplierID(),
                 updatedSupplier.getSupplierName(),
                 updatedSupplier.getContactNo(),

@@ -5,8 +5,8 @@
 package Admin;
 
 import FinanceManager.FinancialReport;
-import SalesManager.DailySalesReport;
-import SalesManager.MonthlySalesReport;
+import SalesManager.Interfaces.DailySalesReport;
+import SalesManager.Interfaces.MonthlySalesReport;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**

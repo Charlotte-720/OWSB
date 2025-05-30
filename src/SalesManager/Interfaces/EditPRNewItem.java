@@ -1,9 +1,6 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+import SalesManager.Functions.prFunction;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -13,14 +10,16 @@ public class EditPRNewItem extends javax.swing.JFrame {
     private String currentPRID;
     private String currentSalesManagerID;
     private List<Supplier> activeSuppliers;
-    
+    private prFunction prFunc;
     
     public EditPRNewItem() {
         initComponents();
+        this.prFunc = new prFunction();
     }
     
     public EditPRNewItem(String prID, String salesManagerID) {
         initComponents();
+        this.prFunc = new prFunction();
         this.currentPRID = prID;
         this.currentSalesManagerID = salesManagerID;
         salesManager.setText(salesManagerID);
@@ -32,40 +31,27 @@ public class EditPRNewItem extends javax.swing.JFrame {
     
     private void loadCurrentPRData() {
         try {
-            String[] prData = FileHandler.getPurchaseRequisitionById(currentPRID);
+            String[] prData = prFunc.loadPRData(currentPRID);
             
-            if (prData != null && prData.length >= 11) {
-                System.out.println("PR Data found with " + prData.length + " elements");
-                for (int i = 0; i < prData.length; i++) {
-                    System.out.println("Index " + i + ": " + prData[i]);
-                }
-                
-                itemName.setText(prData[3].trim()); // Item Name
-                itemQuantity.setText(prData[4].trim()); // Quantity
-                itemPrice.setText(prData[5].trim()); // Unit Price
-                requiredDeliveryDate.setText(prData[9].trim()); // Required Delivery Date
-                
-                // Set the supplier in combo box
-                String currentSupplierID = prData[7].trim(); // Supplier ID
-                setSupplierInComboBox(currentSupplierID);
-                
-                System.out.println("Successfully loaded PR data");
-                
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                    "PR data not found or incomplete for PR ID: " + currentPRID, 
-                    "Data Not Found", 
-                    JOptionPane.WARNING_MESSAGE);
+            System.out.println("PR Data found with " + prData.length + " elements");
+            for (int i = 0; i < prData.length; i++) {
+                System.out.println("Index " + i + ": " + prData[i]);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error loading PR data: " + e.getMessage(), 
-                "File Error", 
-                JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            
+            itemName.setText(prData[3].trim()); // Item Name
+            itemQuantity.setText(prData[4].trim()); // Quantity
+            itemPrice.setText(prData[5].trim()); // Unit Price
+            requiredDeliveryDate.setText(prData[9].trim()); // Required Delivery Date
+            
+            // Set the supplier in combo box
+            String currentSupplierID = prData[7].trim(); // Supplier ID
+            setSupplierInComboBox(currentSupplierID);
+            
+            System.out.println("Successfully loaded PR data");
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                "Unexpected error loading PR data: " + e.getMessage(), 
+                "Error loading PR data: " + e.getMessage(), 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -74,15 +60,7 @@ public class EditPRNewItem extends javax.swing.JFrame {
     
     private void loadActiveSuppliers() {
         try {
-            // Get all suppliers and filter for active ones
-            List<Supplier> allSuppliers = FileHandler.loadAllSuppliers();
-            activeSuppliers = new ArrayList<>();
-            
-            for (Supplier supplier : allSuppliers) {
-                if (supplier.isActive()) {
-                    activeSuppliers.add(supplier);
-                }
-            }
+            activeSuppliers = prFunc.loadAndFormatActiveSuppliers();
             
             // Create combo box model with active suppliers
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -90,15 +68,15 @@ public class EditPRNewItem extends javax.swing.JFrame {
             if (activeSuppliers.isEmpty()) {
                 model.addElement("No active suppliers available");
             } else {
-                for (Supplier supplier : activeSuppliers) {
-                    // Display format: "ID - Name"
-                    model.addElement(supplier.getSupplierID() + " - " + supplier.getSupplierName());
+                String[] supplierDisplayNames = prFunc.formatSuppliersForDisplay(activeSuppliers);
+                for (String displayName : supplierDisplayNames) {
+                    model.addElement(displayName);
                 }
             }
             
             supplierID.setModel(model);
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
                 "Error loading suppliers: " + e.getMessage(), 
                 "Error", 
@@ -117,85 +95,55 @@ public class EditPRNewItem extends javax.swing.JFrame {
         }
         
         int selectedIndex = supplierID.getSelectedIndex();
-        if (selectedIndex >= 0 && selectedIndex < activeSuppliers.size()) {
-            return activeSuppliers.get(selectedIndex).getSupplierID();
-        }
-        
-        return null;
-    }
-    
-    private boolean isDuplicateItem(String itemNameToCheck) {
-    try {
-        return FileHandler.isItemNameDuplicate(itemNameToCheck);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error checking for duplicate items: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        return false; // Assume no duplicate if there's an error
-    }
+        return prFunc.getSupplierIDFromSelection(activeSuppliers, selectedIndex);
     }
     
     private void setSupplierInComboBox(String currentSupplierID) {
-    
-    // Clear selection first
-    supplierID.setSelectedIndex(-1);
-    
-    for (int i = 0; i < supplierID.getItemCount(); i++) {
-        String comboItem = supplierID.getItemAt(i);
+        // Clear selection first
+        supplierID.setSelectedIndex(-1);
         
-        // Check if the combo item starts with the supplier ID
-        if (comboItem.startsWith(currentSupplierID + " - ")) {
-            supplierID.setSelectedIndex(i);
-            System.out.println("Found and set supplier to: " + comboItem);
-            return;
-        }
-    }
-    
-    if (!currentSupplierID.isEmpty()) {
-        try {
-            Supplier supplier = FileHandler.getSupplierById(currentSupplierID);
-            if (supplier != null && supplier.isActive()) {
-                String displayText = supplier.getSupplierID() + " - " + supplier.getSupplierName();
-                supplierID.addItem(displayText);
-                supplierID.setSelectedItem(displayText);
-                
-                // Also add to activeSuppliers list
-                if (activeSuppliers == null) {
-                    activeSuppliers = new ArrayList<>();
-                }
-                activeSuppliers.add(supplier);
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading supplier details: " + e.getMessage());
-        }
-    }
-}
-    
-    private void saveUpdatedPRData() {
-        // Validate input fields
-        if (!validateInput()) {
-            return;
-        }
-        
-        try {
-            // Get current PR data to preserve other fields
-            String[] currentData = FileHandler.getPurchaseRequisitionById(currentPRID);
+        // Try to find in current combo box items
+        for (int i = 0; i < supplierID.getItemCount(); i++) {
+            String comboItem = supplierID.getItemAt(i);
             
-            if (currentData == null || currentData.length < 12) {
-                JOptionPane.showMessageDialog(this, 
-                    "Current PR data not found!", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+            // Check if the combo item starts with the supplier ID
+            if (comboItem.startsWith(currentSupplierID + " - ")) {
+                supplierID.setSelectedIndex(i);
+                System.out.println("Found and set supplier to: " + comboItem);
                 return;
             }
-            
-            // Parse input values
+        }
+        
+        // If not found in combo box, try to load supplier and add it
+        if (!currentSupplierID.isEmpty()) {
+            try {
+                Supplier supplier = prFunc.getSupplierById(currentSupplierID);
+                if (supplier != null && supplier.isActive()) {
+                    String displayText = supplier.getSupplierID() + " - " + supplier.getSupplierName();
+                    supplierID.addItem(displayText);
+                    supplierID.setSelectedItem(displayText);
+                    
+                    // Also add to activeSuppliers list
+                    if (activeSuppliers != null) {
+                        activeSuppliers.add(supplier);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading supplier details: " + e.getMessage());
+            }
+        }
+    }
+    
+    private void saveUpdatedPRData() {
+        try {
+            // Get input values
             String newItemName = itemName.getText().trim();
-            int newQuantity = Integer.parseInt(itemQuantity.getText().trim());
-            double newUnitPrice = Double.parseDouble(itemPrice.getText().trim());
-            double newTotalPrice = newQuantity * newUnitPrice;
+            String quantityText = itemQuantity.getText().trim();
+            String priceText = itemPrice.getText().trim();
             String newSupplierID = getSelectedSupplierID();
+            String deliveryDate = requiredDeliveryDate.getText().trim();
+            
+            // Validate supplier selection
             if (newSupplierID == null) {
                 JOptionPane.showMessageDialog(this, 
                     "Please select a valid supplier!", 
@@ -203,48 +151,17 @@ public class EditPRNewItem extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            String newDeliveryDate = requiredDeliveryDate.getText().trim();
-        
-            // Validate date format
-            try {
-                LocalDate.parse(newDeliveryDate);
-            } catch (DateTimeParseException e) {
-                JOptionPane.showMessageDialog(this, 
-                    "Invalid date format! Please use YYYY-MM-DD format.", 
-                    "Date Format Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                requiredDeliveryDate.requestFocus();
-                return;
-            }
             
-            // Update PR using FileHandler
-            boolean success = FileHandler.updatePurchaseRequisition(
-                currentPRID,                                    // PR ID
-                currentData[1].trim(),                          // PR Type (preserve existing)
-                currentData[2].trim(),                          // Item ID (preserve existing)
-                newItemName,                                    // Item Name (updated)
-                newQuantity,                                    // Quantity (updated)
-                newUnitPrice,                                   // Unit Price (updated)
-                newTotalPrice,                                  // Total Price (calculated)
-                newSupplierID,                                  // Supplier ID (updated)
-                currentData[8].trim(),                          // Raised By (preserve existing)
-                LocalDate.parse(newDeliveryDate),               // Required Delivery Date (updated)
-                LocalDate.parse(currentData[10].trim()),        // Request Date (preserve existing)
-                currentData[11].trim()                          // Status (preserve existing)
-            );
+            // Use prFunction to edit PR item
+            boolean success = prFunc.editPRItem(currentPRID, newItemName, quantityText, 
+                                               priceText, newSupplierID, deliveryDate);
             
             if (success) {
-                JOptionPane.showMessageDialog(this, 
-                    "PR item updated successfully!\n" +
-                    "PR ID: " + currentPRID + "\n" +
-                    "Item: " + newItemName + "\n" +
-                    "Quantity: " + newQuantity + "\n" +
-                    "Unit Price: RM" + String.format("%.2f", newUnitPrice) + "\n" +
-                    "Total Price: RM" + String.format("%.2f", newTotalPrice)+ "\n" +
-                    "Supplier: " + newSupplierID, 
-                    "Update Successful", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                // Create and show success message
+                String successMessage = prFunc.createUpdateSuccessMessage(currentPRID, newItemName, 
+                                                                         quantityText, priceText, newSupplierID);
+                JOptionPane.showMessageDialog(this, successMessage, 
+                    "Update Successful", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose(); // Close the form after successful save
             } else {
                 JOptionPane.showMessageDialog(this, 
@@ -253,111 +170,19 @@ public class EditPRNewItem extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             }
             
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            JOptionPane.showMessageDialog(this, 
+                e.getMessage(), 
+                "Validation Error", 
+                JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
                 "Error saving PR data: " + e.getMessage(), 
-                "File Error", 
+                "Error", 
                 JOptionPane.ERROR_MESSAGE);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Invalid number format in quantity or price fields!", 
-                "Input Error", 
-                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
-    }
-    
-    private boolean validateInput() {
-        // Check if required fields are not empty
-        if (itemName.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Item name is required!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemName.requestFocus();
-            return false;
-        }
-        
-        String newItemName = itemName.getText().trim();
-        try {
-            String[] currentData = FileHandler.getPurchaseRequisitionById(currentPRID);
-            String currentItemName = (currentData != null && currentData.length > 3) ? currentData[3].trim() : "";
-
-            // Only check for duplicate if the name has changed
-            if (!newItemName.equalsIgnoreCase(currentItemName)) {
-                if (isDuplicateItem(newItemName)) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Item name '" + newItemName + "' already exists!\nPlease choose a different name.", 
-                        "Duplicate Item", 
-                        JOptionPane.WARNING_MESSAGE);
-                    itemName.requestFocus();
-                    return false;
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error checking current item name: " + e.getMessage());
-        }
-        
-        if (itemQuantity.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Quantity is required!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemQuantity.requestFocus();
-            return false;
-        }
-        
-        if (itemPrice.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Price is required!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemPrice.requestFocus();
-            return false;
-        }
-        
-        if (requiredDeliveryDate.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Required delivery date is required!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            requiredDeliveryDate.requestFocus();
-            return false;
-        }
-        
-        if (supplierID.getSelectedItem() == null || 
-            supplierID.getSelectedItem().toString().contains("No active suppliers available") || 
-            supplierID.getSelectedItem().toString().contains("Error loading suppliers")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid supplier!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            supplierID.requestFocus();
-            return false;
-        }
-        
-        // Validate quantity is a positive number
-        try {
-            int quantity = Integer.parseInt(itemQuantity.getText().trim());
-            if (quantity <= 0) {
-                JOptionPane.showMessageDialog(this, "Quantity must be a positive number!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                itemQuantity.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Quantity must be a valid number!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemQuantity.requestFocus();
-            return false;
-        }
-        
-        // Validate price is a positive number
-        try {
-            double price = Double.parseDouble(itemPrice.getText().trim());
-            if (price <= 0) {
-                JOptionPane.showMessageDialog(this, "Price must be a positive number!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                itemPrice.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Price must be a valid number!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            itemPrice.requestFocus();
-            return false;
-        }
-        
-        // Validate date format
-        try {
-            LocalDate.parse(requiredDeliveryDate.getText().trim());
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this, "Invalid date format! Please use YYYY-MM-DD format (e.g., 2025-06-01).", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            requiredDeliveryDate.requestFocus();
-            return false;
-        }
-        
-        return true;
     }
     
     private void clearAllFields() {

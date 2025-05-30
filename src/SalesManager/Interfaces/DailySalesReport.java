@@ -1,144 +1,160 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
-import model.Item;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import InventoryManager.functions.InventoryService;
+import SalesManager.Functions.salesFunction;
+import java.io.IOException;
+import model.SalesRecord;
+import model.Item;
 
 public class DailySalesReport extends javax.swing.JFrame {
-    private List<String> lowStockAlerts = new ArrayList<>();
     private static final int LOW_STOCK_THRESHOLD = InventoryService.LOW_STOCK_THRESHOLD;
-
+    private LocalDate currentDate;
+    
+    
     public DailySalesReport() {
         initComponents();
-        loadSalesRecords();
-        saleDate.setText(LocalDate.now().toString());
+        this.currentDate = LocalDate.now();
+        loadTodaysSalesData();
+        saleDate.setText(currentDate.toString());
     }
     
-    private double getPrice(String itemID) {
-        try {
-            Item item = FileHandler.getItemById(itemID);
-            return item != null ? item.getPrice() : 0.0;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return 0.0;
-        }
+    private void loadTodaysSalesData() {
+        loadSalesDataForDate(LocalDate.now());
     }
     
-    private int getTotalStock(String itemID) {
+    public void loadSalesDataForDate(LocalDate date) {
         try {
-            Item item = FileHandler.getItemById(itemID);
-            return item != null ? item.getTotalStock() : 0;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-    
-    private String getItemName(String itemID) {
-        try {
-            Item item = FileHandler.getItemById(itemID);
-            return item != null ? item.getItemName() : "";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    private void loadSalesRecords() {
-    DefaultTableModel model = (DefaultTableModel) salesTable.getModel();
-    model.setRowCount(0); 
-    double totalSalesAmount = 0.0;
-    lowStockAlerts.clear();
-
-    // Set to track items already checked for low stock
-    java.util.Set<String> checkedItems = new java.util.HashSet<>();
-        
-    try {
-        List<String[]> salesRecords = FileHandler.readSalesRecords();
-        String today = LocalDate.now().toString();
-        for (String[] parts : salesRecords) {
-            String saleID = parts[0];
-            String itemID = parts[1];
-            int quantitySold = Integer.parseInt(parts[2]);
-            String saleDate = parts[3];
-
-            if (!saleDate.equals(today)) {
-                continue; // skip sales not made today
-            }
-
-            String itemName = getItemName(itemID);
-            int totalStock = getTotalStock(itemID);
-            double price = getPrice(itemID);
-            double totalAmount = quantitySold * price;
-
-            model.addRow(new Object[]{
-                saleID, 
-                itemID, 
-                itemName, 
-                totalStock, 
-                quantitySold, 
-                price, 
-                totalAmount
-            });
+            this.currentDate = date;
             
-            totalSalesAmount += totalAmount;
+            // Use SalesRecordFileHandler2 to get sales records for date range
+            List<SalesRecord> salesRecords = salesFunction.getSalesRecordsByDateRange(date, date);
             
-            if (totalStock < LOW_STOCK_THRESHOLD && !checkedItems.contains(itemID)) { 
-                    lowStockAlerts.add("Item ID: " + itemName + " (" + itemID + ")\nStock left: " + totalStock);
-                    checkedItems.add(itemID); // Mark this item as checked
-                }
-            }
-        } catch (IOException e) {
+            updateTableWithSalesData(salesRecords);
+            updateTotalAmountDisplay(salesRecords);
+            saleDate.setText(date.toString());
+            
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, 
-                "Error loading sales data", 
+                "Error loading sales data: " + e.getMessage(), 
                 "File Error", 
                 JOptionPane.ERROR_MESSAGE);
         }
-            this.totalAmount.setText(String.format("%.2f", totalSalesAmount));
+    }
+    
+    private void updateTableWithSalesData(List<SalesRecord> salesRecords) {
+        DefaultTableModel model = (DefaultTableModel) salesTable.getModel();
+        model.setRowCount(0); // Clear table
+        
+        try {
+            for (SalesRecord record : salesRecords) {
+                // Call salesFunction.getItemById() to get item details
+                Item item = salesFunction.getItemById(record.getItemID());
+                
+                if (item != null) {
+                    Object[] rowData = {
+                        record.getSaleID(),
+                        record.getItemID(),
+                        item.getItemName(),
+                        item.getTotalStock(),
+                        record.getQuantitySold(),
+                        item.getPrice(),
+                        String.format("RM%.2f", record.getTotalAmount() / record.getQuantitySold()) 
+                    };
+                    model.addRow(rowData);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error updating table: " + e.getMessage());
         }
-    
-    public void refreshSalesData() {
-    loadSalesRecords(); 
-    
-    try {
-        loadSalesRecords(); 
-    } catch (Exception e) {
-        System.out.println("Error in refreshSalesData: " + e.getMessage());
-        e.printStackTrace();
-    }
-        showLowStockAlerts();
     }
     
-    private void showLowStockAlerts() {
-            if (!lowStockAlerts.isEmpty()) {
+    private void updateTotalAmountDisplay(List<SalesRecord> salesRecords) {
+        double total = 0.0;
+        for (SalesRecord record : salesRecords) {
+            total += record.getTotalAmount() / record.getQuantitySold();
+        }
+        this.totalAmount.setText(String.format("RM%.2f", total));
+    }
+
+    private void showLowStockAlertsIfAny() {
+        try {
+            // Call salesFunction.getCurrentLowStockAlerts()
+            List<String> alerts = salesFunction.getCurrentLowStockAlerts();
+            
+            if (!alerts.isEmpty()) {
                 StringBuilder alertMessage = new StringBuilder();
                 alertMessage.append("LOW STOCK WARNINGS:\n\n");
-
-                for (int i = 0; i < lowStockAlerts.size(); i++) {
-                    alertMessage.append(i + 1).append(". ").append(lowStockAlerts.get(i)).append("\n\n");
+                
+                for (int i = 0; i < alerts.size(); i++) {
+                    alertMessage.append(i + 1).append(". ").append(alerts.get(i)).append("\n\n");
                 }
-
+                
                 JOptionPane.showMessageDialog(this, 
                     alertMessage.toString(),
                     "Low Stock Warning - Inventory Alert",
                     JOptionPane.WARNING_MESSAGE);
             }
+        } catch (IOException e) {
+            System.err.println("Error checking low stock: " + e.getMessage());
         }
+    }
+    
+    public void refreshSalesData() {
+        loadSalesDataForDate(currentDate);
+        showLowStockAlertsIfAny();
+    }
     
     public List<String> getLowStockAlerts() {
-        return new ArrayList<>(lowStockAlerts);
+        try {
+            return salesFunction.getCurrentLowStockAlerts();
+        } catch (IOException e) {
+            System.err.println("Error getting alerts: " + e.getMessage());
+            return java.util.Collections.emptyList();
+        }
     }
     
     public boolean hasLowStockAlerts() {
-        return !lowStockAlerts.isEmpty();
+        try {
+            return !salesFunction.getCurrentLowStockAlerts().isEmpty();
+        } catch (IOException e) {
+            return false;
+        }
     }
     
+    public double getCurrentTotalSales() {
+        try {
+            if (currentDate.equals(LocalDate.now())) {
+                // Call salesFunction.getTodaysTotalSales()
+                return salesFunction.getTodaysTotalSales();
+            } else {
+                // Call salesFunction.getSalesRecordsByDateRange()
+                List<SalesRecord> records = salesFunction.getSalesRecordsByDateRange(currentDate, currentDate);
+                return records.stream().mapToDouble(SalesRecord::getTotalAmount).sum();
+            }
+        } catch (IOException e) {
+            return 0.0;
+        }
+    }
+    
+    public int getCurrentSalesCount() {
+        try {
+            if (currentDate.equals(LocalDate.now())) {
+                // Call salesFunction.getTodaysSalesCount()
+                return salesFunction.getTodaysSalesCount();
+            } else {
+                // Call salesFunction.getSalesRecordsByDateRange()
+                List<SalesRecord> records = salesFunction.getSalesRecordsByDateRange(currentDate, currentDate);
+                return records.size();
+            }
+        } catch (IOException e) {
+            return 0;
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -245,21 +261,19 @@ public class DailySalesReport extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(SalesAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(totalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(453, 453, 453)
-                                .addComponent(addSalesButton)))
-                        .addGap(0, 21, Short.MAX_VALUE))
+                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(saleDate, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(453, 453, 453)
+                        .addComponent(addSalesButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(SalesAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(totalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 13, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(salesReportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -277,13 +291,14 @@ public class DailySalesReport extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(SalesAmountLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
-                    .addComponent(totalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(totalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SalesAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addComponent(salesReportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 323, Short.MAX_VALUE)))
+                    .addGap(0, 318, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -297,7 +312,7 @@ public class DailySalesReport extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))

@@ -1,13 +1,8 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
+import SalesManager.Functions.prFunction;
 import model.Item;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,9 +12,11 @@ public class EditPRRestock extends javax.swing.JFrame {
     private String currentPRID;
     private String currentSalesManagerID;
     private String currentPRType;
+    private prFunction prFunc;
 
     public EditPRRestock() {
         initComponents();
+        this.prFunc = new prFunction();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         loadItemIDs();
     }
@@ -27,6 +24,7 @@ public class EditPRRestock extends javax.swing.JFrame {
     public EditPRRestock(String prID, String salesManagerID) {
         initComponents();
         this.currentPRID = prID;
+        this.prFunc = new prFunction();
         this.currentSalesManagerID = salesManagerID;
         salesManager.setText(salesManagerID);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -41,7 +39,7 @@ public class EditPRRestock extends javax.swing.JFrame {
     
     private void loadPRData() {
         try {
-            String[] prData = FileHandler.getPurchaseRequisitionById(currentPRID);
+            String[] prData = prFunc.loadPRData(currentPRID);
             if (prData != null && prData.length >= 12) {
                 populateFields(prData);
                 updateButton.setText("Update");
@@ -49,135 +47,91 @@ public class EditPRRestock extends javax.swing.JFrame {
                 showError("Purchase Requisition not found!");
                 this.dispose();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             showError("Error loading PR data: " + e.getMessage());
             this.dispose();
         }
     }
     
     private void populateFields(String[] prData) {
-    try {
-        currentPRType = prData[1].trim();
-        String prItemID = prData[2];
-        
-        // Check if the item ID exists in the combo box
-        boolean itemFound = false;
-        for (int i = 0; i < itemID.getItemCount(); i++) {
-            if (itemID.getItemAt(i).equals(prItemID)) {
-                itemID.setSelectedIndex(i);
-                itemFound = true;
-                break;
+        try {
+            currentPRType = prData[1].trim();
+            String prItemID = prData[2];
+            
+            // Check if the item ID exists in the combo box
+            boolean itemFound = false;
+            for (int i = 0; i < itemID.getItemCount(); i++) {
+                if (itemID.getItemAt(i).equals(prItemID)) {
+                    itemID.setSelectedIndex(i);
+                    itemFound = true;
+                    break;
+                }
             }
+            
+            if (!itemFound) {
+                showError("Item ID " + prItemID + " not found in system!");
+                return;
+            }
+            
+            // Set other fields with PR data
+            quantity.setText(prData[4]); 
+            unitPrice.setText(prData[5]); 
+            supplierID.setText(prData[7]); 
+            requiredDeliveryDate.setText(prData[9]); 
+            creationDate.setText(prData[10]); 
+            
+            // Update item name display for editing
+            updateItemDisplayForEdit();
+            
+            // Add to table
+            updateTable();
+            
+        } catch (Exception e) {
+            showError("Error loading PR data: " + e.getMessage());
         }
-        
-        if (!itemFound) {
-            showError("Item ID " + prItemID + " not found in system!");
-            return;
-        }
-        
-        // Set other fields with PR data
-        quantity.setText(prData[4]); 
-        unitPrice.setText(prData[5]); 
-        supplierID.setText(prData[7]); 
-        requiredDeliveryDate.setText(prData[9]); 
-        creationDate.setText(prData[10]); 
-        
-        // Update item name display - this will use the item from combo box selection
-        updateItemDisplayForEdit();
-        
-        // Add to table
-        updateTable();
-        
-    } catch (Exception e) {
-        showError("Error loading PR data: " + e.getMessage());
     }
-}
     
     private void updateItemDisplayForEdit() {
         String selectedItemID = (String) itemID.getSelectedItem();
         if (selectedItemID != null && !selectedItemID.trim().isEmpty()) {
             try {
-                Item item = FileHandler.getItemById(selectedItemID);
+                Item item = prFunc.getItemById(selectedItemID);
                 if (item != null) {
                     itemName.setText(item.getItemName());
-                    // DON'T overwrite unitPrice here when editing - keep the PR's price
-                    System.out.println("Item found: " + item.getItemName());
                 } else {
-                    System.out.println("Item not found for ID: " + selectedItemID);
                     itemName.setText("Item not found");
                 }
             } catch (IOException e) {
-                System.out.println("Error loading item: " + e.getMessage());
                 itemName.setText("Error loading item");
             }
         } else {
             itemName.setText("");
-            System.out.println("No item selected");
         }
     }
     
     private void updateItemDisplay() {
-        String selectedItemID = (String) itemID.getSelectedItem();
-        if (selectedItemID != null && !selectedItemID.trim().isEmpty()) {
-            try {
-                Item item = FileHandler.getItemById(selectedItemID);
-                if (item != null) {
-                    itemName.setText(item.getItemName());
-                    // Only set unit price if we're NOT editing (currentPRID is null)
-                    if (currentPRID == null) {
-                        unitPrice.setText(String.valueOf(item.getPrice()));
-                    }
-                    System.out.println("Item found: " + item.getItemName());
-                } else {
-                    System.out.println("Item not found for ID: " + selectedItemID);
-                    itemName.setText("Item not found");
-                    if (currentPRID == null) {
-                        unitPrice.setText("0.0");
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("Error loading item: " + e.getMessage());
-                itemName.setText("Error loading item");
-                if (currentPRID == null) {
-                    unitPrice.setText("0.0");
-                }
-            }
-        } else {
-            itemName.setText("");
-            if (currentPRID == null) {
-                unitPrice.setText("");
-            }
-            System.out.println("No item selected");
-        }
+    try {
+        String id = (String) itemID.getSelectedItem();
+        Item item = prFunc.getItemDetails(id);
+        itemName.setText(item.getItemName());
+        if (currentPRID == null) unitPrice.setText(String.valueOf(item.getPrice()));
+    } catch (Exception e) {
+        itemName.setText("Error");
+        unitPrice.setText("0.0");
     }
+}
     
     private void loadItemIDs() {
         try {
-            List<Item> items = FileHandler.loadAllItems();
-            if (items.isEmpty()) {
-                showError("No items found in the system!");
-                return;
-            }
-            
-            String[] itemIDs = new String[items.size()];
-            for (int i = 0; i < items.size(); i++) {
-                itemIDs[i] = items.get(i).getItemID();
-            }
-            
+            String[] itemIDs = prFunc.getItemIDs(); // Moved to backend
             itemID.setModel(new DefaultComboBoxModel<>(itemIDs));
             itemID.addActionListener(e -> updateItemDisplay());
-            
-            // Update display for the first item
-            if (itemIDs.length > 0) {
-                updateItemDisplay();
-            }
-            
-        } catch (IOException e) {
+            if (itemIDs.length > 0) updateItemDisplay();
+        } catch (Exception e) {
             showError("Error loading items: " + e.getMessage());
         }
     }
     
-    // Helper method to update table
     private void updateTable() {
         try {
             String selectedItemID = (String) itemID.getSelectedItem();
@@ -185,9 +139,11 @@ public class EditPRRestock extends javax.swing.JFrame {
                 return; 
             }
             
+            // Use backend function to calculate total
+            double total = prFunc.calculateTotalAmount(quantity.getText(), unitPrice.getText());
+            
             int qty = Integer.parseInt(quantity.getText());
             double price = Double.parseDouble(unitPrice.getText());
-            double total = qty * price;
             
             // Get item name
             String itemNameText = itemName.getText();
@@ -197,50 +153,25 @@ public class EditPRRestock extends javax.swing.JFrame {
             model.setRowCount(0);
             model.addRow(new Object[]{selectedItemID, itemNameText, qty, price, total});
             
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number format in updateTable: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error updating table: " + e.getMessage());
         }
     }
     
     private boolean validateInputs() {
-        if (itemID.getSelectedItem() == null) {
-            showError("Please select an item");
-            return false;
-        }
-        
-        if (quantity.getText().trim().isEmpty()) {
-            showError("Please enter quantity");
-            return false;
-        }
-        
         try {
-            int qty = Integer.parseInt(quantity.getText());
-            if (qty <= 0) {
-                showError("Quantity must be positive");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showError("Invalid quantity format");
+            String selectedItemID = (String) itemID.getSelectedItem();
+            String quantityText = quantity.getText().trim();
+            String deliveryDateText = requiredDeliveryDate.getText().trim();
+            
+            // Use backend validation
+            prFunc.validateRestockInputs(selectedItemID, quantityText, deliveryDateText);
+            return true;
+            
+        } catch (IllegalArgumentException e) {
+            showError(e.getMessage());
             return false;
         }
-        
-        if (requiredDeliveryDate.getText().trim().isEmpty()) {
-            showError("Please enter delivery date");
-            return false;
-        }
-        
-        try {
-            LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText());
-            if (deliveryDate.isBefore(LocalDate.now())) {
-                showError("Delivery date cannot be in the past!");
-                return false;
-            }
-        } catch (DateTimeParseException e) {
-            showError("Invalid date format. Please use YYYY-MM-DD");
-            return false;
-        }
-        
-        return true;
     }
     
     private void showError(String message) {
@@ -263,8 +194,6 @@ public class EditPRRestock extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) prTable.getModel();
         model.setRowCount(0);
     }
-            
-            
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -549,46 +478,29 @@ public class EditPRRestock extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-         if (!validateInputs()) return;
-        
-        try {
-            String selectedItemID = (String) itemID.getSelectedItem();
-            String itemNameText = itemName.getText();
-            int quantityValue = Integer.parseInt(quantity.getText());
-            double priceValue = Double.parseDouble(unitPrice.getText());
-            double totalPrice = priceValue * quantityValue;
-            LocalDate deliveryDate = LocalDate.parse(requiredDeliveryDate.getText());
-            LocalDate creationDateValue = LocalDate.parse(creationDate.getText());
-            String supplierIDValue = supplierID.getText();
-            String raisedBy = getCurrentSalesManagerID();
-            
-            // Update table
-            updateTable();
-            
-            // Update PR using existing FileHandler method
-            boolean updated = FileHandler.updatePurchaseRequisition(
-            currentPRID, 
-            currentPRType,       
-            selectedItemID, 
-            itemNameText,        
-            quantityValue, 
-            priceValue, 
-            totalPrice, 
-            supplierIDValue,
-            raisedBy,           
-            deliveryDate,
-            creationDateValue, 
-            "PENDING"
+        if (!validateInputs()) return;
+
+    try {
+        boolean updated = prFunc.updateRestockPR(
+            currentPRID,
+            currentSalesManagerID,
+            currentPRType,
+            (String) itemID.getSelectedItem(),
+            quantity.getText(),
+            unitPrice.getText(),
+            requiredDeliveryDate.getText(),
+            creationDate.getText(),
+            supplierID.getText()
         );
-            
-            if (updated) {
-                showSuccess("Purchase Requisition updated successfully!");
-            } else {
-                showError("Purchase Requisition not found in file");
-                }
-            } catch (Exception e) {
-                showError("Error updating Purchase Requisition: " + e.getMessage());
-            }
+
+        if (updated) {
+            showSuccess("PR updated successfully!");
+        } else {
+            showError("PR not found.");
+        }
+    } catch (Exception e) {
+        showError("Error: " + e.getMessage());
+    }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void quantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityActionPerformed
