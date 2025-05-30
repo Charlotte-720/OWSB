@@ -94,7 +94,7 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="logoutMouseClicked"/>
           </Events>
         </Component>
-        <Component class="PurchaseManager.button" name="ViewItem">
+        <Component class="PurchaseManager.GUI.button" name="ViewItem">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="6e" green="55" red="55" type="rgb"/>
@@ -112,7 +112,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewItemActionPerformed"/>
           </Events>
         </Component>
-        <Component class="PurchaseManager.button" name="ViewSuppliers">
+        <Component class="PurchaseManager.GUI.button" name="ViewSuppliers">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="6e" green="55" red="55" type="rgb"/>
@@ -130,7 +130,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewSuppliersActionPerformed"/>
           </Events>
         </Component>
-        <Component class="PurchaseManager.button" name="ViewRequisition">
+        <Component class="PurchaseManager.GUI.button" name="ViewRequisition">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="6e" green="55" red="55" type="rgb"/>
@@ -148,7 +148,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewRequisitionActionPerformed"/>
           </Events>
         </Component>
-        <Component class="PurchaseManager.button" name="GenerateViewPO">
+        <Component class="PurchaseManager.GUI.button" name="GenerateViewPO">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="6e" green="55" red="55" type="rgb"/>
@@ -291,6 +291,7 @@
                           <Component id="Approve" min="-2" max="-2" attributes="0"/>
                           <Component id="Pending" min="-2" max="-2" attributes="0"/>
                           <Component id="Paid" min="-2" max="-2" attributes="0"/>
+                          <Component id="Received" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="105" max="32767" attributes="0"/>
                   </Group>
@@ -316,6 +317,8 @@
                               <Component id="Pending" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="Paid" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="Received" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane1" min="-2" pref="265" max="-2" attributes="0"/>
                       </Group>
@@ -421,7 +424,7 @@
                 <Property name="text" type="java.lang.String" value="Paid            :"/>
               </Properties>
             </Component>
-            <Component class="PurchaseManager.button" name="moredetail">
+            <Component class="PurchaseManager.GUI.button" name="moredetail">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="6e" green="55" red="55" type="rgb"/>
@@ -438,6 +441,18 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="moredetailActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="Received">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="15" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="dc" green="dc" red="dc" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Received     :"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

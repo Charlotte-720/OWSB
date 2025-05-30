@@ -1,11 +1,13 @@
 
-package PurchaseManager;
+package PurchaseManager.GUI;
+
+import PurchaseManager.Function.updatedata;
 
 public class viewitem extends javax.swing.JFrame {
 
     public viewitem() {
         initComponents();
-        DSIT.loadItemData(jTable1);
+        updatedata.loadItemData(jTable1);
     }
 
 
@@ -18,7 +20,7 @@ public class viewitem extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         cancel = new javax.swing.JLabel();
-        back = new PurchaseManager.button();
+        back = new PurchaseManager.GUI.button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -128,20 +130,16 @@ public class viewitem extends javax.swing.JFrame {
     //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
     }//GEN-LAST:event_backActionPerformed
 
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.button back;
+    private PurchaseManager.GUI.button back;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

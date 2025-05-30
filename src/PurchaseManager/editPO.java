@@ -1,4 +1,4 @@
-package PurchaseManager;
+package PurchaseManager.GUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class editPO {
     public static boolean editPO(JFrame parentFrame, String poId, String filePath) {
-        String supplierName = "", item = "", quantity = "", unitPrice = "", date = "", status = "";
+        String itemId = "", supplierId = "", item = "", quantity = "", unitPrice = "", date = "", status = "";
 
         // Read original values from file
         File file = new File(filePath);
@@ -24,8 +24,9 @@ public class editPO {
                 if (line.startsWith("PO_ID: " + poId)) {
                     String[] parts = line.split(", ");
                     for (String part : parts) {
-                        if (part.startsWith("Supplier Name: ")) supplierName = part.substring(15);
-                        else if (part.startsWith("Item: ")) item = part.substring(6);
+                        if (part.startsWith("Item ID: ")) itemId = part.substring(9);
+                        else if (part.startsWith("Supplier ID: ")) supplierId = part.substring(13);
+                        else if (part.startsWith("Item Name: ")) item = part.substring(11);
                         else if (part.startsWith("Quantity: ")) quantity = part.substring(10);
                         else if (part.startsWith("Unit Price: ")) unitPrice = part.substring(12);
                         else if (part.startsWith("Date: ")) date = part.substring(6);
@@ -51,34 +52,7 @@ public class editPO {
             return false;
         }
 
-        // Read suppliers from file and extract only Supplier Name
-        List<String> supplierNames = new ArrayList<>();
-        File supplierFile = new File("src/txtFile/suppliers.txt"); // Ensure this path is correct
-
-        try (Scanner supplierScanner = new Scanner(supplierFile)) {
-            while (supplierScanner.hasNextLine()) {
-                String line = supplierScanner.nextLine().trim();
-                if (!line.isEmpty()) {
-                    String[] parts = line.split(", ");
-                    for (String part : parts) {
-                        if (part.startsWith("Supplier Name: ")) {
-                            String name = part.substring(15).trim();
-                            supplierNames.add(name);
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(parentFrame, "Error reading supplier list.");
-            return false;
-        }
-
-        JComboBox<String> supplierCombo = new JComboBox<>(supplierNames.toArray(new String[0]));
-        supplierCombo.setSelectedItem(supplierName);
-
-        // UI fields
+        // UI fields (no supplier dropdown)
         JTextField itemField = new JTextField(item);
         JTextField quantityField = new JTextField(quantity);
         JTextField unitPriceField = new JTextField(unitPrice);
@@ -86,9 +60,7 @@ public class editPO {
         JTextField dateField = new JTextField(date);
 
         JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.add(new JLabel("Supplier Name:"));
-        panel.add(supplierCombo);
-        panel.add(new JLabel("Item:"));
+        panel.add(new JLabel("Item Name:"));
         panel.add(itemField);
         panel.add(new JLabel("Quantity:"));
         panel.add(quantityField);
@@ -102,14 +74,13 @@ public class editPO {
 
         if (result != JOptionPane.OK_OPTION) return false;
 
-        // Get new values
-        String newSupplier = (String) supplierCombo.getSelectedItem();
+        // Get updated values
         String newItem = itemField.getText().trim();
         String newQuantity = quantityField.getText().trim();
         String newUnitPrice = unitPriceField.getText().trim(); // unchanged
         String newDate = dateField.getText().trim();
 
-        if (newSupplier.isEmpty() || newItem.isEmpty() || newQuantity.isEmpty() || newUnitPrice.isEmpty() || newDate.isEmpty()) {
+        if (newItem.isEmpty() || newQuantity.isEmpty() || newUnitPrice.isEmpty() || newDate.isEmpty()) {
             JOptionPane.showMessageDialog(parentFrame, "All fields must be filled.");
             return false;
         }
@@ -132,8 +103,9 @@ public class editPO {
             for (String line : lines) {
                 if (line.startsWith("PO_ID: " + poId)) {
                     line = "PO_ID: " + poId +
-                            ", Supplier Name: " + newSupplier +
-                            ", Item: " + newItem +
+                            ", Item ID: " + itemId +
+                            ", Supplier ID: " + supplierId +
+                            ", Item Name: " + newItem +
                             ", Quantity: " + newQuantity +
                             ", Unit Price: " + newUnitPrice +
                             ", Total Price: " + totalPriceStr +

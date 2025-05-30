@@ -1,4 +1,4 @@
-package PurchaseManager;
+package PurchaseManager.Function;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class DSIT {   
-    private JTable poTable; // your JTable instance
-
-    
+public class updatedata {   
     public static void loadSupplierData(JTable table) {
         String[] columnNames = {"Suppliers ID", "Suppliers Name", "Contact No","Suppliers","Active"};
         List<Object[]> rows = new ArrayList<>();
@@ -91,7 +88,7 @@ public class DSIT {
     }
     
     public static void loadRequisitionData(JTable table){
-        String[] columnNames = {"PR ID", "Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Suppliers ID", "Raised By","RD Date","R Date","Status"};
+        String[] columnNames = {"PR ID","PR Type","Item ID", "Item Name", "Quantity", "Unit Price", "Total Price", "Suppliers ID", "Raised By","RD Date","R Date","Status"};
 
         List<Object[]> rows = new ArrayList<>();
 
@@ -101,9 +98,9 @@ public class DSIT {
                 // Assuming Suppliers.txt stores data in CSV format like:
                 // SupplierID,Name,Contact,IsActive
                 String[] values = line.split(",");
-                if (values.length >= 9) {
-                    Object[] row = new Object[11];
-                    for (int i = 0; i < 11; i++) {
+                if (values.length >= 12) {
+                    Object[] row = new Object[12];
+                    for (int i = 0; i < 12; i++) {
                         String[] parts = values[i].split(":", 2);
                         row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();                       }
                     rows.add(row);
@@ -193,7 +190,10 @@ public class DSIT {
                         c.setForeground(new Color(255, 165, 0)); // orange-ish yellow
                         break;
                     case "approved":
-                        c.setForeground(new Color(0, 128, 0)); // dark green
+                        c.setForeground(new Color(0, 128, 0)); // dark green\
+                        break;
+                    case "received":
+                        c.setForeground(new Color(0,102,255)); // dark green
                         break;
                     default:
                         c.setForeground(Color.BLACK);

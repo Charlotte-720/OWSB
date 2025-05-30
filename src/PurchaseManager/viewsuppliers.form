@@ -145,7 +145,7 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cancelMouseClicked"/>
           </Events>
         </Component>
-        <Component class="PurchaseManager.button" name="back">
+        <Component class="PurchaseManager.GUI.button" name="back">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="6e" green="55" red="55" type="rgb"/>

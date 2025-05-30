@@ -1,5 +1,7 @@
-package PurchaseManager;
+package PurchaseManager.GUI;
 
+import PurchaseManager.Function.deletefc;
+import PurchaseManager.GUI.addPO;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -15,7 +17,7 @@ public class generateandviewpo extends javax.swing.JPanel {
     public generateandviewpo() {
         initComponents();
         loadPOData(); // Load data when the window is opened
-        jTable1.getColumnModel().getColumn(8).setCellRenderer(new StatusColumnCellRenderer());
+        jTable1.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
     }
 
     @SuppressWarnings("unchecked")
@@ -26,10 +28,10 @@ public class generateandviewpo extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        edit = new PurchaseManager.button();
-        delete = new PurchaseManager.button();
-        add = new PurchaseManager.button();
-        back = new PurchaseManager.button();
+        edit = new PurchaseManager.GUI.button();
+        delete = new PurchaseManager.GUI.button();
+        add = new PurchaseManager.GUI.button();
+        back = new PurchaseManager.GUI.button();
 
         setBackground(new java.awt.Color(225, 230, 245));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -51,28 +53,28 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO ID", "Item ID", "Suppliers ID", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
+                "PO ID", "Item ID", "Suppliers ID", "Suppliers N", "Item", "Quantity", "Unit Price", "Total Price", "RD Date", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, false, false, false, false
+                false, true, false, true, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -174,16 +176,13 @@ public class generateandviewpo extends javax.swing.JPanel {
 
     //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
-    JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-    currentFrame.dispose(); 
-    PM pmFrame = new PM("exampleFinanceManager"); 
-    pmFrame.setVisible(true);
-    pmFrame.setLocationRelativeTo(null); 
+        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        currentFrame.dispose();
     }//GEN-LAST:event_cancelMouseClicked
 
     // go to add panel
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-        new addPO(this); // Opens the Add Purchase Order JFrame
+        addPO addPO = new addPO(this); // Opens the Add Purchase Order JFrame
     }//GEN-LAST:event_addMouseClicked
 
     //edit funcation 
@@ -212,14 +211,14 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         if (selectedRow != -1) {
             String poIdToDelete = (String) jTable1.getValueAt(selectedRow, 0);
-            String status = (String) jTable1.getValueAt(selectedRow, 8);
+            String status = (String) jTable1.getValueAt(selectedRow, 9);
 
             if (!status.equalsIgnoreCase("Pending")) {
                 JOptionPane.showMessageDialog(this, "Cannot delete PO, only Pending can be delete!");
-                return; // Stop here to avoid calling deletePO
+                return; // Stop here to avoid calling deletefc
             }
 
-            deletePO deletePO = new deletePO();
+            deletefc deletePO = new deletefc();
             String filePath = new File("src/txtFile/po.txt").getAbsolutePath();
 
             boolean success = deletePO.deletePO(jTable1, poIdToDelete, filePath);
@@ -234,38 +233,79 @@ public class generateandviewpo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteActionPerformed
 
-    // back function
+    // back to homepage
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose();
-        PM pmFrame = new PM("exampleFinanceManager");
-        pmFrame.setVisible(true);
-        pmFrame.setLocationRelativeTo(null);
     }//GEN-LAST:event_backActionPerformed
     
     
     // read the txt file and show it (read function)
     public void loadPOData() {
-       DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data
 
-        File file = new File("src/txtFile/po.txt");
+        File poFile = new File("src/txtFile/po.txt");
+        File supplierFile = new File("src/txtFile/suppliers.txt");
 
-        if (file.exists()) {
-            try (Scanner scanner = new Scanner(file)) {
+        // Step 1: Build supplier ID -> Name map
+        Map<String, String> supplierNameMap = new HashMap<>();
+
+        if (supplierFile.exists()) {
+            try (Scanner supplierScanner = new Scanner(supplierFile)) {
+                while (supplierScanner.hasNextLine()) {
+                    String line = supplierScanner.nextLine();
+                    String[] parts = line.split(",");
+
+                    String supplierID = "";
+                    String supplierName = "";
+
+                    for (String part : parts) {
+                        part = part.trim();
+                        if (part.startsWith("Supplier ID:")) {
+                            supplierID = part.split(":", 2)[1].trim();
+                        } else if (part.startsWith("Supplier Name:")) {
+                            supplierName = part.split(":", 2)[1].trim();
+                        }
+                    }
+
+                    if (!supplierID.isEmpty() && !supplierName.isEmpty()) {
+                        supplierNameMap.put(supplierID, supplierName);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Step 2: Read PO file and insert Supplier Name in correct position
+        if (poFile.exists()) {
+            try (Scanner scanner = new Scanner(poFile)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     String[] details = line.split(",");
 
-                    // Create a new array to store only the values after ':'
-                    String[] rowData = new String[details.length];
+                    String[] rowData = new String[details.length + 1]; // +1 for Supplier Name
+                    String supplierID = "";
 
+                    int insertIndex = 0;
                     for (int i = 0; i < details.length; i++) {
-                        String[] parts = details[i].split(":");
+                        String[] parts = details[i].split(":", 2);
                         if (parts.length > 1) {
-                            rowData[i] = parts[1].trim(); // Take the part after ':'
+                            String key = parts[0].trim();
+                            String value = parts[1].trim();
+
+                            if (key.equalsIgnoreCase("Supplier ID")) {
+                                supplierID = value;
+                                rowData[insertIndex++] = value; // Supplier ID
+                                // insert supplier name after Supplier ID
+                                String supplierName = supplierNameMap.getOrDefault(supplierID, "Unknown");
+                                rowData[insertIndex++] = supplierName;
+                            } else {
+                                rowData[insertIndex++] = value;
+                            }
                         } else {
-                            rowData[i] = ""; // If no colon, leave empty
+                            rowData[insertIndex++] = "";
                         }
                     }
 
@@ -275,9 +315,10 @@ public class generateandviewpo extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File not found at: " + file.getAbsolutePath());
+            System.out.println("File not found at: " + poFile.getAbsolutePath());
         }
     }
+
 
     class StatusColumnCellRenderer extends DefaultTableCellRenderer {
         @Override
@@ -299,6 +340,9 @@ public class generateandviewpo extends javax.swing.JPanel {
                     case "approved":
                         c.setForeground(new Color(0, 128, 0));
                         break;
+                    case "received":
+                        c.setForeground(new Color(0,102,255));
+                        break;
                     default:
                         c.setForeground(Color.BLACK);
                         break;
@@ -312,11 +356,11 @@ public class generateandviewpo extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.button add;
-    private PurchaseManager.button back;
+    private PurchaseManager.GUI.button add;
+    private PurchaseManager.GUI.button back;
     private javax.swing.JLabel cancel;
-    private PurchaseManager.button delete;
-    private PurchaseManager.button edit;
+    private PurchaseManager.GUI.button delete;
+    private PurchaseManager.GUI.button edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

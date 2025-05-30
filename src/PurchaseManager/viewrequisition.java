@@ -1,5 +1,6 @@
-package PurchaseManager;
+package PurchaseManager.GUI;
 
+import PurchaseManager.Function.updatedata;
 import javax.swing.JFrame;
 
 public class viewrequisition extends javax.swing.JFrame {
@@ -9,7 +10,7 @@ public class viewrequisition extends javax.swing.JFrame {
     public viewrequisition(JFrame parentFrame) {
         this.previousFrame = parentFrame;
         initComponents();
-        DSIT.loadRequisitionData(jTable1);
+        updatedata.loadRequisitionData(jTable1);
     }
 
     @SuppressWarnings("unchecked")
@@ -21,7 +22,7 @@ public class viewrequisition extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         cancel = new javax.swing.JLabel();
-        back = new PurchaseManager.button();
+        back = new PurchaseManager.GUI.button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -139,21 +140,15 @@ public class viewrequisition extends javax.swing.JFrame {
 
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
-        if (previousFrame != null) {
-            previousFrame.setVisible(true);
-        }
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
-        if (previousFrame != null) {
-            previousFrame.setVisible(true);
-        }
     }//GEN-LAST:event_backActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.button back;
+    private PurchaseManager.GUI.button back;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

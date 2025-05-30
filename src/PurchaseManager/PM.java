@@ -1,5 +1,10 @@
-package PurchaseManager;
+package PurchaseManager.GUI;
 
+import PurchaseManager.Function.updatedata;
+import PurchaseManager.GUI.viewitem;
+import PurchaseManager.GUI.viewsuppliers;
+import PurchaseManager.GUI.viewrequisition;
+import PurchaseManager.GUI.generateandviewpo;
 import Admin.Loginpage1;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +35,7 @@ public class PM extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
-        DSIT.loadstatusPOData(jTable1);
+        updatedata.loadstatusPOData(jTable1);
         readAndCountStatuses(); // Add this call here
     }
 
@@ -40,10 +45,10 @@ public class PM extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         logout = new javax.swing.JLabel();
-        ViewItem = new PurchaseManager.button();
-        ViewSuppliers = new PurchaseManager.button();
-        ViewRequisition = new PurchaseManager.button();
-        GenerateViewPO = new PurchaseManager.button();
+        ViewItem = new PurchaseManager.GUI.button();
+        ViewSuppliers = new PurchaseManager.GUI.button();
+        ViewRequisition = new PurchaseManager.GUI.button();
+        GenerateViewPO = new PurchaseManager.GUI.button();
         home1 = new javax.swing.JLabel();
         wlc = new javax.swing.JPanel();
         cancel = new javax.swing.JLabel();
@@ -57,7 +62,8 @@ public class PM extends javax.swing.JFrame {
         Approve = new javax.swing.JLabel();
         Pending = new javax.swing.JLabel();
         Paid = new javax.swing.JLabel();
-        moredetail = new PurchaseManager.button();
+        moredetail = new PurchaseManager.GUI.button();
+        Received = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -252,6 +258,11 @@ public class PM extends javax.swing.JFrame {
             }
         });
 
+        Received.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        Received.setForeground(new java.awt.Color(220, 220, 220));
+        Received.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Received.setText("Received     :");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -265,7 +276,8 @@ public class PM extends javax.swing.JFrame {
                     .addComponent(Reject)
                     .addComponent(Approve)
                     .addComponent(Pending)
-                    .addComponent(Paid))
+                    .addComponent(Paid)
+                    .addComponent(Received))
                 .addContainerGap(105, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -286,7 +298,9 @@ public class PM extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(Pending)
                         .addGap(18, 18, 18)
-                        .addComponent(Paid))
+                        .addComponent(Paid)
+                        .addGap(18, 18, 18)
+                        .addComponent(Received))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -342,13 +356,11 @@ public class PM extends javax.swing.JFrame {
 
     // go to other panel
     private void ViewSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewSuppliersActionPerformed
-        this.dispose();
         viewsuppliers Viewsuppliers = new viewsuppliers();
         Viewsuppliers.setVisible(true);
     }//GEN-LAST:event_ViewSuppliersActionPerformed
 
     private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
-        this.setVisible(false);  // hide current frame
         viewrequisition view = new viewrequisition(this);
         view.setVisible(true);
     }//GEN-LAST:event_ViewRequisitionActionPerformed
@@ -360,7 +372,6 @@ public class PM extends javax.swing.JFrame {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_GenerateViewPOActionPerformed
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
@@ -387,7 +398,6 @@ public class PM extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseClicked
 
     private void ViewItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewItemActionPerformed
-        this.dispose();
         viewitem Viewitem = new viewitem();
         Viewitem.setVisible(true);
     }//GEN-LAST:event_ViewItemActionPerformed
@@ -397,9 +407,6 @@ public class PM extends javax.swing.JFrame {
         frame.setContentPane(new generateandviewpo());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_moredetailActionPerformed
 
     //show the number of how many reject, pendinf ...
@@ -408,6 +415,7 @@ public class PM extends javax.swing.JFrame {
     int countApprove = 0;
     int countPaid = 0;
     int countPending = 0;
+    int countReceived = 0;
 
     try {
         // Read all lines from po.txt
@@ -437,7 +445,11 @@ public class PM extends javax.swing.JFrame {
                         countPaid++;
                         break;
                     case "pending":
-                        countPending++;
+                        countPaid++;
+                        break;
+                    case "receive":
+                    case "received":
+                        countReceived++;
                         break;
                 }
             }
@@ -448,6 +460,7 @@ public class PM extends javax.swing.JFrame {
         Approve.setText("Approve   : " + countApprove);
         Paid.setText("Paid           : " + countPaid);
         Pending.setText("Pending    : " + countPending);
+        Received.setText("Received    : " + countReceived);
 
     } catch (IOException e) {
         e.printStackTrace();
@@ -457,14 +470,15 @@ public class PM extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Approve;
-    private PurchaseManager.button GenerateViewPO;
+    private PurchaseManager.GUI.button GenerateViewPO;
     private javax.swing.JLabel PO;
     private javax.swing.JLabel Paid;
     private javax.swing.JLabel Pending;
+    private javax.swing.JLabel Received;
     private javax.swing.JLabel Reject;
-    private PurchaseManager.button ViewItem;
-    private PurchaseManager.button ViewRequisition;
-    private PurchaseManager.button ViewSuppliers;
+    private PurchaseManager.GUI.button ViewItem;
+    private PurchaseManager.GUI.button ViewRequisition;
+    private PurchaseManager.GUI.button ViewSuppliers;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel home1;
     private javax.swing.JLabel jLabel1;
@@ -474,7 +488,7 @@ public class PM extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel logout;
-    private PurchaseManager.button moredetail;
+    private PurchaseManager.GUI.button moredetail;
     private javax.swing.JPanel wlc;
     // End of variables declaration//GEN-END:variables
 }

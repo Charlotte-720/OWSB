@@ -1,4 +1,4 @@
-package PurchaseManager;
+package PurchaseManager.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
