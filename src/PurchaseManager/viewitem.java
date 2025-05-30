@@ -1,5 +1,4 @@
-
-package PurchaseManager.GUI;
+package PurchaseManager;
 
 import PurchaseManager.Function.updatedata;
 
@@ -20,7 +19,7 @@ public class viewitem extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         cancel = new javax.swing.JLabel();
-        back = new PurchaseManager.GUI.button();
+        back = new PurchaseManager.button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -139,7 +138,7 @@ public class viewitem extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.GUI.button back;
+    private PurchaseManager.button back;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

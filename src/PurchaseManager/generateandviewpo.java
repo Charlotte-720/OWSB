@@ -1,7 +1,7 @@
-package PurchaseManager.GUI;
+package PurchaseManager;
 
 import PurchaseManager.Function.deletefc;
-import PurchaseManager.GUI.addPO;
+import PurchaseManager.addPO;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -28,10 +28,10 @@ public class generateandviewpo extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        edit = new PurchaseManager.GUI.button();
-        delete = new PurchaseManager.GUI.button();
-        add = new PurchaseManager.GUI.button();
-        back = new PurchaseManager.GUI.button();
+        edit = new PurchaseManager.button();
+        delete = new PurchaseManager.button();
+        add = new PurchaseManager.button();
+        back = new PurchaseManager.button();
 
         setBackground(new java.awt.Color(225, 230, 245));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -177,7 +177,10 @@ public class generateandviewpo extends javax.swing.JPanel {
     //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        currentFrame.dispose();
+        currentFrame.dispose(); 
+        PM pmFrame = new PM("exampleFinanceManager"); 
+        pmFrame.setVisible(true);
+        pmFrame.setLocationRelativeTo(null); 
     }//GEN-LAST:event_cancelMouseClicked
 
     // go to add panel
@@ -236,7 +239,10 @@ public class generateandviewpo extends javax.swing.JPanel {
     // back to homepage
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        currentFrame.dispose();
+        currentFrame.dispose(); 
+        PM pmFrame = new PM("exampleFinanceManager"); 
+        pmFrame.setVisible(true);
+        pmFrame.setLocationRelativeTo(null); 
     }//GEN-LAST:event_backActionPerformed
     
     
@@ -356,11 +362,11 @@ public class generateandviewpo extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.GUI.button add;
-    private PurchaseManager.GUI.button back;
+    private PurchaseManager.button add;
+    private PurchaseManager.button back;
     private javax.swing.JLabel cancel;
-    private PurchaseManager.GUI.button delete;
-    private PurchaseManager.GUI.button edit;
+    private PurchaseManager.button delete;
+    private PurchaseManager.button edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

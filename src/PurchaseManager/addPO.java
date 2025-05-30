@@ -1,6 +1,7 @@
-package PurchaseManager.GUI;
+package PurchaseManager;
 
-import PurchaseManager.Backend.addFC;
+import PurchaseManager.Function.addFC;
+import PurchaseManager.generateandviewpo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -59,36 +60,41 @@ public class addPO extends JFrame {
         setVisible(true);
     }
 
-    private void loadPRData() {
-        prLines = addFC.loadPendingPRs(prFilePath);
-        model.setRowCount(0);
+private void loadPRData() {
+    prLines = addFC.loadAllPRs(prFilePath);
+    model.setRowCount(0);
 
-        for (String line : prLines) {
-            String itemID = "", supplierID = "", itemName = "", quantity = "", unitPrice = "", totalPrice = "", requiredDeliveryDate = "";
-
-            String[] parts = line.split(", ");
-            for (String part : parts) {
-                String[] keyValue = part.split(":", 2);
-                if (keyValue.length < 2) continue;
-
-                String key = keyValue[0].trim().toLowerCase();
-                String value = keyValue[1].trim();
-
-                switch (key) {
-                    case "item id" -> itemID = value;
-                    case "supplier id" -> supplierID = value;
-                    case "item name" -> itemName = value;
-                    case "quantity" -> quantity = value;
-                    case "unit price" -> unitPrice = value;
-                    case "total price" -> totalPrice = value;
-                    case "required delivery date" -> requiredDeliveryDate = value;
-                }
-            }
-
-            Object[] row = {false, itemID, supplierID, itemName, quantity, unitPrice, totalPrice, requiredDeliveryDate};
-            model.addRow(row);
+    for (String line : prLines) {
+        if (!line.contains("Status: Pending")) {
+            continue;  // skip lines not pending
         }
+
+        String itemID = "", supplierID = "", itemName = "", quantity = "", unitPrice = "", totalPrice = "", requiredDeliveryDate = "";
+
+        String[] parts = line.split(", ");
+        for (String part : parts) {
+            String[] keyValue = part.split(":", 2);
+            if (keyValue.length < 2) continue;
+
+            String key = keyValue[0].trim().toLowerCase();
+            String value = keyValue[1].trim();
+
+            switch (key) {
+                case "item id" -> itemID = value;
+                case "supplier id" -> supplierID = value;
+                case "item name" -> itemName = value;
+                case "quantity" -> quantity = value;
+                case "unit price" -> unitPrice = value;
+                case "total price" -> totalPrice = value;
+                case "required delivery date" -> requiredDeliveryDate = value;
+            }
+        }
+
+        Object[] row = {false, itemID, supplierID, itemName, quantity, unitPrice, totalPrice, requiredDeliveryDate};
+        model.addRow(row);
     }
+}
+
 
     private void saveSelectedPRs() {
         List<Integer> selectedRows = new ArrayList<>();

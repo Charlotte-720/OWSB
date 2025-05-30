@@ -1,4 +1,4 @@
-package PurchaseManager.GUI;
+package PurchaseManager;
 
 import javax.swing.*;
 import java.awt.*;

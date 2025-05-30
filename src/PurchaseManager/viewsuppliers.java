@@ -1,4 +1,4 @@
-package PurchaseManager.GUI;
+package PurchaseManager;
 
 import PurchaseManager.Function.updatedata;
 
@@ -18,7 +18,7 @@ public class viewsuppliers extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         cancel = new javax.swing.JLabel();
-        back = new PurchaseManager.GUI.button();
+        back = new PurchaseManager.button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -126,17 +126,20 @@ public class viewsuppliers extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
+        PM pm = new PM("examplePM");
+        pm.setVisible(true);
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
+        PM pm = new PM("examplePM");
+        pm.setVisible(true);
     }//GEN-LAST:event_backActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.GUI.button back;
+    private PurchaseManager.button back;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

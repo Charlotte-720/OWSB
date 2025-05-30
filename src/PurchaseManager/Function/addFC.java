@@ -1,26 +1,23 @@
-package PurchaseManager.Backend;
+package PurchaseManager.Function;
 
 import java.io.*;
 import java.util.*;
 
 public class addFC {
 
-    public static List<String> loadPendingPRs(String prFilePath) {
-        List<String> prLines = new ArrayList<>();
-
+    public static List<String> loadAllPRs(String prFilePath) {
+        List<String> allLines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(prFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.toLowerCase().contains("status: pending")) {
-                    prLines.add(line);
-                }
+                allLines.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return prLines;
+        return allLines;
     }
+
 
     public static String generateNextPOID(String poFilePath) {
         int maxID = 0;
@@ -50,17 +47,23 @@ public class addFC {
         }
     }
 
-    public static List<String> updatePRStatusByItemIDs(List<String> originalPRLines, List<String> itemIDsToUpdate) {
-        List<String> updated = new ArrayList<>(originalPRLines);
-        for (int i = 0; i < updated.size(); i++) {
+    public static List<String> updatePRStatusByItemIDs(List<String> prLines, List<String> itemIDsToUpdate) {
+        List<String> updated = new ArrayList<>();
+        for (String line : prLines) {
+            boolean updatedLine = false;
             for (String itemID : itemIDsToUpdate) {
-                if (updated.get(i).contains("Item ID: " + itemID) && updated.get(i).contains("Status: Pending")) {
-                    updated.set(i, updated.get(i).replace("Status: Pending", "Status: Submit"));
+                if (line.contains("Item ID: " + itemID) && line.contains("Status: Pending")) {
+                    line = line.replace("Status: Pending", "Status: Submit");
+                    updatedLine = true;
+                    break;
                 }
             }
+            updated.add(line);
         }
         return updated;
     }
+
+
 
     public static void rewritePRFile(List<String> prLines, String prFilePath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(prFilePath))) {

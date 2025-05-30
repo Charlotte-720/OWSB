@@ -1,10 +1,10 @@
 package PurchaseManager;
 
 import PurchaseManager.Function.updatedata;
-import PurchaseManager.GUI.viewitem;
-import PurchaseManager.GUI.viewsuppliers;
-import PurchaseManager.GUI.viewrequisition;
-import PurchaseManager.GUI.generateandviewpo;
+import PurchaseManager.viewitem;
+import PurchaseManager.viewsuppliers;
+import PurchaseManager.viewrequisition;
+import PurchaseManager.generateandviewpo;
 import Admin.Loginpage1;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,10 +45,10 @@ public class PM extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         logout = new javax.swing.JLabel();
-        ViewItem = new PurchaseManager.GUI.button();
-        ViewSuppliers = new PurchaseManager.GUI.button();
-        ViewRequisition = new PurchaseManager.GUI.button();
-        GenerateViewPO = new PurchaseManager.GUI.button();
+        ViewItem = new PurchaseManager.button();
+        ViewSuppliers = new PurchaseManager.button();
+        ViewRequisition = new PurchaseManager.button();
+        GenerateViewPO = new PurchaseManager.button();
         home1 = new javax.swing.JLabel();
         wlc = new javax.swing.JPanel();
         cancel = new javax.swing.JLabel();
@@ -62,7 +62,7 @@ public class PM extends javax.swing.JFrame {
         Approve = new javax.swing.JLabel();
         Pending = new javax.swing.JLabel();
         Paid = new javax.swing.JLabel();
-        moredetail = new PurchaseManager.GUI.button();
+        moredetail = new PurchaseManager.button();
         Received = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -372,6 +372,7 @@ public class PM extends javax.swing.JFrame {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_GenerateViewPOActionPerformed
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
@@ -407,6 +408,9 @@ public class PM extends javax.swing.JFrame {
         frame.setContentPane(new generateandviewpo());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_moredetailActionPerformed
 
     //show the number of how many reject, pendinf ...
@@ -470,15 +474,15 @@ public class PM extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Approve;
-    private PurchaseManager.GUI.button GenerateViewPO;
+    private PurchaseManager.button GenerateViewPO;
     private javax.swing.JLabel PO;
     private javax.swing.JLabel Paid;
     private javax.swing.JLabel Pending;
     private javax.swing.JLabel Received;
     private javax.swing.JLabel Reject;
-    private PurchaseManager.GUI.button ViewItem;
-    private PurchaseManager.GUI.button ViewRequisition;
-    private PurchaseManager.GUI.button ViewSuppliers;
+    private PurchaseManager.button ViewItem;
+    private PurchaseManager.button ViewRequisition;
+    private PurchaseManager.button ViewSuppliers;
     private javax.swing.JLabel cancel;
     private javax.swing.JLabel home1;
     private javax.swing.JLabel jLabel1;
@@ -488,7 +492,7 @@ public class PM extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel logout;
-    private PurchaseManager.GUI.button moredetail;
+    private PurchaseManager.button moredetail;
     private javax.swing.JPanel wlc;
     // End of variables declaration//GEN-END:variables
 }
