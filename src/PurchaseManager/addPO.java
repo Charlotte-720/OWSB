@@ -96,77 +96,77 @@ public class addPO extends JFrame {
     }
 
 
-private void saveSelectedPRs() {
-    List<Integer> selectedRows = new ArrayList<>();
-    Map<String, String> itemToSupplierMap = new HashMap<>();
-    List<String> poLines = new ArrayList<>();
+    private void saveSelectedPRs() {
+        List<Integer> selectedRows = new ArrayList<>();
+        Map<String, String> itemToSupplierMap = new HashMap<>();
+        List<String> poLines = new ArrayList<>();
 
-    // Collect selected rows
-    for (int i = 0; i < model.getRowCount(); i++) {
-        Boolean selected = (Boolean) model.getValueAt(i, 0);
-        if (Boolean.TRUE.equals(selected)) {
-            selectedRows.add(i);
-        }
-    }
-
-    if (selectedRows.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please select at least one PR to save.");
-        return;
-    }
-
-    try {
-        // Load existing PO_IDs for all suppliers in the PO file
-        Map<String, String> existingPOs = addFC.loadSupplierPOMap(poFilePath);
-        Map<String, String> supplierPOMap = new HashMap<>(existingPOs);
-
-        // Generate PO_IDs for new suppliers
-        for (int row : selectedRows) {
-            String supplierID = (String) model.getValueAt(row, 2);
-            if (!supplierPOMap.containsKey(supplierID)) {
-                String newPOID = addFC.generateNextPOID(poFilePath);
-                supplierPOMap.put(supplierID, newPOID);
+        // Collect selected rows
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean selected = (Boolean) model.getValueAt(i, 0);
+            if (Boolean.TRUE.equals(selected)) {
+                selectedRows.add(i);
             }
         }
 
-        // Build PO lines and item-supplier map
-        for (int row : selectedRows) {
-            String supplierID = (String) model.getValueAt(row, 2);
-            String poID = supplierPOMap.get(supplierID);
-            String itemID = (String) model.getValueAt(row, 1);
-
-            itemToSupplierMap.put(itemID, supplierID);  // Link item to supplier
-
-            String poLine = String.format(
-                    "PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: Pending",
-                    poID,
-                    itemID,
-                    supplierID,
-                    model.getValueAt(row, 3),
-                    model.getValueAt(row, 4),
-                    model.getValueAt(row, 5),
-                    model.getValueAt(row, 6),
-                    model.getValueAt(row, 7)
-            );
-
-            poLines.add(poLine);
+        if (selectedRows.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select at least one PR to save.");
+            return;
         }
 
-        // Save PO lines and update PR status
-        addFC.savePOs(poLines, poFilePath);
-        prLines = addFC.updatePRStatusByItemIDs(prLines, itemToSupplierMap); // Use updated method
-        addFC.rewritePRFile(prLines, prFilePath);
+        try {
+            // Load existing PO_IDs for all suppliers in the PO file
+            Map<String, String> existingPOs = addFC.loadSupplierPOMap(poFilePath);
+            Map<String, String> supplierPOMap = new HashMap<>(existingPOs);
 
-        JOptionPane.showMessageDialog(this, "PO(s) saved successfully!");
+            // Generate PO_IDs for new suppliers
+            for (int row : selectedRows) {
+                String supplierID = (String) model.getValueAt(row, 2);
+                if (!supplierPOMap.containsKey(supplierID)) {
+                    String newPOID = addFC.generateNextPOID(poFilePath);
+                    supplierPOMap.put(supplierID, newPOID);
+                }
+            }
 
-        if (parentFrame != null) {
-            parentFrame.loadPOData();
+            // Build PO lines and item-supplier map
+            for (int row : selectedRows) {
+                String supplierID = (String) model.getValueAt(row, 2);
+                String poID = supplierPOMap.get(supplierID);
+                String itemID = (String) model.getValueAt(row, 1);
+
+                itemToSupplierMap.put(itemID, supplierID);  // Link item to supplier
+
+                String poLine = String.format(
+                        "PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: Pending",
+                        poID,
+                        itemID,
+                        supplierID,
+                        model.getValueAt(row, 3),
+                        model.getValueAt(row, 4),
+                        model.getValueAt(row, 5),
+                        model.getValueAt(row, 6),
+                        model.getValueAt(row, 7)
+                );
+
+                poLines.add(poLine);
+            }
+
+            // Save PO lines and update PR status
+            addFC.savePOs(poLines, poFilePath);
+            prLines = addFC.updatePRStatusByItemIDs(prLines, itemToSupplierMap); // Use updated method
+            addFC.rewritePRFile(prLines, prFilePath);
+
+            JOptionPane.showMessageDialog(this, "PO(s) saved successfully!");
+
+            if (parentFrame != null) {
+                parentFrame.loadPOData();
+            }
+
+            dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error saving PO data.");
         }
-
-        dispose();
-    } catch (IOException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error saving PO data.");
     }
-}
   
 }

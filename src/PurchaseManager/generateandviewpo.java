@@ -356,8 +356,6 @@ public class generateandviewpo extends javax.swing.JPanel {
         return flaggedMap;
     }
 
-
-
     class StatusColumnCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, 

@@ -43,11 +43,17 @@ public class addFC {
     public static void savePOs(List<String> poLines, String poFilePath) throws IOException {
         try (BufferedWriter poWriter = new BufferedWriter(new FileWriter(poFilePath, true))) {
             for (String poLine : poLines) {
-                poWriter.write(poLine);
-                poWriter.newLine();
+                if (poLine != null && !poLine.trim().isEmpty()) {
+                    poWriter.write(poLine.trim());
+                    poWriter.newLine(); // Ensures exactly one line per PO
+                }
             }
         }
     }
+
+
+
+
 
     public static List<String> updatePRStatusByItemIDs(List<String> prLines, Map<String, String> itemToSupplierMap) {
         List<String> updated = new ArrayList<>();
