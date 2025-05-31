@@ -13,8 +13,9 @@ public class PurchaseOrder {
     private String date;
     private String status;  
     private List<Item> items; // for inventory manager role
+    private String flagReason;
     
-    public PurchaseOrder(String poID, String supplierName, String item, String quantity, String unitPrice, String totalPrice, String date, String status) {
+    public PurchaseOrder(String poID, String supplierName, String item, String quantity, String unitPrice, String totalPrice, String date, String status, String flagReason) {
         this.poID = poID;
         this.supplierName = supplierName;
         this.item = item;
@@ -23,6 +24,7 @@ public class PurchaseOrder {
         this.totalPrice = totalPrice;
         this.date = date;
         this.status = status;
+        this.flagReason = flagReason;
     }
     
     //setter for IM
@@ -60,6 +62,10 @@ public class PurchaseOrder {
 
     public String getStatus() {
         return status;
+    }
+    
+    public String getFlagReason() {
+        return flagReason;
     }
     
     // Add getters and setters for items

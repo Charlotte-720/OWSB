@@ -66,7 +66,8 @@ public class ManagePO extends javax.swing.JFrame {
                 po.getUnitPrice(),
                 po.getTotalPrice(),
                 po.getDate(),
-                po.getStatus()
+                po.getStatus(),
+                po.getFlagReason()
             });
         }
     }
@@ -145,18 +146,18 @@ public class ManagePO extends javax.swing.JFrame {
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
+                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status", "Flag Reason"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {

@@ -97,7 +97,7 @@ public class InventoryService {
                     String date = parts[6].split(": ")[1].trim();
                     String status = parts[7].split(": ")[1].trim();
 
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, itemName, quantity, unitPrice, totalPrice, date, status);
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, itemName, quantity, unitPrice, totalPrice, date, status, "-");
 
                     // ✅ Find and attach matching item by name
                     List<Item> matchedItems = new ArrayList<>();

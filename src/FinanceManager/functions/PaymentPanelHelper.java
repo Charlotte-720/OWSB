@@ -33,7 +33,7 @@ public class PaymentPanelHelper {
                 String status = fields[7].split(": ")[1];
 
                 if ("Verified".equalsIgnoreCase(status)) {
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status, "-");
                     poList.add(po);
                 }
             }

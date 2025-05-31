@@ -22,8 +22,10 @@ import model.PurchaseOrder;
  * @author charl
  */
 public class ManagePOHelper {
-    public static ArrayList<PurchaseOrder> readPOFile(String filePath) {
+   public static ArrayList<PurchaseOrder> readPOFile(String filePath) {
         ArrayList<PurchaseOrder> poList = new ArrayList<>();
+        Map<String, String> flaggedReasons = readFlaggedReasons("src/txtFile/flagReason.txt");
+
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -37,13 +39,17 @@ public class ManagePOHelper {
                 String date = fields[6].split(": ")[1];
                 String status = fields[7].split(": ")[1];
 
-                poList.add(new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status));
+                String flagReason = flaggedReasons.getOrDefault(poID, "-");
+
+                poList.add(new PurchaseOrder(poID, supplierName, item, quantity,
+                                             unitPrice, totalPrice, date, status, flagReason));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return poList;
     }
+
 
     public static List<String> loadActiveSuppliersForItem(String itemName) {
         List<String> validSuppliers = new ArrayList<>();
@@ -119,5 +125,34 @@ public class ManagePOHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public static Map<String, String> readFlaggedReasons(String filePath) {
+        Map<String, String> flaggedMap = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                // Format: PO_ID: 11, Reason: Not fresh
+                String[] parts = line.split(", ");
+                if (parts.length == 2) {
+                    String poIDPart = parts[0].trim();     // "PO_ID: 11"
+                    String reasonPart = parts[1].trim();   // "Reason: Not fresh"
+
+                    String poID = poIDPart.split(":")[1].trim();
+                    String reason = reasonPart.split(":")[1].trim();
+
+                    flaggedMap.put(poID, reason);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return flaggedMap;
     }
 }
