@@ -43,13 +43,13 @@ public class FinanceSummaryHelper {
 
                 try {
                     String[] fields = line.split(", ");
-                    String dateStr = fields[6].split(": ")[1];
+                    String dateStr = fields[7].split(": ")[1];
                     LocalDate poDate = LocalDate.parse(dateStr, fileDateFormat);
 
                     if (poDate.getMonth() == targetMonth.getMonth() && poDate.getYear() == targetMonth.getYear()) {
                         totalPO++;
-                        String totalPriceStr = fields[5].split(": ")[1];
-                        String status = fields[7].split(": ")[1];
+                        String totalPriceStr = fields[6].split(": ")[1];
+                        String status = fields[8].split(": ")[1];
                         double totalPrice = Double.parseDouble(totalPriceStr);
 
                         if (status.equals("Paid")) totalPayment += totalPrice;

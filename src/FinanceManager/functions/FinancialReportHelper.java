@@ -33,7 +33,7 @@ public class FinancialReportHelper {
                 if (line.trim().isEmpty()) continue;
                 summary.totalPO++;
 
-                String[] parts = line.split(",");
+                String[] parts = line.split(", ");
                 String status = "";
                 double totalPrice = 0;
 
@@ -78,13 +78,12 @@ public class FinancialReportHelper {
 
                 String[] fields = line.split(", ");
                 try {
-                    String item = fields[2].split(": ")[1];
-                    int quantity = Integer.parseInt(fields[3].split(": ")[1]);
-
+                    String item = fields[3].split(": ")[1];
+                    int quantity = Integer.parseInt(fields[4].split(": ")[1]);
                     itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
 
                 } catch (Exception e) {
-                    System.out.println("Skipping malformed line: " + line);
+                    System.out.println("Error, can't fetch the data.");
                 }
             }
 
@@ -152,7 +151,7 @@ public class FinancialReportHelper {
 
                     if (part.startsWith("Date:")) {
                         dateStr = part.split(":")[1].trim();
-                    } else if (part.startsWith("Item:")) {
+                    } else if (part.startsWith("Item Name:")) {
                         item = part.split(":")[1].trim();
                     } else if (part.startsWith("Quantity:")) {
                         quantity = Integer.parseInt(part.split(":")[1].trim());

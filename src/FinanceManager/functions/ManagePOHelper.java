@@ -25,20 +25,22 @@ public class ManagePOHelper {
    public static ArrayList<PurchaseOrder> readPOFile(String filePath) {
         ArrayList<PurchaseOrder> poList = new ArrayList<>();
         Map<String, String> flaggedReasons = readFlaggedReasons("src/txtFile/flagReason.txt");
+        Map<String, String> supplierMap = readSupplierMap("src/txtFile/suppliers.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(", ");
                 String poID = fields[0].split(": ")[1];
-                String supplierName = fields[1].split(": ")[1];
-                String item = fields[2].split(": ")[1];
-                String quantity = fields[3].split(": ")[1];
-                String unitPrice = fields[4].split(": ")[1];    
-                String totalPrice = fields[5].split(": ")[1];
-                String date = fields[6].split(": ")[1];
-                String status = fields[7].split(": ")[1];
+                String supplierID  = fields[2].split(": ")[1]; 
+                String item = fields[3].split(": ")[1];
+                String quantity = fields[4].split(": ")[1];
+                String unitPrice = fields[5].split(": ")[1];    
+                String totalPrice = fields[6].split(": ")[1];
+                String date = fields[7].split(": ")[1];
+                String status = fields[8].split(": ")[1];
 
+                String supplierName = supplierMap.getOrDefault(supplierID, "Unknown");
                 String flagReason = flaggedReasons.getOrDefault(poID, "-");
 
                 poList.add(new PurchaseOrder(poID, supplierName, item, quantity,
@@ -155,4 +157,40 @@ public class ManagePOHelper {
 
         return flaggedMap;
     }
+    
+    public static Map<String, String> readSupplierMap(String filePath) {
+        Map<String, String> supplierMap = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(", ");
+                String supplierID = "";
+                String supplierName = "";
+
+                for (String field : fields) {
+                    String[] parts = field.split(": ");
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        String value = parts[1].trim();
+
+                        if (key.equalsIgnoreCase("Supplier ID")) {
+                            supplierID = value;
+                        } else if (key.equalsIgnoreCase("Supplier Name")) {
+                            supplierName = value;
+                        }
+                    }
+                }
+
+                if (!supplierID.isEmpty() && !supplierName.isEmpty()) {
+                    supplierMap.put(supplierID, supplierName);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return supplierMap;
+    }
+
 }

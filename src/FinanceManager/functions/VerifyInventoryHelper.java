@@ -4,12 +4,15 @@
  */
 package FinanceManager.functions;
 
+import static FinanceManager.functions.ManagePOHelper.readSupplierMap;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +29,7 @@ public class VerifyInventoryHelper {
         };
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        Map<String, String> supplierMap = readSupplierMap("src/txtFile/suppliers.txt"); 
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -34,31 +38,42 @@ public class VerifyInventoryHelper {
                 if (line.trim().isEmpty()) continue;
 
                 String[] fields = line.split(", ");
-                String[] rowData = new String[columnNames.length];
-                String status = "";
+                String poID = "", supplierID = "", supplierName = "", item = "", quantity = "",
+                       unitPrice = "", totalPrice = "", date = "", status = "";
 
-                for (int i = 0; i < fields.length && i < rowData.length; i++) {
-                    String[] keyValue = fields[i].split(": ");
-                    if (keyValue.length == 2) {
-                        rowData[i] = keyValue[1].trim();
-                        if (fields[i].startsWith("Status:")) {
-                            status = keyValue[1].trim();
+                for (String field : fields) {
+                    String[] parts = field.split(": ");
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        String value = parts[1].trim();
+
+                        switch (key) {
+                            case "PO_ID": poID = value; break;
+                            case "Supplier ID": supplierID = value; break;
+                            case "Item Name": item = value; break;
+                            case "Quantity": quantity = value; break;
+                            case "Unit Price": unitPrice = value; break;
+                            case "Total Price": totalPrice = value; break;
+                            case "Date": date = value; break;
+                            case "Status": status = value; break;
                         }
                     }
                 }
 
                 if (status.equalsIgnoreCase("Received")) {
-                    model.addRow(rowData);
+                    supplierName = supplierMap.getOrDefault(supplierID, "Unknown");
+                    model.addRow(new Object[]{poID, supplierName, item, quantity, unitPrice, totalPrice, date, status});
                 }
             }
 
             table.setModel(model);
 
         } catch (IOException e) {
-            javax.swing.JOptionPane.showMessageDialog(null, "Failed to load PO data.");
+            JOptionPane.showMessageDialog(null, "Failed to load PO data.");
             e.printStackTrace();
         }
     }
+
     
     public static void updatePOStatus(String poID, String newStatus) {
         File inputFile = new File("src/txtFile/po.txt");
@@ -73,8 +88,7 @@ public class VerifyInventoryHelper {
                 if (line.trim().isEmpty()) continue;
 
                 if (line.contains("PO_ID: " + poID + ",")) {
-                    // Replace the Status value
-                    line = line.replaceAll("Status: \\w+", "Status: " + newStatus);
+                    line = line.replaceAll("Status: [^,]+", "Status: " + newStatus);
                 }
 
                 writer.write(line);
@@ -103,4 +117,37 @@ public class VerifyInventoryHelper {
             JOptionPane.showMessageDialog(null, "Failed to log flagged PO reason.");
         }
     }
+    
+    public static Map<String, String> readSupplierMap(String filePath) {
+        Map<String, String> supplierMap = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(", ");
+                String supplierID = "";
+                String supplierName = "";
+
+                for (String field : fields) {
+                    String[] parts = field.split(": ");
+                    if (parts.length == 2) {
+                        if (parts[0].trim().equalsIgnoreCase("Supplier ID")) {
+                            supplierID = parts[1].trim();
+                        } else if (parts[0].trim().equalsIgnoreCase("Supplier Name")) {
+                            supplierName = parts[1].trim();
+                        }
+                    }
+                }
+
+                if (!supplierID.isEmpty() && !supplierName.isEmpty()) {
+                    supplierMap.put(supplierID, supplierName);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return supplierMap;
+    }
+
 }

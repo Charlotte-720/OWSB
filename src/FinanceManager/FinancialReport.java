@@ -146,7 +146,7 @@ public class FinancialReport extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 226, 226));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        jLabel3.setText("Top 3 Purchased Items:");
+        jLabel3.setText("Top 3 Purchased Items (By Quantity):");
 
         barChartPanel.setMaximumSize(new java.awt.Dimension(300, 140));
 
@@ -154,7 +154,7 @@ public class FinancialReport extends javax.swing.JFrame {
         barChartPanel.setLayout(barChartPanelLayout);
         barChartPanelLayout.setHorizontalGroup(
             barChartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 341, Short.MAX_VALUE)
         );
         barChartPanelLayout.setVerticalGroup(
             barChartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,10 +168,10 @@ public class FinancialReport extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(barChartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 219, Short.MAX_VALUE))
-                    .addComponent(barChartPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                        .addGap(139, 139, 139)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
