@@ -1,2 +1,2 @@
 PO_ID: 11, Reason: Not fresh
-PO_ID: 12, Reason: Not good
+PO_ID: 12, Reason: Not goodPO_ID: 06, Reason: Fruits are not fresh

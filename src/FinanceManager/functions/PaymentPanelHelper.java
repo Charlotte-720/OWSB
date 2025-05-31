@@ -32,7 +32,7 @@ public class PaymentPanelHelper {
                 String date = fields[6].split(": ")[1];
                 String status = fields[7].split(": ")[1];
 
-                if ("Received".equalsIgnoreCase(status)) {
+                if ("Verified".equalsIgnoreCase(status)) {
                     PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status);
                     poList.add(po);
                 }

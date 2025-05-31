@@ -22,6 +22,7 @@ public class ViewRequisition extends javax.swing.JFrame {
     public ViewRequisition(Component previousComponent) {
         initComponents();
         this.previousComponent = previousComponent;
+        
         ViewRequisitionHelper.loadPRTable(prTable, "src/txtFile/pr.txt", "All");
         prTable.getColumnModel().getColumn(11).setCellRenderer(new StatusFormat.StatusCellRenderer());
         TableStyle.styleTableHeader(prTable, new Color(166, 214, 214), Color.BLACK);
@@ -34,9 +35,8 @@ public class ViewRequisition extends javax.swing.JFrame {
         statusFilter.addActionListener(e -> {
             String selectedStatus = (String) statusFilter.getSelectedItem();
             ViewRequisitionHelper.loadPRTable(prTable, "src/txtFile/pr.txt", selectedStatus);
+            prTable.getColumnModel().getColumn(11).setCellRenderer(new StatusFormat.StatusCellRenderer());
         });
-
-    
     }
 
     /**

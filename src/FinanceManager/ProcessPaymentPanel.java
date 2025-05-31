@@ -181,8 +181,9 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        FinanceManagerPanel fmg = new FinanceManagerPanel("exampleFinanceManager");
-        fmg.setVisible(true);
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnProcessPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPaymentActionPerformed
@@ -194,8 +195,8 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         }
 
         String status = paymentTable.getValueAt(row, 7).toString();
-        if (!status.equalsIgnoreCase("Received")) {
-            JOptionPane.showMessageDialog(this, "Only POs with status 'Received' can be paid.");
+        if (!status.equalsIgnoreCase("Verified")) {
+            JOptionPane.showMessageDialog(this, "Only POs with status 'Verified' can be paid.");
             return;
         }
         if (status.equalsIgnoreCase("Paid")) {
