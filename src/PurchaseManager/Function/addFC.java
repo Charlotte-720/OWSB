@@ -50,29 +50,33 @@ public class addFC {
     }
 
     public static List<String> updatePRStatusByItemIDs(List<String> prLines, Map<String, String> itemToSupplierMap) {
-    List<String> updated = new ArrayList<>();
-    for (String line : prLines) {
-        boolean updatedLine = false;
-        for (Map.Entry<String, String> entry : itemToSupplierMap.entrySet()) {
-            String itemID = entry.getKey();
-            String supplierID = entry.getValue();
+        List<String> updated = new ArrayList<>();
+        Set<String> updatedItems = new HashSet<>(); // To avoid duplicate updates
 
-            if (line.contains("Item ID: " + itemID)
-                && line.contains("Supplier ID: " + supplierID)
-                && line.contains("Status: Pending")) {
+        for (String line : prLines) {
+            boolean isUpdated = false;
 
-                line = line.replace("Status: Pending", "Status: Submit");
-                updatedLine = true;
-                break;
+            for (Map.Entry<String, String> entry : itemToSupplierMap.entrySet()) {
+                String itemID = entry.getKey();
+                String supplierID = entry.getValue();
+
+                if (line.contains("Item ID: " + itemID)
+                    && line.contains("Supplier ID: " + supplierID)
+                    && line.contains("Status: Pending")
+                    && !updatedItems.contains(itemID + supplierID)) {
+
+                    line = line.replace("Status: Pending", "Status: Submit");
+                    updatedItems.add(itemID + supplierID);
+                    isUpdated = true;
+                    break;
+                }
             }
+
+            updated.add(line);
         }
-        updated.add(line);
+
+        return updated;
     }
-    return updated;
-}
-
-
-
 
 
     public static void rewritePRFile(List<String> prLines, String prFilePath) throws IOException {

@@ -28,6 +28,10 @@ public class generateandviewpo extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        edit = new PurchaseManager.button();
+        delete = new PurchaseManager.button();
+        add = new PurchaseManager.button();
+        back = new PurchaseManager.button();
 
         setBackground(new java.awt.Color(225, 230, 245));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -43,35 +47,34 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
         jLabel1.setText("Generate PO");
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO ID", "Item ID", "Suppliers ID", "Suppliers N", "Item", "Quantity", "Unit Price", "Total Price", "RD Date", "Status", "Flag Reason"
+                "PO ID", "Item ID", "Suppliers ID", "Suppliers N", "Item", "Quantity", "Unit Price", "Total Price", "RD Date", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, true, false, false, false, false, false, false, false
+                false, true, false, true, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -83,6 +86,50 @@ public class generateandviewpo extends javax.swing.JPanel {
         jTable1.setRowHeight(25);
         jScrollPane1.setViewportView(jTable1);
 
+        edit.setBackground(new java.awt.Color(85, 85, 110));
+        edit.setForeground(new java.awt.Color(220, 220, 220));
+        edit.setText("Edit");
+        edit.setRound(20);
+        edit.setShadowColor(new java.awt.Color(0, 0, 0));
+        edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editActionPerformed(evt);
+            }
+        });
+
+        delete.setBackground(new java.awt.Color(85, 85, 110));
+        delete.setForeground(new java.awt.Color(220, 220, 220));
+        delete.setText("Delete");
+        delete.setRound(20);
+        delete.setShadowColor(new java.awt.Color(0, 0, 0));
+        delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteActionPerformed(evt);
+            }
+        });
+
+        add.setBackground(new java.awt.Color(85, 85, 110));
+        add.setForeground(new java.awt.Color(220, 220, 220));
+        add.setText("Add");
+        add.setRound(20);
+        add.setShadowColor(new java.awt.Color(0, 0, 0));
+        add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMouseClicked(evt);
+            }
+        });
+
+        back.setBackground(new java.awt.Color(85, 85, 110));
+        back.setForeground(new java.awt.Color(220, 220, 220));
+        back.setText("Back");
+        back.setRound(20);
+        back.setShadowColor(new java.awt.Color(0, 0, 0));
+        back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,11 +137,19 @@ public class generateandviewpo extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 827, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(cancel)))
+                        .addComponent(cancel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65)
+                        .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)
+                        .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
@@ -104,27 +159,33 @@ public class generateandviewpo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(29, 29, 29)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     //back to homepage
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
-        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        currentFrame.dispose(); 
-        PM pmFrame = new PM("exampleFinanceManager"); 
-        pmFrame.setVisible(true);
-        pmFrame.setLocationRelativeTo(null); 
+    JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    currentFrame.dispose(); 
+    PM pmFrame = new PM("exampleFinanceManager"); 
+    pmFrame.setVisible(true);
+    pmFrame.setLocationRelativeTo(null); 
     }//GEN-LAST:event_cancelMouseClicked
 
     // go to add panel
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-        addPO addPO = new addPO(this); // Opens the Add Purchase Order JFrame
+       addPO addPO = new addPO(this); // Opens the Add Purchase Order JFrame
     }//GEN-LAST:event_addMouseClicked
 
     //edit funcation 
@@ -157,7 +218,7 @@ public class generateandviewpo extends javax.swing.JPanel {
 
             if (!status.equalsIgnoreCase("Pending")) {
                 JOptionPane.showMessageDialog(this, "Cannot delete PO, only Pending can be delete!");
-                return; // Stop here to avoid calling deletefc
+                return; // Stop here to avoid calling deletePO
             }
 
             deletefc deletePO = new deletefc();
@@ -175,29 +236,27 @@ public class generateandviewpo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteActionPerformed
 
-    // back to homepage
+    // back function
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        currentFrame.dispose(); 
+        currentFrame.dispose();
         PM pmFrame = new PM("exampleFinanceManager"); 
         pmFrame.setVisible(true);
-        pmFrame.setLocationRelativeTo(null); 
+        pmFrame.setLocationRelativeTo(null);
     }//GEN-LAST:event_backActionPerformed
     
     
     // read the txt file and show it (read function)
     public void loadPOData() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); // Clear existing data
 
         File poFile = new File("src/txtFile/po.txt");
         File supplierFile = new File("src/txtFile/suppliers.txt");
 
-        Map<String, String[]> prDataMap = readPRMap("src/txtFile/pr.txt"); 
+        // Step 1: Build supplier ID -> Name map
         Map<String, String> supplierNameMap = new HashMap<>();
-        Map<String, String> flaggedReasons = readFlaggedReasons();
 
-        // Step 1: Read suppliers.txt to map Supplier ID → Supplier Name
         if (supplierFile.exists()) {
             try (Scanner supplierScanner = new Scanner(supplierFile)) {
                 while (supplierScanner.hasNextLine()) {
@@ -225,132 +284,46 @@ public class generateandviewpo extends javax.swing.JPanel {
             }
         }
 
-        // Step 2: Read po.txt and populate the table
+        // Step 2: Read PO file and insert Supplier Name in correct position
         if (poFile.exists()) {
             try (Scanner scanner = new Scanner(poFile)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     String[] details = line.split(",");
 
-                    // Initialize all PO fields
-                    String poID = "", item = "", quantity = "", unitPrice = "", totalPrice = "", reqDate = "", status = "";
+                    String[] rowData = new String[details.length + 1]; // +1 for Supplier Name
+                    String supplierID = "";
 
-                    for (String field : details) {
-                        String[] parts = field.split(":", 2);
-                        if (parts.length == 2) {
+                    int insertIndex = 0;
+                    for (int i = 0; i < details.length; i++) {
+                        String[] parts = details[i].split(":", 2);
+                        if (parts.length > 1) {
                             String key = parts[0].trim();
                             String value = parts[1].trim();
 
-                            switch (key) {
-                                case "PO_ID":
-                                    poID = value;
-                                    break;
-                                case "Item":
-                                    item = value;
-                                    break;
-                                case "Quantity":
-                                    quantity = value;
-                                    break;
-                                case "Unit Price":
-                                    unitPrice = value;
-                                    break;
-                                case "Total Price":
-                                    totalPrice = value;
-                                    break;
-                                case "Date":
-                                case "Required Delivery Date":
-                                    reqDate = value;
-                                    break;
-                                case "Status":
-                                    status = value;
-                                    break;
+                            if (key.equalsIgnoreCase("Supplier ID")) {
+                                supplierID = value;
+                                rowData[insertIndex++] = value; // Supplier ID
+                                // insert supplier name after Supplier ID
+                                String supplierName = supplierNameMap.getOrDefault(supplierID, "Unknown");
+                                rowData[insertIndex++] = supplierName;
+                            } else {
+                                rowData[insertIndex++] = value;
                             }
+                        } else {
+                            rowData[insertIndex++] = "";
                         }
                     }
 
-                    // Now: lookup remaining fields based on item and PO ID
-                    String[] prFields = prDataMap.getOrDefault(item, new String[]{"-", "-"});
-                    String itemID = prFields[0];
-                    String supplierID = prFields[1];
-                    String supplierName = supplierNameMap.getOrDefault(supplierID, "-");
-                    String flagReason = flaggedReasons.getOrDefault(poID, "-");
-
-                    // Add row to table
-                    model.addRow(new Object[]{
-                        poID, itemID, supplierID, supplierName, item,
-                        quantity, unitPrice, totalPrice, reqDate, status, flagReason
-                    });
+                    model.addRow(rowData);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("PO file not found: " + poFile.getAbsolutePath());
+            System.out.println("File not found at: " + poFile.getAbsolutePath());
         }
     }
-
-
-    
-    public Map<String, String> readFlaggedReasons() {
-        Map<String, String> flaggedMap = new HashMap<>();
-        File reasonFile = new File("src/txtFile/flagReason.txt");
-
-        if (reasonFile.exists()) {
-            try (Scanner scanner = new Scanner(reasonFile)) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String[] parts = line.split(", ");
-                    if (parts.length == 2) {
-                        String poID = parts[0].split(":")[1].trim();
-                        String reason = parts[1].split(":")[1].trim();
-                        flaggedMap.put(poID, reason);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return flaggedMap;
-    }
-
-    public static Map<String, String[]> readPRMap(String prPath) {
-        Map<String, String[]> prMap = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(prPath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(", ");
-                String itemID = "", itemName = "", supplierID = "";
-
-                for (String field : fields) {
-                    String[] parts = field.split(": ");
-                    if (parts.length == 2) {
-                        String key = parts[0].trim();
-                        String value = parts[1].trim();
-                        switch (key) {
-                            case "Item ID":
-                                itemID = value;
-                                break;
-                            case "Item Name":
-                                itemName = value;
-                                break;
-                            case "Supplier ID":
-                                supplierID = value;
-                                break;
-                        }
-                    }
-                }
-
-                if (!itemName.isEmpty()) {
-                    prMap.put(itemName, new String[]{itemID, supplierID});
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return prMap;
-    }
-
 
 
     class StatusColumnCellRenderer extends DefaultTableCellRenderer {
@@ -395,7 +368,11 @@ public class generateandviewpo extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private PurchaseManager.button add;
+    private PurchaseManager.button back;
     private javax.swing.JLabel cancel;
+    private PurchaseManager.button delete;
+    private PurchaseManager.button edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
