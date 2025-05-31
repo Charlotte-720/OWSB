@@ -3,8 +3,8 @@ package SalesManager;
 import SalesManager.DataHandlers.SupplierFileHandler;
 import SalesManager.Functions.supplierFunction;
 import java.awt.Component;
-import model.Supplier;
 import javax.swing.JOptionPane;
+import model.Supplier;
 
 
 public class EditSupplier extends javax.swing.JFrame {
@@ -74,7 +74,7 @@ public class EditSupplier extends javax.swing.JFrame {
         supplierName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setFocusableWindowState(false);
+        // setFocusableWindowState(false);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 246, 226));
