@@ -1,4 +1,4 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
 import SalesManager.Functions.prFunction;
 import java.util.List;

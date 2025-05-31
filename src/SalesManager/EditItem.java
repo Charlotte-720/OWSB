@@ -1,4 +1,4 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.DataHandlers.ItemFileHandler.POItem;

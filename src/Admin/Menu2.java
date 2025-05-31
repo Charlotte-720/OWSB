@@ -4,7 +4,7 @@
  */
 package Admin;
 
-import SalesManager.Interfaces.ItemEntry;
+import SalesManager.ItemEntry;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**

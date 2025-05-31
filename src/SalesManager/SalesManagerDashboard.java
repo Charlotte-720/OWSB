@@ -1,12 +1,6 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
-import SalesManager.Interfaces.ItemEntry;
-import SalesManager.Interfaces.DailySalesReport;
-import SalesManager.Interfaces.MonthlySalesReportPanel;
-import SalesManager.Interfaces.MonthlySalesReport;
-import SalesManager.Interfaces.ViewPO;
 import Admin.Loginpage1;
-import SalesManager.SupplierEntry;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

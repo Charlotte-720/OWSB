@@ -1,5 +1,5 @@
 
-package SalesManager.Interfaces;
+package SalesManager;
 
 import java.io.File;
 import java.io.IOException;

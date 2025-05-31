@@ -719,4 +719,45 @@ public class prFunction {
         errorCallback.accept("Unexpected error during deletion: " + e.getMessage());
     }
 }
+    
+//    Search function
+    public List<String[]> searchPRRecords(List<String[]> allRecords, String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            return new ArrayList<>(allRecords);
+        }
+        
+        String searchLower = searchText.toLowerCase().trim();
+        List<String[]> filteredRecords = new ArrayList<>();
+        
+        for (String[] record : allRecords) {
+            if (record != null && record.length >= 12) {
+                if (matchesPRSearchCriteria(record, searchLower)) {
+                    filteredRecords.add(record);
+                }
+            }
+        }
+        
+        return filteredRecords;
+    }
+    
+    private boolean matchesPRSearchCriteria(String[] record, String searchLower) {
+        // Search in these fields: PR ID, Item Name, Supplier ID, Status
+        String prID = (record[0] != null) ? record[0].toLowerCase() : "";
+        String itemName = (record[3] != null) ? record[3].toLowerCase() : "";
+        String supplierID = (record[7] != null) ? record[7].toLowerCase() : "";
+        String status = (record[11] != null) ? record[11].toLowerCase() : "";
+        
+        // Return true if any field contains the search text
+        return prID.contains(searchLower) || 
+               itemName.contains(searchLower) || 
+               supplierID.contains(searchLower) || 
+               status.contains(searchLower);
+    }
+    
+    public List<Object[]> performSearchAndGetTableData(List<String[]> allRecords, String searchText) {
+        List<String[]> filteredRecords = searchPRRecords(allRecords, searchText);
+        return processRecordsForTable(filteredRecords);
+    }
+    
+    
 }

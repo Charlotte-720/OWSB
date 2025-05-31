@@ -2,6 +2,7 @@ package SalesManager.Functions;
 
 import SalesManager.DataHandlers.SupplierFileHandler;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Supplier;
 
@@ -201,6 +202,129 @@ public class supplierFunction {
             return new OperationResult(true, "Supplier deleted successfully!");
         } catch (IOException e) {
             return new OperationResult(false, "Error deleting supplier: " + e.getMessage());
+        }
+    }
+    
+//    search function
+    public static ListResult searchSuppliers(String searchTerm) {
+        try {
+            List<Supplier> allSuppliers = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt");
+            List<Supplier> filteredSuppliers = new ArrayList<>();
+            
+            // If search term is empty or null, return all suppliers
+            if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                return new ListResult(true, "All suppliers loaded", allSuppliers);
+            }
+            
+            String lowerSearchTerm = searchTerm.toLowerCase().trim();
+            
+            // Filter suppliers based on search term
+            for (Supplier supplier : allSuppliers) {
+                if (matchesSearchTerm(supplier, lowerSearchTerm)) {
+                    filteredSuppliers.add(supplier);
+                }
+            }
+            
+            String message = filteredSuppliers.isEmpty() 
+                ? "No suppliers found matching: " + searchTerm
+                : filteredSuppliers.size() + " supplier(s) found matching: " + searchTerm;
+            
+            return new ListResult(true, message, filteredSuppliers);
+            
+        } catch (IOException e) {
+            return new ListResult(false, "Error searching suppliers: " + e.getMessage(), null);
+        }
+    }
+    
+    private static boolean matchesSearchTerm(Supplier supplier, String searchTerm) {
+        // Search in Supplier ID
+        if (supplier.getSupplierID() != null && 
+            supplier.getSupplierID().toLowerCase().contains(searchTerm)) {
+            return true;
+        }
+        
+        // Search in Supplier Name
+        if (supplier.getSupplierName() != null && 
+            supplier.getSupplierName().toLowerCase().contains(searchTerm)) {
+            return true;
+        }
+        
+        // Search in Contact Number
+        if (supplier.getContactNo() != null && 
+            supplier.getContactNo().toLowerCase().contains(searchTerm)) {
+            return true;
+        }
+        
+        // Search in Active status
+        String activeStatus = supplier.isActive() ? "active" : "inactive";
+        if (activeStatus.contains(searchTerm)) {
+            return true;
+        }
+        
+        // Also check for boolean representations
+        String booleanStatus = String.valueOf(supplier.isActive()).toLowerCase();
+        if (booleanStatus.contains(searchTerm)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static ListResult searchSuppliersByField(String searchTerm, String searchField) {
+        try {
+            List<Supplier> allSuppliers = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt");
+            List<Supplier> filteredSuppliers = new ArrayList<>();
+            
+            // If search term is empty, return all suppliers
+            if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                return new ListResult(true, "All suppliers loaded", allSuppliers);
+            }
+            
+            String lowerSearchTerm = searchTerm.toLowerCase().trim();
+            String lowerSearchField = searchField.toLowerCase().trim();
+            
+            // Filter suppliers based on specific field
+            for (Supplier supplier : allSuppliers) {
+                boolean matches = false;
+                
+                switch (lowerSearchField) {
+                    case "id":
+                        matches = supplier.getSupplierID() != null && 
+                                 supplier.getSupplierID().toLowerCase().contains(lowerSearchTerm);
+                        break;
+                    case "name":
+                        matches = supplier.getSupplierName() != null && 
+                                 supplier.getSupplierName().toLowerCase().contains(lowerSearchTerm);
+                        break;
+                    case "contact":
+                        matches = supplier.getContactNo() != null && 
+                                 supplier.getContactNo().toLowerCase().contains(lowerSearchTerm);
+                        break;
+                    case "status":
+                        String activeStatus = supplier.isActive() ? "active" : "inactive";
+                        String booleanStatus = String.valueOf(supplier.isActive()).toLowerCase();
+                        matches = activeStatus.contains(lowerSearchTerm) || 
+                                 booleanStatus.contains(lowerSearchTerm);
+                        break;
+                    default:
+                        // If field not recognized, search all fields
+                        matches = matchesSearchTerm(supplier, lowerSearchTerm);
+                        break;
+                }
+                
+                if (matches) {
+                    filteredSuppliers.add(supplier);
+                }
+            }
+            
+            String message = filteredSuppliers.isEmpty() 
+                ? "No suppliers found in " + searchField + " matching: " + searchTerm
+                : filteredSuppliers.size() + " supplier(s) found in " + searchField + " matching: " + searchTerm;
+            
+            return new ListResult(true, message, filteredSuppliers);
+            
+        } catch (IOException e) {
+            return new ListResult(false, "Error searching suppliers by field: " + e.getMessage(), null);
         }
     }
 }

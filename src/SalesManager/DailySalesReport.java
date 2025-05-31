@@ -1,4 +1,4 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
 import java.time.LocalDate;
 import java.util.List;

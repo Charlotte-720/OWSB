@@ -1,8 +1,8 @@
 
-package SalesManager.Interfaces;
+package SalesManager;
 
-import SalesManager.Interfaces.AddItem;
-import SalesManager.Interfaces.EditItem;
+import SalesManager.AddItem;
+import SalesManager.EditItem;
 import model.Item;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
@@ -73,37 +73,7 @@ private List<Item> allItems = new ArrayList<>();
     } catch (IOException e) {
         JOptionPane.showMessageDialog(this, "Error filtering by category: " + e.getMessage());
     }
-}
-
-private void showLowStockItems(int threshold) {
-    try {
-        List<Item> lowStockItems = itemFunction.getLowStockItems(threshold);
-        populateTable(lowStockItems);
-        
-        if (lowStockItems.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No items with stock below " + threshold);
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Error getting low stock items: " + e.getMessage());
-    }
-}
-
-private void showExpiringItems(int days) {
-    try {
-        List<Item> expiringItems = itemFunction.getItemsExpiringWithin(days);
-        populateTable(expiringItems);
-        
-        if (expiringItems.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No items expiring within " + days + " days");
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                expiringItems.size() + " items expiring within " + days + " days");
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Error getting expiring items: " + e.getMessage());
-    }
-}
-    
+}   
     // Modified refreshTable method to maintain search results
     private void refreshTable() {
         try {
@@ -113,12 +83,6 @@ private void showExpiringItems(int days) {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error refreshing table: " + e.getMessage());
         }
-    }
-
-    // You can also add a clear search button method (optional)
-    private void clearSearch() {
-        SearchField.setText("");
-        populateTable(allItems);
     }
 
     // Separate method for edit action
@@ -170,22 +134,22 @@ private void showExpiringItems(int days) {
         }
 
     public void populateTable(List<Item> itemList) {
-    DefaultTableModel model = (DefaultTableModel) ItemTable.getModel();
-    model.setRowCount(0); // Clear existing rows
+        DefaultTableModel model = (DefaultTableModel) ItemTable.getModel();
+        model.setRowCount(0); // Clear existing rows
 
-    for (Item item : itemList) {
-        model.addRow(new Object[]{
-            item.getItemID(),
-            item.getItemName(),
-            item.getPrice(),
-            item.getCategory(),
-            item.getExpiredDate(),
-            item.getSupplierID(),
-            item.getTotalStock(),
-            item.getUpdatedDate(),
-        });
+        for (Item item : itemList) {
+            model.addRow(new Object[]{
+                item.getItemID(),
+                item.getItemName(),
+                item.getPrice(),
+                item.getCategory(),
+                item.getExpiredDate(),
+                item.getSupplierID(),
+                item.getTotalStock(),
+                item.getUpdatedDate(),
+            });
+        }
     }
-}
     
     private void setupActionColumn() {
     if (ItemTable.getColumnCount() >= 9) {
@@ -286,6 +250,7 @@ private void showExpiringItems(int days) {
                 .addGap(24, 24, 24))
         );
 
+        SearchField.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SearchField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SearchFieldActionPerformed(evt);
@@ -406,44 +371,6 @@ private void showExpiringItems(int days) {
             SearchField.requestFocus();
         });
     }//GEN-LAST:event_clearButtonActionPerformed
-
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(ItemEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(ItemEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(ItemEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(ItemEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ItemEntry().setVisible(true);
-//                
-//            }
-//        });
-//    }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ItemPanel;

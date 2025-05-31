@@ -1,7 +1,5 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
-import SalesManager.Interfaces.EditSupplier;
-import SalesManager.Interfaces.AddSupplier;
 import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
@@ -9,15 +7,19 @@ import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Functions.supplierFunction;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 
 public class SupplierEntry extends javax.swing.JFrame {
-
+    private List<Supplier> allSuppliers;
+    
     public SupplierEntry() {
         initComponents();
         initializeTable();
         loadSuppliers();
+        setupSearchListener();
     }
     
     private void initializeTable() {
@@ -50,10 +52,73 @@ public class SupplierEntry extends javax.swing.JFrame {
         supplierFunction.ListResult result = supplierFunction.getAllSuppliers();
         
         if (result.isSuccess()) {
+            allSuppliers = result.getSuppliers();
             populateTable(result.getSuppliers());
         } else {
             JOptionPane.showMessageDialog(this, result.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void setupSearchListener() {
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                performSearch();
+            }
+        });
+    }
+    
+    private void performSearch() {
+        String searchTerm = searchField.getText().trim();
+        
+        supplierFunction.ListResult result = supplierFunction.searchSuppliers(searchTerm);
+        
+        if (result.isSuccess()) {
+            populateTable(result.getSuppliers());
+            
+            // Optional: Show search results count in status
+            if (!searchTerm.isEmpty()) {
+                int resultCount = result.getSuppliers().size();
+                }
+        } else {
+            JOptionPane.showMessageDialog(this, result.getMessage(),
+                "Search Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void refreshTable() {
+        loadSuppliers();
+        // If there's a search term, re-apply the search
+        String currentSearch = searchField.getText().trim();
+        if (!currentSearch.isEmpty()) {
+            performSearch();
+        }
+    }
+    
+    private void populateTable(List<Supplier> supplierList) {
+        DefaultTableModel model = (DefaultTableModel) supplierTable.getModel();
+        model.setRowCount(0); 
+
+        if (supplierList != null) {
+            for (Supplier supplier : supplierList) {
+                model.addRow(new Object[]{
+                    supplier.getSupplierID(),
+                    supplier.getSupplierName(),
+                    supplier.getContactNo(),
+                    supplier.isActive(),
+                });
+            }
         }
     }
     
@@ -100,23 +165,10 @@ public class SupplierEntry extends javax.swing.JFrame {
             }
         }
     }
-
-    private void refreshTable() {
-        loadSuppliers();
-    }
     
-    private void populateTable(List<Supplier> supplierList) {
-        DefaultTableModel model = (DefaultTableModel) supplierTable.getModel();
-        model.setRowCount(0); // Clear existing rows
-
-        for (Supplier supplier : supplierList) {
-            model.addRow(new Object[]{
-                supplier.getSupplierID(),
-                supplier.getSupplierName(),
-                supplier.getContactNo(),
-                supplier.isActive(),
-            });
-        }
+    private void clearSearch() {
+        searchField.setText("");
+        searchField.requestFocus();
     }
     
     @SuppressWarnings("unchecked")
@@ -127,9 +179,12 @@ public class SupplierEntry extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        addButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         supplierTable = new javax.swing.JTable();
+        addButton = new javax.swing.JButton();
+        SearchLabel = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
+        clearButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -159,28 +214,19 @@ public class SupplierEntry extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(151, 151, 151)
+                .addGap(137, 137, 137)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 30, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
-
-        addButton.setBackground(new java.awt.Color(103, 193, 58));
-        addButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        addButton.setText("Add Supplier");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
 
         supplierTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -205,17 +251,51 @@ public class SupplierEntry extends javax.swing.JFrame {
         supplierTable.setRowHeight(40);
         jScrollPane1.setViewportView(supplierTable);
 
+        addButton.setBackground(new java.awt.Color(103, 193, 58));
+        addButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addButton.setText("Add Supplier");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        SearchLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        SearchLabel.setLabelFor(SearchLabel);
+        SearchLabel.setText("Search");
+
+        searchField.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+
+        clearButton.setBackground(new java.awt.Color(255, 255, 153));
+        clearButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(addButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(SearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(clearButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addButton)))
                 .addContainerGap())
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -223,11 +303,15 @@ public class SupplierEntry extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(addButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearButton)
+                    .addComponent(SearchLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12))
+                .addGap(14, 14, 14))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -266,13 +350,24 @@ public class SupplierEntry extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_addButtonActionPerformed
 
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        performSearch();
+    }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        clearSearch();
+    }//GEN-LAST:event_clearButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SearchLabel;
     private javax.swing.JButton addButton;
+    private javax.swing.JButton clearButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField searchField;
     private javax.swing.JTable supplierTable;
     // End of variables declaration//GEN-END:variables
 }

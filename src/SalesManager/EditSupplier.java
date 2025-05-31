@@ -1,4 +1,4 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
 import SalesManager.DataHandlers.SupplierFileHandler;
 import SalesManager.Functions.supplierFunction;

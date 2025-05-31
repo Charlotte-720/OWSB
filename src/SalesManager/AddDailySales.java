@@ -1,6 +1,6 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
-import SalesManager.Interfaces.DailySalesReport;
+import SalesManager.DailySalesReport;
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.DataHandlers.SalesRecordFileHandler;
 import SalesManager.Functions.salesFunction;

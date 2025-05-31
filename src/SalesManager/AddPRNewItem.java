@@ -1,4 +1,4 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
 import SalesManager.DataHandlers.PRFileHandler;
 import SalesManager.Functions.prFunction;

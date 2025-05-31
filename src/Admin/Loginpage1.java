@@ -7,7 +7,7 @@ package Admin;
 import FinanceManager.FinanceManagerPanel;
 import InventoryManager.InventoryManagerDashboard;
 import PurchaseManager.PM;
-import SalesManager.Interfaces.SalesManagerDashboard;
+import SalesManager.SalesManagerDashboard;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.event.FocusListener;

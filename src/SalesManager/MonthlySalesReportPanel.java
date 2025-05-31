@@ -1,5 +1,5 @@
 
-package SalesManager.Interfaces;
+package SalesManager;
 
 import SalesManager.DataHandlers.SalesRecordFileHandler;
 import java.time.YearMonth;

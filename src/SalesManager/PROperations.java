@@ -1,24 +1,23 @@
-package SalesManager.Interfaces;
+package SalesManager;
 
-import SalesManager.Interfaces.EditPRRestock;
-import SalesManager.Interfaces.AddPRRestock;
-import SalesManager.Interfaces.EditPRNewItem;
-import SalesManager.Interfaces.AddPRNewItem;
 import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionEvent;
-import SalesManager.DataHandlers.PRFileHandler;
 import SalesManager.Functions.prFunction;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 
 public class PROperations extends javax.swing.JFrame {
     private String currentSalesManagerID;
     private prFunction prFunc;
+    private List<String[]> allPRRecords = new ArrayList<>(); 
     
     public PROperations(String salesManagerID) {
         this.currentSalesManagerID = salesManagerID;
@@ -31,6 +30,7 @@ public class PROperations extends javax.swing.JFrame {
     private void initializeUI() {
         loadPurchaseRequisitions();
         setupActionColumn();
+        setupSearchFunction(); 
     }
         
     private void setupActionColumn() {
@@ -57,20 +57,60 @@ public class PROperations extends javax.swing.JFrame {
         }
     }
     
+    private void setupSearchFunction() {
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                performSearch();
+            }
+        });
+    }
+    private void performSearch() {
+        String searchText = searchField.getText().trim();
+        
+        try {
+            List<String[]> filteredRecords = prFunc.searchPRRecords(allPRRecords, searchText);
+            populatePRTable(filteredRecords);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error performing search: " + e.getMessage());
+            populatePRTable(allPRRecords);
+        }
+    }
+   
+    private void populatePRTable(List<String[]> prRecords) {
+        DefaultTableModel model = (DefaultTableModel) prTable.getModel();
+        model.setRowCount(0);
+        
+        List<Object[]> tableData = prFunc.processRecordsForTable(prRecords);
+        
+        for (Object[] rowData : tableData) {
+            model.addRow(rowData);
+        }
+    }
+    
     private void loadPurchaseRequisitions() {
         try {
             DefaultTableModel model = (DefaultTableModel) prTable.getModel();
             model.setRowCount(0);
-            
-            // Use prFunction to load and process data
+
             List<String[]> records = prFunc.loadPurchaseRequisitions();
+            this.allPRRecords = new ArrayList<>(records);
             List<Object[]> tableData = prFunc.processRecordsForTable(records);
-            
-            // Populate table with processed data
+
             for (Object[] rowData : tableData) {
                 model.addRow(rowData);
             }
-            
+
         } catch (IOException e) {
             handleException("Error loading Purchase Requisitions", e);
         }
@@ -81,7 +121,6 @@ public class PROperations extends javax.swing.JFrame {
         Object value = model.getValueAt(row, 0);
         return value != null ? value.toString() : null;
     }
-    
     
     private void handleEditPR(int row) {
         try {
@@ -211,10 +250,13 @@ public class PROperations extends javax.swing.JFrame {
         PRTitle = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
+        clearButton = new javax.swing.JButton();
         date = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         prTable = new javax.swing.JTable();
         PurchaseNewItemButton = new javax.swing.JButton();
+        SearchLabel = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -270,7 +312,16 @@ public class PROperations extends javax.swing.JFrame {
         dateLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         dateLabel.setText("Date");
 
-        date.setText("jLabel3");
+        clearButton.setBackground(new java.awt.Color(255, 255, 153));
+        clearButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+
+        date.setText(" ");
 
         prTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -304,6 +355,17 @@ public class PROperations extends javax.swing.JFrame {
             }
         });
 
+        SearchLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        SearchLabel.setText("Search");
+
+        searchField.setText(" ");
+        searchField.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -311,14 +373,22 @@ public class PROperations extends javax.swing.JFrame {
             .addComponent(PRPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(SearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(clearButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(RestockExistingItemButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -331,15 +401,19 @@ public class PROperations extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(PRPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
-                .addComponent(PurchaseNewItemButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RestockExistingItemButton)
+                    .addComponent(PurchaseNewItemButton)
                     .addComponent(date)
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RestockExistingItemButton)
+                    .addComponent(SearchLabel)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -355,7 +429,7 @@ public class PROperations extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addContainerGap())
         );
 
         pack();
@@ -380,16 +454,30 @@ public class PROperations extends javax.swing.JFrame {
         addPRDialog.addWindowListener(createRefreshTableListener());
     }//GEN-LAST:event_PurchaseNewItemButtonActionPerformed
 
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        clearButton.addActionListener(e -> {
+        searchField.setText("");
+        searchField.requestFocus();
+        });
+    }//GEN-LAST:event_clearButtonActionPerformed
+
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchFieldActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PRPanel;
     private javax.swing.JLabel PRTitle;
     private javax.swing.JButton PurchaseNewItemButton;
     private javax.swing.JButton RestockExistingItemButton;
+    private javax.swing.JLabel SearchLabel;
+    private javax.swing.JButton clearButton;
     private javax.swing.JLabel date;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable prTable;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 }
