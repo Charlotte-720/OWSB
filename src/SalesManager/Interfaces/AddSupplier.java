@@ -1,4 +1,4 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
 import SalesManager.Functions.supplierFunction;
 import javax.swing.JOptionPane;                                                                                                                                             

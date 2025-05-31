@@ -1,5 +1,7 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
+import SalesManager.Interfaces.EditSupplier;
+import SalesManager.Interfaces.AddSupplier;
 import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;

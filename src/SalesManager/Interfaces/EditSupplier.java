@@ -1,4 +1,4 @@
-package SalesManager;
+package SalesManager.Interfaces;
 
 import SalesManager.DataHandlers.SupplierFileHandler;
 import SalesManager.Functions.supplierFunction;
@@ -64,7 +64,7 @@ public class EditSupplier extends javax.swing.JFrame {
         supplierName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        // setFocusableWindowState(false);
+        setFocusableWindowState(false);
         setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(246, 246, 226));
