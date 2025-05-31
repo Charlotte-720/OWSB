@@ -53,28 +53,28 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO ID", "Item ID", "Suppliers ID", "Suppliers N", "Item", "Quantity", "Unit Price", "Total Price", "RD Date", "Status"
+                "PO ID", "Item ID", "Suppliers ID", "Suppliers N", "Item", "Quantity", "Unit Price", "Total Price", "RD Date", "Status", "Flag Reason"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, true, false, false, false, false, false, false
+                false, true, false, true, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -144,11 +144,11 @@ public class generateandviewpo extends javax.swing.JPanel {
                         .addComponent(cancel))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
+                        .addGap(92, 92, 92)
                         .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                        .addGap(84, 84, 84)
                         .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(49, 49, 49)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                         .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28))
         );
@@ -159,7 +159,7 @@ public class generateandviewpo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(29, 29, 29)))
@@ -170,7 +170,7 @@ public class generateandviewpo extends javax.swing.JPanel {
                     .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -256,7 +256,6 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         // Step 1: Build supplier ID -> Name map
         Map<String, String> supplierNameMap = new HashMap<>();
-
         if (supplierFile.exists()) {
             try (Scanner supplierScanner = new Scanner(supplierFile)) {
                 while (supplierScanner.hasNextLine()) {
@@ -284,46 +283,79 @@ public class generateandviewpo extends javax.swing.JPanel {
             }
         }
 
-        // Step 2: Read PO file and insert Supplier Name in correct position
+        // Optional: Load flagged reasons
+        Map<String, String> flaggedReasons = readFlaggedReasons();
+
+        // Step 2: Read PO file
         if (poFile.exists()) {
             try (Scanner scanner = new Scanner(poFile)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    String[] details = line.split(",");
+                    String[] fields = line.split(", ");
 
-                    String[] rowData = new String[details.length + 1]; // +1 for Supplier Name
-                    String supplierID = "";
+                    String poID = "", itemID = "", supplierID = "", itemName = "";
+                    String quantity = "", unitPrice = "", totalPrice = "";
+                    String date = "", status = "";
 
-                    int insertIndex = 0;
-                    for (int i = 0; i < details.length; i++) {
-                        String[] parts = details[i].split(":", 2);
-                        if (parts.length > 1) {
+                    for (String field : fields) {
+                        String[] parts = field.split(": ", 2);
+                        if (parts.length == 2) {
                             String key = parts[0].trim();
                             String value = parts[1].trim();
 
-                            if (key.equalsIgnoreCase("Supplier ID")) {
-                                supplierID = value;
-                                rowData[insertIndex++] = value; // Supplier ID
-                                // insert supplier name after Supplier ID
-                                String supplierName = supplierNameMap.getOrDefault(supplierID, "Unknown");
-                                rowData[insertIndex++] = supplierName;
-                            } else {
-                                rowData[insertIndex++] = value;
+                            switch (key) {
+                                case "PO_ID": poID = value; break;
+                                case "Item ID": itemID = value; break;
+                                case "Supplier ID": supplierID = value; break;
+                                case "Item Name": itemName = value; break;
+                                case "Quantity": quantity = value; break;
+                                case "Unit Price": unitPrice = value; break;
+                                case "Total Price": totalPrice = value; break;
+                                case "Date": date = value; break;
+                                case "Status": status = value; break;
                             }
-                        } else {
-                            rowData[insertIndex++] = "";
                         }
                     }
 
-                    model.addRow(rowData);
+                    String supplierName = supplierNameMap.getOrDefault(supplierID, "Unknown");
+                    String flagReason = flaggedReasons.getOrDefault(poID, "-");
+
+                    model.addRow(new Object[]{
+                        poID, itemID, supplierID, supplierName, itemName,
+                        quantity, unitPrice, totalPrice, date, status, flagReason
+                    });
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File not found at: " + poFile.getAbsolutePath());
+            System.out.println("File not found: " + poFile.getAbsolutePath());
         }
     }
+
+    public Map<String, String> readFlaggedReasons() {
+        Map<String, String> flaggedMap = new HashMap<>();
+        File reasonFile = new File("src/txtFile/flagReason.txt");
+
+        if (reasonFile.exists()) {
+            try (Scanner scanner = new Scanner(reasonFile)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] parts = line.split(", ");
+                    if (parts.length == 2) {
+                        String poID = parts[0].split(":")[1].trim();
+                        String reason = parts[1].split(":")[1].trim();
+                        flaggedMap.put(poID, reason);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return flaggedMap;
+    }
+
 
 
     class StatusColumnCellRenderer extends DefaultTableCellRenderer {
