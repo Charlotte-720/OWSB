@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import InventoryManager.functions.InventoryService;
 import SalesManager.Functions.salesFunction;
+import java.awt.Component;
 import java.io.IOException;
 import model.SalesRecord;
 import model.Item;
@@ -13,9 +14,11 @@ import model.Item;
 public class DailySalesReport extends javax.swing.JFrame {
     private static final int LOW_STOCK_THRESHOLD = InventoryService.LOW_STOCK_THRESHOLD;
     private LocalDate currentDate;
+    private Component previousComponent;
     
     
-    public DailySalesReport() {
+    public DailySalesReport(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         this.currentDate = LocalDate.now();
         loadTodaysSalesData();
@@ -323,12 +326,16 @@ public class DailySalesReport extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addSalesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSalesButtonActionPerformed
+        this.setVisible(false);
         AddDailySales addSalesDialog = new AddDailySales(this);
         addSalesDialog.setVisible(true);
     }//GEN-LAST:event_addSalesButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
     
     

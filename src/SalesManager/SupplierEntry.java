@@ -5,6 +5,7 @@ import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Functions.supplierFunction;
+import java.awt.Component;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
@@ -14,8 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class SupplierEntry extends javax.swing.JFrame {
     private List<Supplier> allSuppliers;
+    private Component previousComponent;
     
-    public SupplierEntry() {
+    public SupplierEntry(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         initializeTable();
         loadSuppliers();
@@ -337,10 +340,14 @@ public class SupplierEntry extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddSupplier addSupplierDialog = new AddSupplier();
+        this.setVisible(false);
+        AddSupplier addSupplierDialog = new AddSupplier(this);
         addSupplierDialog.setVisible(true);
         addSupplierDialog.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

@@ -345,6 +345,9 @@ private DailySalesReport parentFrame;
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (parentFrame != null) {
+            parentFrame.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
     private void updateStockDisplay() {
     String selectedItemID = (String) itemID.getSelectedItem();

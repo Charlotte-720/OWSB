@@ -2,6 +2,7 @@ package SalesManager;
 
 import SalesManager.DataHandlers.SupplierFileHandler;
 import SalesManager.Functions.supplierFunction;
+import java.awt.Component;
 import model.Supplier;
 import javax.swing.JOptionPane;
 
@@ -9,12 +10,21 @@ import javax.swing.JOptionPane;
 public class EditSupplier extends javax.swing.JFrame {
     private String currentSupplierID;
     private supplierFunction supplierFunc;  
-
+    private Component previousComponent;
+    private SupplierEntry entryWindow;
+    
     public EditSupplier(String supplierID) {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.currentSupplierID = supplierID;
         this.supplierFunc = new supplierFunction();
+        loadSupplierForEditing();
+    }
+    public EditSupplier(String supplierID, SupplierEntry entryWindow) {
+        initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.entryWindow = entryWindow;
+        this.previousComponent = entryWindow;
         loadSupplierForEditing();
     }
     
@@ -212,6 +222,9 @@ public class EditSupplier extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed

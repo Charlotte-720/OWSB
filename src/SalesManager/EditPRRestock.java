@@ -1,6 +1,7 @@
 package SalesManager;
 
 import SalesManager.Functions.prFunction;
+import java.awt.Component;
 import model.Item;
 import java.io.IOException;
 import javax.swing.DefaultComboBoxModel;
@@ -13,6 +14,7 @@ public class EditPRRestock extends javax.swing.JFrame {
     private String currentSalesManagerID;
     private String currentPRType;
     private prFunction prFunc;
+    private Component previousComponent;
 
     public EditPRRestock() {
         initComponents();
@@ -21,11 +23,13 @@ public class EditPRRestock extends javax.swing.JFrame {
         loadItemIDs();
     }
 
-    public EditPRRestock(String prID, String salesManagerID) {
+    public EditPRRestock(String prID, String salesManagerID, Component previousComponent) {
         initComponents();
         this.currentPRID = prID;
         this.prFunc = new prFunction();
         this.currentSalesManagerID = salesManagerID;
+        this.previousComponent = previousComponent;
+        
         salesManager.setText(salesManagerID);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         
@@ -505,7 +509,6 @@ public class EditPRRestock extends javax.swing.JFrame {
 
     private void quantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityActionPerformed
         updateTable();
-
     }//GEN-LAST:event_quantityActionPerformed
 
     private void requiredDeliveryDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requiredDeliveryDateActionPerformed
@@ -544,6 +547,9 @@ public class EditPRRestock extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**

@@ -4,6 +4,7 @@ import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Functions.prFunction;
+import java.awt.Component;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,13 +19,19 @@ public class PROperations extends javax.swing.JFrame {
     private String currentSalesManagerID;
     private prFunction prFunc;
     private List<String[]> allPRRecords = new ArrayList<>(); 
+    private Component previousComponent;
     
-    public PROperations(String salesManagerID) {
+    public PROperations(String salesManagerID, Component previousComponent) {
+        this.previousComponent = previousComponent;
         this.currentSalesManagerID = salesManagerID;
         this.prFunc = new prFunction();
         initComponents();
         initializeUI();
         date.setText(LocalDate.now().toString());
+    }
+    
+    public PROperations(String salesManagerID) {
+        this(salesManagerID, null);
     }
     
     private void initializeUI() {
@@ -159,13 +166,13 @@ public class PROperations extends javax.swing.JFrame {
     }
     
     private void openEditPRNewItem(String prID, String salesManagerID) {
-        EditPRNewItem editForm = new EditPRNewItem(prID, salesManagerID);
+        EditPRNewItem editForm = new EditPRNewItem(prID, salesManagerID, this);
         editForm.setVisible(true);
         editForm.addWindowListener(createRefreshTableListener());
     }
     
     private void openEditPRRestock(String prID, String salesManagerID) {
-        EditPRRestock editForm = new EditPRRestock(prID, salesManagerID);
+        EditPRRestock editForm = new EditPRRestock(prID, salesManagerID, this);
         editForm.setVisible(true);
         editForm.addWindowListener(createRefreshTableListener());
     }
@@ -429,7 +436,7 @@ public class PROperations extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -437,19 +444,24 @@ public class PROperations extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RestockExistingItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestockExistingItemButtonActionPerformed
-       String salesManagerID = getCurrentSalesManagerID();
-        AddPRRestock addPRDialog = new AddPRRestock(salesManagerID);
+        this.setVisible(false);
+        String salesManagerID = getCurrentSalesManagerID();
+        AddPRRestock addPRDialog = new AddPRRestock(salesManagerID,this);
         addPRDialog.setVisible(true);
         addPRDialog.addWindowListener(createRefreshTableListener());
     }//GEN-LAST:event_RestockExistingItemButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void PurchaseNewItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PurchaseNewItemButtonActionPerformed
+        this.setVisible(false);
         String salesManagerID = getCurrentSalesManagerID();
-        AddPRNewItem addPRDialog = new AddPRNewItem(salesManagerID);
+        AddPRNewItem addPRDialog = new AddPRNewItem(salesManagerID,this);
         addPRDialog.setVisible(true);
         addPRDialog.addWindowListener(createRefreshTableListener());
     }//GEN-LAST:event_PurchaseNewItemButtonActionPerformed

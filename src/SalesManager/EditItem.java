@@ -3,6 +3,7 @@ package SalesManager;
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.DataHandlers.ItemFileHandler.POItem;
 import SalesManager.Functions.itemFunction;
+import java.awt.Component;
 import model.Item;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class EditItem extends javax.swing.JFrame {
     private Item originalItem;
     private List<POItem> paidPOItems;
     private boolean isInitializing = false;
+    private Component previousComponent;
     
     public EditItem() {
         initComponents();
@@ -33,6 +35,7 @@ public class EditItem extends javax.swing.JFrame {
         initComponents();
         this.currentItemID = itemID;
         this.entryWindow = entryWindow;
+        this.previousComponent = entryWindow;
         initializeData();
     }
     
@@ -442,6 +445,9 @@ public class EditItem extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void itemCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCategoryActionPerformed

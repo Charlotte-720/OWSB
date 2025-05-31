@@ -1,6 +1,7 @@
 package SalesManager;
 
 import SalesManager.Functions.prFunction;
+import java.awt.Component;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -11,17 +12,19 @@ public class EditPRNewItem extends javax.swing.JFrame {
     private String currentSalesManagerID;
     private List<Supplier> activeSuppliers;
     private prFunction prFunc;
+    private Component previousComponent;
     
     public EditPRNewItem() {
         initComponents();
         this.prFunc = new prFunction();
     }
     
-    public EditPRNewItem(String prID, String salesManagerID) {
+    public EditPRNewItem(String prID, String salesManagerID, Component previousComponent) {
         initComponents();
         this.prFunc = new prFunction();
         this.currentPRID = prID;
         this.currentSalesManagerID = salesManagerID;
+        this.previousComponent = previousComponent;
         salesManager.setText(salesManagerID);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         
@@ -415,6 +418,9 @@ public class EditPRNewItem extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed

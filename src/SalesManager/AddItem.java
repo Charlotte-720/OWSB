@@ -3,6 +3,7 @@ package SalesManager;
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.DataHandlers.ItemFileHandler.POItem;
 import SalesManager.Functions.itemFunction;
+import java.awt.Component;
 import model.Item;
 import javax.swing.*;
 import java.time.LocalDate;
@@ -13,10 +14,11 @@ public class AddItem extends javax.swing.JFrame {
    private ItemEntry entryWindow;
    private List<Item> itemList;
    private List<POItem> paidPOItems;
+   private Component previousComponent;
    
 public AddItem(ItemEntry entryWindow) {
-        this.entryWindow = entryWindow;
-        
+    this.entryWindow = entryWindow;
+        this.previousComponent = entryWindow;
         // Load items using functions
         try {
             itemList = ItemFileHandler.loadAllItems();
@@ -430,6 +432,9 @@ public AddItem(ItemEntry entryWindow) {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void itemCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCategoryActionPerformed

@@ -2,6 +2,7 @@ package SalesManager;
 
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.DataHandlers.PRFileHandler;
+import java.awt.Component;
 import model.Item;
 import model.PurchaseRequisition;
 import model.PRItem;
@@ -16,9 +17,11 @@ import javax.swing.table.DefaultTableModel;
 public class AddPRRestock extends javax.swing.JFrame {
     private java.util.List<Item> itemList;
     private String currentSalesManagerID;
+    private Component previousComponent;
     
-     public AddPRRestock(String salesManagerID) {
+     public AddPRRestock(String salesManagerID, Component previousComponent) {
         this.currentSalesManagerID = salesManagerID;
+        this.previousComponent = previousComponent;
         
         itemList = loadItemsFromFile(); 
         initComponents();
@@ -601,6 +604,9 @@ public class AddPRRestock extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
 

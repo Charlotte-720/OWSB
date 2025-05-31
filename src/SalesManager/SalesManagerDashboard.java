@@ -61,7 +61,6 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
@@ -192,14 +191,6 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 153, 0));
         jLabel2.setText("Monthly Sales Report");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel5.setText("X");
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
-            }
-        });
-
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel4.setText("WELCOME BACK!");
 
@@ -213,9 +204,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,18 +214,13 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                     .addGap(23, 23, 23)
                                     .addComponent(jLabel2))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(44, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel4)))
+                .addGap(37, 37, 37)
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
@@ -266,7 +250,8 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dailySalesReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dailySalesReportButtonActionPerformed
-        DailySalesReport dailySales = new DailySalesReport();
+        this.setVisible(false);
+        DailySalesReport dailySales = new DailySalesReport(this);
         dailySales.setVisible(true);
     }//GEN-LAST:event_dailySalesReportButtonActionPerformed
 
@@ -293,31 +278,32 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void supplierEntryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierEntryButtonActionPerformed
-        SupplierEntry supplierEntry = new SupplierEntry();
+        this.setVisible(false);
+        SupplierEntry supplierEntry = new SupplierEntry(this);
         supplierEntry.setVisible(true);
     }//GEN-LAST:event_supplierEntryButtonActionPerformed
 
     private void purchaseRequisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionButtonActionPerformed
-        PROperations pr = new PROperations(this.employeeID);
+        this.setVisible(false);
+        PROperations pr = new PROperations(this.employeeID, this);
         pr.setVisible(true);
     }//GEN-LAST:event_purchaseRequisitionButtonActionPerformed
 
     private void itemEntryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEntryButtonActionPerformed
-        ItemEntry itemEntry = new ItemEntry();
+        this.setVisible(false);
+        ItemEntry itemEntry = new ItemEntry(this);
         itemEntry.setVisible(true);
     }//GEN-LAST:event_itemEntryButtonActionPerformed
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        this.dispose();
-    }//GEN-LAST:event_jLabel5MouseClicked
-
     private void monthlySalesReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthlySalesReportButtonActionPerformed
-        MonthlySalesReport monthlySales = new MonthlySalesReport();
+        this.setVisible(false);
+        MonthlySalesReport monthlySales = new MonthlySalesReport(this);
         monthlySales.setVisible(true);
     }//GEN-LAST:event_monthlySalesReportButtonActionPerformed
 
     private void purchaseOrdersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrdersButtonActionPerformed
-        ViewPO viewPO = new ViewPO();
+        this.setVisible(false);
+        ViewPO viewPO = new ViewPO(this);
         viewPO.setVisible(true);
     }//GEN-LAST:event_purchaseOrdersButtonActionPerformed
 
@@ -365,7 +351,6 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

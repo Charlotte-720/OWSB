@@ -1,12 +1,15 @@
 package SalesManager;
 
 import SalesManager.Functions.supplierFunction;
+import java.awt.Component;
 import javax.swing.JOptionPane;                                                                                                                                             
 
 public class AddSupplier extends javax.swing.JFrame {
     private supplierFunction supplierFunc;
+    private Component previousComponent;
     
-    public AddSupplier() {
+    public AddSupplier(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         this.supplierFunc = new supplierFunction(); 
     }
@@ -171,6 +174,9 @@ public class AddSupplier extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

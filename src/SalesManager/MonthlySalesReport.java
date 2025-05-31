@@ -1,6 +1,7 @@
 package SalesManager;
 
 import SalesManager.DataHandlers.SalesRecordFileHandler;
+import java.awt.Component;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import javax.swing.table.DefaultTableModel;
@@ -10,8 +11,10 @@ public class MonthlySalesReport extends javax.swing.JFrame {
     private DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
     private DateTimeFormatter monthFileFormat = DateTimeFormatter.ofPattern("yyyy-MM");
     private double totalMonthlyAmount = 0.0;
+    private Component previousComponent;
      
-    public MonthlySalesReport() {
+    public MonthlySalesReport(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         currentMonth = YearMonth.now();
         updateMonthDisplay();
@@ -231,42 +234,11 @@ public class MonthlySalesReport extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(MonthlySalesReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(MonthlySalesReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(MonthlySalesReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(MonthlySalesReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new MonthlySalesReport().setVisible(true);
-//            }
-//        });
-//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

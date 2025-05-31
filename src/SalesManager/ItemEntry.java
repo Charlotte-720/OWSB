@@ -1,14 +1,13 @@
 
 package SalesManager;
 
-import SalesManager.AddItem;
-import SalesManager.EditItem;
 import model.Item;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
 import SalesManager.DataHandlers.ItemFileHandler;
 import SalesManager.Functions.itemFunction;
+import java.awt.Component;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
@@ -19,10 +18,10 @@ import javax.swing.event.DocumentListener;
 
 public class ItemEntry extends javax.swing.JFrame {
 private List<Item> allItems = new ArrayList<>();
-    /**
-     * Creates new form ItemEntryTest
-     */
-    public ItemEntry() {
+private Component previousComponent;
+
+    public ItemEntry(Component previousComponent) {
+        this.previousComponent = previousComponent;
         initComponents();
         try {
             allItems = ItemFileHandler.loadAllItems();
@@ -357,12 +356,16 @@ private List<Item> allItems = new ArrayList<>();
     }//GEN-LAST:event_SearchFieldActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        this.setVisible(false);
         AddItem addItemWindow  = new AddItem(this);
             addItemWindow .setVisible(true); 
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         this.dispose();
+        if (previousComponent != null) {
+            previousComponent.setVisible(true);
+        }
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
