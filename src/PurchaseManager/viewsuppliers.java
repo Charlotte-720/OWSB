@@ -6,7 +6,6 @@ public class viewsuppliers extends javax.swing.JFrame {
     public viewsuppliers() {
         initComponents();
         updatedata.loadSupplierData(jTable1);
-
     }
 
     @SuppressWarnings("unchecked")
@@ -27,30 +26,31 @@ public class viewsuppliers extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - checklist.png"))); // NOI18N
         jLabel1.setText("List of Suppliers");
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Suppliers ID", "Supplier Name", "Contact No", "Suppliers", "Active"
+                "Suppliers ID", "Supplier Name", "Contact No", "Active"
             }
         ));
         jTable1.setGridColor(new java.awt.Color(255, 255, 255));
@@ -128,14 +128,10 @@ public class viewsuppliers extends javax.swing.JFrame {
 
     private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
     }//GEN-LAST:event_cancelMouseClicked
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
         this.dispose();
-        PM pm = new PM("examplePM");
-        pm.setVisible(true);
     }//GEN-LAST:event_backActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

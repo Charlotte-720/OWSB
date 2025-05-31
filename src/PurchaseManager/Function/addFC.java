@@ -49,21 +49,31 @@ public class addFC {
         }
     }
 
-    public static List<String> updatePRStatusByItemIDs(List<String> prLines, List<String> itemIDsToUpdate) {
-        List<String> updated = new ArrayList<>();
-        for (String line : prLines) {
-            boolean updatedLine = false;
-            for (String itemID : itemIDsToUpdate) {
-                if (line.contains("Item ID: " + itemID) && line.contains("Status: Pending")) {
-                    line = line.replace("Status: Pending", "Status: Submit");
-                    updatedLine = true;
-                    break;
-                }
+    public static List<String> updatePRStatusByItemIDs(List<String> prLines, Map<String, String> itemToSupplierMap) {
+    List<String> updated = new ArrayList<>();
+    for (String line : prLines) {
+        boolean updatedLine = false;
+        for (Map.Entry<String, String> entry : itemToSupplierMap.entrySet()) {
+            String itemID = entry.getKey();
+            String supplierID = entry.getValue();
+
+            if (line.contains("Item ID: " + itemID)
+                && line.contains("Supplier ID: " + supplierID)
+                && line.contains("Status: Pending")) {
+
+                line = line.replace("Status: Pending", "Status: Submit");
+                updatedLine = true;
+                break;
             }
-            updated.add(line);
         }
-        return updated;
+        updated.add(line);
     }
+    return updated;
+}
+
+
+
+
 
     public static void rewritePRFile(List<String> prLines, String prFilePath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(prFilePath))) {

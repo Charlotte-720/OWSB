@@ -86,6 +86,7 @@ public class PM extends javax.swing.JFrame {
 
         ViewItem.setBackground(new java.awt.Color(85, 85, 110));
         ViewItem.setForeground(new java.awt.Color(220, 220, 220));
+        ViewItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-items-30.png"))); // NOI18N
         ViewItem.setText("View Item");
         ViewItem.setRound(20);
         ViewItem.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -97,6 +98,7 @@ public class PM extends javax.swing.JFrame {
 
         ViewSuppliers.setBackground(new java.awt.Color(85, 85, 110));
         ViewSuppliers.setForeground(new java.awt.Color(220, 220, 220));
+        ViewSuppliers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-supplier-30.png"))); // NOI18N
         ViewSuppliers.setText("View Suppliers");
         ViewSuppliers.setRound(20);
         ViewSuppliers.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -108,6 +110,7 @@ public class PM extends javax.swing.JFrame {
 
         ViewRequisition.setBackground(new java.awt.Color(85, 85, 110));
         ViewRequisition.setForeground(new java.awt.Color(220, 220, 220));
+        ViewRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - inventory.png"))); // NOI18N
         ViewRequisition.setText("View Requisition");
         ViewRequisition.setRound(20);
         ViewRequisition.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -119,6 +122,7 @@ public class PM extends javax.swing.JFrame {
 
         GenerateViewPO.setBackground(new java.awt.Color(85, 85, 110));
         GenerateViewPO.setForeground(new java.awt.Color(220, 220, 220));
+        GenerateViewPO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
         GenerateViewPO.setText("Generat PO and View");
         GenerateViewPO.setRound(20);
         GenerateViewPO.setShadowColor(new java.awt.Color(0, 0, 0));
@@ -144,8 +148,8 @@ public class PM extends javax.swing.JFrame {
                     .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ViewSuppliers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ViewRequisition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(GenerateViewPO, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                    .addComponent(GenerateViewPO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -161,14 +165,15 @@ public class PM extends javax.swing.JFrame {
                 .addComponent(ViewRequisition, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(GenerateViewPO, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+                .addGap(65, 65, 65)
                 .addComponent(logout)
-                .addGap(36, 36, 36))
+                .addGap(50, 50, 50))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 600));
 
         wlc.setBackground(new java.awt.Color(245, 245, 245));
+        wlc.setPreferredSize(new java.awt.Dimension(800, 600));
 
         cancel.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         cancel.setForeground(new java.awt.Color(255, 0, 0));

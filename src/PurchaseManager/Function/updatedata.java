@@ -11,16 +11,16 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class updatedata {   
     public static void loadSupplierData(JTable table) {
-        String[] columnNames = {"Suppliers ID", "Suppliers Name", "Contact No","Suppliers","Active"};
+        String[] columnNames = {"Suppliers ID", "Suppliers Name", "Contact No","Active"};
         List<Object[]> rows = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/txtFile/suppliers.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if (values.length >= 5) {
-                    Object[] row = new Object[5];
-                    for (int i = 0; i < 5; i++) {
+                if (values.length >= 4) {
+                    Object[] row = new Object[4];
+                    for (int i = 0; i < 4; i++) {
                         String[] parts = values[i].split(":", 2);
                         row[i] = parts.length == 2 ? parts[1].trim() : values[i].trim();
                     }

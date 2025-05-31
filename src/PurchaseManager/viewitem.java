@@ -30,6 +30,7 @@ public class viewitem extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(245, 245, 245));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - checklist.png"))); // NOI18N
         jLabel1.setText("List of Item");
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));

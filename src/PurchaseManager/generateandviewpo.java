@@ -47,6 +47,7 @@ public class generateandviewpo extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
         jLabel1.setText("Generate PO");
 
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
