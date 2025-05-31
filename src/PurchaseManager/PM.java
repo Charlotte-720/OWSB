@@ -67,7 +67,6 @@ public class PM extends javax.swing.JFrame {
         Flagged = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(800, 600));
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -87,6 +86,7 @@ public class PM extends javax.swing.JFrame {
         ViewItem.setForeground(new java.awt.Color(220, 220, 220));
         ViewItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-items-30.png"))); // NOI18N
         ViewItem.setText("View Item");
+        ViewItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         ViewItem.setRound(20);
         ViewItem.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewItem.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +99,7 @@ public class PM extends javax.swing.JFrame {
         ViewSuppliers.setForeground(new java.awt.Color(220, 220, 220));
         ViewSuppliers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-supplier-30.png"))); // NOI18N
         ViewSuppliers.setText("View Suppliers");
+        ViewSuppliers.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         ViewSuppliers.setRound(20);
         ViewSuppliers.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewSuppliers.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +112,7 @@ public class PM extends javax.swing.JFrame {
         ViewRequisition.setForeground(new java.awt.Color(220, 220, 220));
         ViewRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - inventory.png"))); // NOI18N
         ViewRequisition.setText("View Requisition");
+        ViewRequisition.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         ViewRequisition.setRound(20);
         ViewRequisition.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewRequisition.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +124,8 @@ public class PM extends javax.swing.JFrame {
         GenerateViewPO.setBackground(new java.awt.Color(85, 85, 110));
         GenerateViewPO.setForeground(new java.awt.Color(220, 220, 220));
         GenerateViewPO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
-        GenerateViewPO.setText("Generat PO and View");
+        GenerateViewPO.setText("Generate PO and View");
+        GenerateViewPO.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         GenerateViewPO.setRound(20);
         GenerateViewPO.setShadowColor(new java.awt.Color(0, 0, 0));
         GenerateViewPO.addActionListener(new java.awt.event.ActionListener() {
@@ -143,12 +146,15 @@ public class PM extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ViewItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ViewSuppliers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ViewRequisition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(GenerateViewPO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(GenerateViewPO, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(ViewRequisition, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ViewSuppliers, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ViewItem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -164,9 +170,9 @@ public class PM extends javax.swing.JFrame {
                 .addComponent(ViewRequisition, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(GenerateViewPO, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65)
+                .addGap(69, 69, 69)
                 .addComponent(logout)
-                .addGap(50, 50, 50))
+                .addGap(46, 46, 46))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 600));
@@ -333,11 +339,9 @@ public class PM extends javax.swing.JFrame {
                 .addGroup(wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(wlcLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(wlcLayout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 71, Short.MAX_VALUE))))
+                        .addComponent(jLabel1))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         wlcLayout.setVerticalGroup(
             wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

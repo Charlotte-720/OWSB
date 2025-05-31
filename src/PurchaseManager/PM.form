@@ -3,9 +3,6 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[800, 600]"/>
-    </Property>
     <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
@@ -47,12 +44,17 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="ViewItem" alignment="1" max="32767" attributes="0"/>
                       <Component id="logout" alignment="0" max="32767" attributes="0"/>
-                      <Component id="ViewSuppliers" alignment="0" max="32767" attributes="0"/>
-                      <Component id="ViewRequisition" alignment="1" max="32767" attributes="0"/>
-                      <Component id="GenerateViewPO" alignment="0" max="32767" attributes="0"/>
                       <Component id="home1" alignment="1" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="GenerateViewPO" alignment="0" pref="240" max="32767" attributes="0"/>
+                              <Component id="ViewRequisition" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ViewSuppliers" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ViewItem" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -71,9 +73,9 @@
                   <Component id="ViewRequisition" min="-2" pref="58" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="GenerateViewPO" min="-2" pref="58" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
                   <Component id="logout" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -106,6 +108,9 @@
               <Image iconType="3" name="/Icons/icons8-items-30.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="View Item"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="1"/>
+            </Property>
             <Property name="round" type="int" value="20"/>
             <Property name="shadowColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
@@ -127,6 +132,9 @@
               <Image iconType="3" name="/Icons/icons8-supplier-30.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="View Suppliers"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="1"/>
+            </Property>
             <Property name="round" type="int" value="20"/>
             <Property name="shadowColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
@@ -148,6 +156,9 @@
               <Image iconType="3" name="/Icons/Icon - inventory.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="View Requisition"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="1"/>
+            </Property>
             <Property name="round" type="int" value="20"/>
             <Property name="shadowColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
@@ -168,7 +179,10 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/Icons/icons8-purchase-order-30 (1).png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Generat PO and View"/>
+            <Property name="text" type="java.lang.String" value="Generate PO and View"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="16" style="1"/>
+            </Property>
             <Property name="round" type="int" value="20"/>
             <Property name="shadowColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
