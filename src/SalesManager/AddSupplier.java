@@ -1,14 +1,19 @@
 package SalesManager;
 
-import SalesManager.DataHandlers.SupplierFileHandler;
-import model.Supplier;
-import java.io.IOException;
+import SalesManager.Functions.supplierFunction;
 import javax.swing.JOptionPane;                                                                                                                                             
 
 public class AddSupplier extends javax.swing.JFrame {
+    private supplierFunction supplierFunc;
     
     public AddSupplier() {
         initComponents();
+        this.supplierFunc = new supplierFunction(); 
+    }
+    
+    private void clearFields(){
+        supplierName.setText("");
+        ContactNo.setText("");
     }
     
     @SuppressWarnings("unchecked")
@@ -148,97 +153,25 @@ public class AddSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_supplierNameActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        try {
-            String name = supplierName.getText().trim();
-            String contact = ContactNo.getText().trim();
-            
-            // Validation
-            if (name.isEmpty() || contact.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill all fields.");
-                return;
-            }
-            
-            if (!contact.matches("^\\d{9,10}$")) {
-                JOptionPane.showMessageDialog(this, 
-                    "Invalid contact number!\n" +
-                    "Format: 9 or 10 digits\n" +
-                    "Example: 123456789 or 1234567890");
-                return;
-            }
-            
-            if (SupplierFileHandler.isSupplierNameDuplicate(name, "")) {
-                JOptionPane.showMessageDialog(this, 
-                    "Duplicate supplier name detected!", 
-                    "Duplicate Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-                
-            // Create and save supplier
-            Supplier newSupplier = new Supplier(
-                SupplierFileHandler.generateSupplierID(),
-                name,
-                contact,
-                true // isActive
-            );
-            
-            SupplierFileHandler.saveSupplier(newSupplier);
-            JOptionPane.showMessageDialog(this, "Supplier added successfully!");
+        String name = supplierName.getText();
+        String contact = ContactNo.getText();
+        
+        supplierFunction.OperationResult result = supplierFunction.addSupplier(name, contact);
+        
+        if (result.isSuccess()) {
+            JOptionPane.showMessageDialog(this, result.getMessage());
             clearFields();
-            
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error saving supplier: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        } else {
+            int messageType = result.getMessage().contains("Duplicate") ? 
+                JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+            JOptionPane.showMessageDialog(this, result.getMessage(), "Error", messageType);
         }
-    
        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
-
-    private void clearFields(){
-        supplierName.setText("");
-        ContactNo.setText("");
-    }
-    
-    
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AddSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AddSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AddSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AddSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AddSupplier().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ContactNo;

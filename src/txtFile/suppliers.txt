@@ -1,4 +1,4 @@
-Supplier ID: S04, Supplier Name: Goh, Contact No: 0125478523, Active: false
+Supplier ID: S04, Supplier Name: Goh, Contact No: 0125478523, Active: true
 Supplier ID: S06, Supplier Name: Amanda, Contact No: 0124526322, Active: true
 Supplier ID: S07, Supplier Name: How, Contact No: 0145829636, Active: true
 Supplier ID: S08, Supplier Name: Irene, Contact No: 0125468596, Active: true
@@ -8,3 +8,4 @@ Supplier ID: S11, Supplier Name: ss, Contact No: 0125435252, Active: true
 Supplier ID: S12, Supplier Name: How1, Contact No: 0123456212, Active: false
 Supplier ID: S13, Supplier Name: xiao, Contact No: 012345678, Active: false
 Supplier ID: S14, Supplier Name: Danny, Contact No: 0132562585, Active: true
+Supplier ID: S15, Supplier Name: xs, Contact No: 0111474171, Active: true

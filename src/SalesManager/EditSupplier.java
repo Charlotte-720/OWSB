@@ -1,66 +1,49 @@
 package SalesManager;
 
 import SalesManager.DataHandlers.SupplierFileHandler;
+import SalesManager.Functions.supplierFunction;
 import model.Supplier;
-import java.io.IOException;
 import javax.swing.JOptionPane;
 
 
 public class EditSupplier extends javax.swing.JFrame {
     private String currentSupplierID;
-    
-    public EditSupplier() {
-        initComponents();
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Add this line
-    }
+    private supplierFunction supplierFunc;  
 
     public EditSupplier(String supplierID) {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.currentSupplierID = supplierID;
+        this.supplierFunc = new supplierFunction();
         loadSupplierForEditing();
     }
     
-    // Modify your loadSupplierForEditing method
     private void loadSupplierForEditing() {
         if (currentSupplierID == null) {
             return;
         }
-
         try {
             Supplier supplier = SupplierFileHandler.getSupplierById(currentSupplierID);
-
+            
             if (supplier != null) {
                 supplierName.setText(supplier.getSupplierName());
                 contactNo.setText(supplier.getContactNo());
                 isActive.setSelected(supplier.isActive());
-
-                // Make sure fields are editable (add these lines)
-                supplierName.setEditable(true);
-                contactNo.setEditable(true);
-                supplierName.setEnabled(true);
-                contactNo.setEnabled(true);
-                
-                this.requestFocus();
                 supplierName.requestFocusInWindow();
-                
-                // Change button text to indicate editing
-                updateButton.setText("Update");
             } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Supplier not found!", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Supplier not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                "Error loading supplier: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading supplier: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+    }
+    
+    private void clearFields() {
+        supplierName.setText("");
+        contactNo.setText("");
+        isActive.setSelected(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -232,100 +215,29 @@ public class EditSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        String newName = supplierName.getText().trim(); 
-        String newContactNo = contactNo.getText().trim();
-        boolean newIsActive = isActive.isSelected();
-
-        // Validate inputs
-        if (newName.isEmpty() || newContactNo.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Please fill in all fields.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+       String name = supplierName.getText();
+        String contact = contactNo.getText();
+        boolean active = isActive.isSelected();
         
-        if (!newContactNo.matches("^\\d{9,10}$")) {
-                JOptionPane.showMessageDialog(this, 
-                    "Invalid contact number!\n" +
-                    "Format: 9 or 10 digits\n" +
-                    "Example: 123456789 or 1234567890");
-                return;
-            }
-
-        try {
-            // Check for duplicate supplier name (excluding the current supplier)
-            if (SupplierFileHandler.isSupplierNameDuplicate(newName, currentSupplierID)) {
-                JOptionPane.showMessageDialog(this,
-                    "Supplier name already exists!",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Create updated supplier object
-            Supplier updatedSupplier = new Supplier(currentSupplierID, newName, newContactNo, newIsActive);
-            SupplierFileHandler.updateSupplier(
-                updatedSupplier.getSupplierID(),
-                updatedSupplier.getSupplierName(),
-                updatedSupplier.getContactNo(),
-                updatedSupplier.isActive()
-            );
-
-            // Show success message and close the form
-            JOptionPane.showMessageDialog(this, "Supplier updated successfully!");
+        supplierFunction.OperationResult result = supplierFunction.updateSupplier(currentSupplierID, name, contact, active);
+        
+        if (result.isSuccess()) {
+            JOptionPane.showMessageDialog(this, result.getMessage(), "Success", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                "Error updating supplier: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        } else {
+            int messageType = result.getMessage().contains("Duplicate") ? 
+                JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+            JOptionPane.showMessageDialog(this, result.getMessage(), "Error", messageType);
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        supplierName.setText("");
-        contactNo.setText("");
-        isActive.setSelected(false);
+        clearFields();
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void supplierNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_supplierNameActionPerformed
-
-
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(EditSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(EditSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(EditSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(EditSupplier.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new EditSupplier().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel activeLabel;

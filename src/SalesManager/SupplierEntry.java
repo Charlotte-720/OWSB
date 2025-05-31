@@ -4,8 +4,7 @@ import model.Supplier;
 import SalesManager.Actions.TableActionEvent;
 import SalesManager.Actions.TableActionCellRender;
 import SalesManager.Actions.TableActionCellEditor;
-import SalesManager.DataHandlers.SupplierFileHandler;
-import java.io.IOException;
+import SalesManager.Functions.supplierFunction;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,24 +12,23 @@ import javax.swing.table.DefaultTableModel;
 
 public class SupplierEntry extends javax.swing.JFrame {
 
-    
     public SupplierEntry() {
         initComponents();
+        initializeTable();
+        loadSuppliers();
+    }
+    
+    private void initializeTable() {
         try {
-            List<Supplier> supplierList = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); 
-            populateTable(supplierList);
-            
             if (supplierTable.getColumnCount() >= 5) {
                 TableActionEvent event = new TableActionEvent() {
                     @Override
                     public void editButton(int row) {
-                        System.out.println("Edit row: " + row);
                         editSupplier(row);
                     }
 
                     @Override
                     public void deleteButton(int row) {
-                        System.out.println("Delete row: " + row);
                         deleteSupplier(row);
                     }
                 };
@@ -40,13 +38,23 @@ public class SupplierEntry extends javax.swing.JFrame {
             } else {
                 System.err.println("Table doesn't have enough columns for actions");
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading suppliers: " + e.getMessage(),
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error initializing table: " + e.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    // Separate method for edit action
+    private void loadSuppliers() {
+        supplierFunction.ListResult result = supplierFunction.getAllSuppliers();
+        
+        if (result.isSuccess()) {
+            populateTable(result.getSuppliers());
+        } else {
+            JOptionPane.showMessageDialog(this, result.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private void editSupplier(int row) {
         DefaultTableModel model = (DefaultTableModel) supplierTable.getModel();
         String supplierID = (String) model.getValueAt(row, 0);
@@ -78,29 +86,24 @@ public class SupplierEntry extends javax.swing.JFrame {
         );
 
         if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                SupplierFileHandler.deleteSupplier(supplierID); 
+            supplierFunction.OperationResult result = supplierFunction.deleteSupplierWithConfirmation(supplierID);
+            
+            if (result.isSuccess()) {
                 model.removeRow(row);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, 
-                    "Error deleting supplier: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, result.getMessage(), 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, result.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void refreshTable() {
-        try {
-            List<Supplier> supplierList = SupplierFileHandler.readSuppliersFromFile("src/txtFile/suppliers.txt"); 
-            populateTable(supplierList);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error refreshing suppliers: " + e.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        loadSuppliers();
     }
     
-    public void populateTable(List<Supplier> supplierList) {
+    private void populateTable(List<Supplier> supplierList) {
         DefaultTableModel model = (DefaultTableModel) supplierTable.getModel();
         model.setRowCount(0); // Clear existing rows
 
@@ -251,53 +254,15 @@ public class SupplierEntry extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-//        AddSupplier addSupplierDialog = new AddSupplier();
-//            addSupplierDialog.setVisible(true); 
         AddSupplier addSupplierDialog = new AddSupplier();
-            addSupplierDialog.setVisible(true);
-            addSupplierDialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent e) {
-                    refreshTable();
-                }
-            });
+        addSupplierDialog.setVisible(true);
+        addSupplierDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                refreshTable();
+            }
+        });
     }//GEN-LAST:event_addButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(SupplierEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(SupplierEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(SupplierEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(SupplierEntry.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new SupplierEntry().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

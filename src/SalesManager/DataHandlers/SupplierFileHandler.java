@@ -1,6 +1,7 @@
 package SalesManager.DataHandlers;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +14,30 @@ import model.Supplier;
 
 public class SupplierFileHandler extends BaseFileHandler{
     private static final String SUPPLIER_FILE = "src/txtFile/suppliers.txt";
+    
+    public static class LoadSupplierResult {
+        private boolean success;
+        private String message;
+        private Supplier supplier;
+        
+        public LoadSupplierResult(boolean success, String message, Supplier supplier) {
+            this.success = success;
+            this.message = message;
+            this.supplier = supplier;
+        }
+        
+        public boolean isSuccess() {
+            return success;
+        }
+        
+        public String getMessage() {
+            return message;
+        }
+        
+        public Supplier getSupplier() {
+            return supplier;
+        }
+    }
     
     public static void saveSupplier(Supplier supplier) throws IOException {
         try (FileWriter writer = new FileWriter(SUPPLIER_FILE, true)) {
@@ -146,10 +171,8 @@ public class SupplierFileHandler extends BaseFileHandler{
     }
 
     public static void updateSupplier(String supplierID, String name, String contactNo, boolean active) throws IOException {
-        System.out.println("SupplierFileHandler: Updating supplier: ID=" + supplierID + ", Name=" + name);
         
         List<String> lines = Files.readAllLines(Paths.get(SUPPLIER_FILE));
-        System.out.println("Read " + lines.size() + " lines from supplier file");
 
         boolean found = false;
 
@@ -169,27 +192,21 @@ public class SupplierFileHandler extends BaseFileHandler{
                 }
             }
             
-            System.out.println("Checking line " + i + ": " + line);
             
             if (currentSupplierID.equals(supplierID)) {
-                System.out.println("Found matching supplier ID at line " + i);
                 String updatedLine = "Supplier ID: " + supplierID + 
                                    ", Supplier Name: " + name + 
                                    ", Contact No: " + contactNo + 
                                    ", Active: " + active;
                 lines.set(i, updatedLine);
-                System.out.println("Updated line to: " + updatedLine);
                 found = true;
                 break;
             }
         }
 
         if (found) {
-            System.out.println("Writing " + lines.size() + " lines back to file");
             Files.write(Paths.get(SUPPLIER_FILE), lines);
-            System.out.println("File updated successfully");
         } else {
-            System.out.println("Supplier with ID " + supplierID + " not found in file");
             throw new IOException("Supplier with ID " + supplierID + " not found");
         }
     }
@@ -327,17 +344,56 @@ public class SupplierFileHandler extends BaseFileHandler{
         }
         return false;
     }
-   
-    public static List<Supplier> loadActiveSuppliers() throws IOException {
-        List<Supplier> activeSuppliers = new ArrayList<>();
-        List<Supplier> allSuppliers = loadAllSuppliers();
+    
+    public static List<Supplier> getAllSuppliers() {
+        List<Supplier> suppliers = new ArrayList<>();
+        File file = new File(SUPPLIER_FILE); // Use SUPPLIER_FILE constant instead of "SUPPLIER_FILE" string
 
-        for (Supplier supplier : allSuppliers) {
-            if (supplier.isActive()) {
-                activeSuppliers.add(supplier);
-            }
+        if (!file.exists()) {
+            return suppliers; // Return empty list if file doesn't exist
         }
 
-        return activeSuppliers;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] keys = {"Supplier ID", "Supplier Name", "Contact No", "Active"};
+                String[] parts;
+
+                if (line.contains(": ")) {
+                    parts = parseFormattedLine(line, keys);
+                } else {
+                    parts = line.split(",", -1);
+                }
+
+                if (parts.length >= 4) {
+                    String id = parts[0].trim();
+                    String name = parts[1].trim();
+                    String contact = parts[2].trim();
+                    boolean isActive = Boolean.parseBoolean(parts[3].trim());
+
+                    suppliers.add(new Supplier(id, name, contact, isActive));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // You can log this instead
+        }
+
+        return suppliers;
+    }
+
+    public static LoadSupplierResult loadSupplierForEditing(String supplierID) {
+        try {
+            Supplier supplier = getSupplierById(supplierID);
+
+            if (supplier != null) {
+                return new LoadSupplierResult(true, "Supplier loaded successfully", supplier);
+            } else {
+                return new LoadSupplierResult(false, "Supplier not found", null);
+            }
+        } catch (IOException e) {
+            return new LoadSupplierResult(false, "Error loading supplier: " + e.getMessage(), null);
+        }
     }
 }
