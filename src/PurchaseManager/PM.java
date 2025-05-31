@@ -51,7 +51,6 @@ public class PM extends javax.swing.JFrame {
         GenerateViewPO = new PurchaseManager.button();
         home1 = new javax.swing.JLabel();
         wlc = new javax.swing.JPanel();
-        cancel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -174,15 +173,6 @@ public class PM extends javax.swing.JFrame {
 
         wlc.setBackground(new java.awt.Color(245, 245, 245));
         wlc.setPreferredSize(new java.awt.Dimension(800, 600));
-
-        cancel.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        cancel.setForeground(new java.awt.Color(255, 0, 0));
-        cancel.setText("X");
-        cancel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancelMouseClicked(evt);
-            }
-        });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel4.setText("WELCOME BACK!");
@@ -347,20 +337,13 @@ public class PM extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(wlcLayout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                        .addComponent(cancel)
-                        .addGap(20, 20, 20))))
+                        .addGap(20, 71, Short.MAX_VALUE))))
         );
         wlcLayout.setVerticalGroup(
             wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wlcLayout.createSequentialGroup()
-                .addGroup(wlcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(wlcLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(wlcLayout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel4)))
+                .addGap(37, 37, 37)
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -372,10 +355,6 @@ public class PM extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
-        this.dispose();
-    }//GEN-LAST:event_cancelMouseClicked
 
     // go to other panel
     private void ViewSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewSuppliersActionPerformed
@@ -474,7 +453,7 @@ public class PM extends javax.swing.JFrame {
                         countPaid++;
                         break;
                     case "pending":
-                        countPaid++;
+                        countPending++;
                         break;
                     case "receive":
                         countReceived++;
@@ -517,7 +496,6 @@ public class PM extends javax.swing.JFrame {
     private PurchaseManager.button ViewItem;
     private PurchaseManager.button ViewRequisition;
     private PurchaseManager.button ViewSuppliers;
-    private javax.swing.JLabel cancel;
     private javax.swing.JLabel home1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
