@@ -21,6 +21,7 @@ public class DailySalesReport extends javax.swing.JFrame {
         this.previousComponent = previousComponent;
         initComponents();
         this.currentDate = LocalDate.now();
+        showLowStockAlertsIfAny();
         loadTodaysSalesData();
         saleDate.setText(currentDate.toString());
     }

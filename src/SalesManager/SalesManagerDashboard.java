@@ -55,13 +55,13 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         supplierEntryButton = new javax.swing.JButton();
         purchaseRequisitionButton = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         monthlySalesReportButton = new javax.swing.JButton();
         purchaseOrdersButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -74,6 +74,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 153));
 
         itemEntryButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        itemEntryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - item.png"))); // NOI18N
         itemEntryButton.setText("Manage Inventory Entries");
         itemEntryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,6 +83,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         });
 
         dailySalesReportButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        dailySalesReportButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - daily sales.png"))); // NOI18N
         dailySalesReportButton.setText("Daily Sales Report");
         dailySalesReportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +92,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         });
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - logout.png"))); // NOI18N
         jButton3.setText("Logout");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,6 +101,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         });
 
         supplierEntryButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        supplierEntryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon- supplier.png"))); // NOI18N
         supplierEntryButton.setText("Manage Supplier Entries");
         supplierEntryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,6 +110,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         });
 
         purchaseRequisitionButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        purchaseRequisitionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - pr.png"))); // NOI18N
         purchaseRequisitionButton.setText("Purchase Requisition ");
         purchaseRequisitionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,9 +118,8 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SalesManager/home.png"))); // NOI18N
-
         monthlySalesReportButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        monthlySalesReportButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon- daily sales.png"))); // NOI18N
         monthlySalesReportButton.setText("Monthly Sales Report");
         monthlySalesReportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,6 +128,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         });
 
         purchaseOrdersButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        purchaseOrdersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - report.png"))); // NOI18N
         purchaseOrdersButton.setText("View Purchase Orders ");
         purchaseOrdersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +143,6 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(supplierEntryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(purchaseRequisitionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -151,9 +155,7 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
+                .addGap(111, 111, 111)
                 .addComponent(itemEntryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(supplierEntryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,7 +185,8 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
             .addGap(0, 268, Short.MAX_VALUE)
         );
 
-        jLabel1.setFont(new java.awt.Font("Sitka Text", 1, 20)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Sitka Text", 0, 20)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel1.setText("Sales Manager, <userid>");
 
         jLabel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -194,33 +197,40 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel4.setText("WELCOME BACK!");
 
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - sales manager.png"))); // NOI18N
+        jLabel5.setText("jLabel5");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGap(23, 23, 23)
-                                    .addComponent(jLabel2))))
-                        .addContainerGap(44, Short.MAX_VALUE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel2))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(94, 94, 94)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(jLabel4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
@@ -349,8 +359,8 @@ public class SalesManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
