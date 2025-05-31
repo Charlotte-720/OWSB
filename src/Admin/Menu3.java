@@ -118,7 +118,8 @@ public class Menu3 extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        SupplierEntry supplierEntry = new SupplierEntry();
+        this.setVisible(false);
+        SupplierEntry supplierEntry = new SupplierEntry(this);
         supplierEntry.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 

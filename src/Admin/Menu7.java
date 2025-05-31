@@ -162,14 +162,16 @@ public class Menu7 extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        MonthlySalesReport monthlySales = new MonthlySalesReport();
-        monthlySales.setVisible(true);
+        this.setVisible(false);
+        MonthlySalesReport monthlySalesReport = new MonthlySalesReport(this);
+        monthlySalesReport.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        DailySalesReport dailySales = new DailySalesReport();
-        dailySales.setVisible(true);
+        this.setVisible(false);
+        DailySalesReport dailySalesReport = new DailySalesReport(this);
+        dailySalesReport.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
