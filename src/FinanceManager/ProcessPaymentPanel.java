@@ -27,7 +27,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         initComponents();
         this.previousComponent = previousComponent;
         loadPOData();
-        paymentTable.getColumnModel().getColumn(7).setCellRenderer(new StatusFormat.StatusCellRenderer());
+        paymentTable.getColumnModel().getColumn(9).setCellRenderer(new StatusFormat.StatusCellRenderer());
         TableStyle.styleTableHeader(paymentTable, new Color(120, 157, 188), Color.BLACK);
     }
     
@@ -39,6 +39,8 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
         for (PurchaseOrder po : poList) {
             model.addRow(new Object[] {
                 po.getPoID(),
+                po.getItemID(),
+                po.getSupplierID(),
                 po.getSupplierName(),
                 po.getItem(),
                 po.getQuantity(),
@@ -88,21 +90,28 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
 
         paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
+                "PO_ID", "Item ID", "Supplier ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(paymentTable);
@@ -128,39 +137,37 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(196, 196, 196)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(270, 270, 270)
+                        .addGap(30, 30, 30)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 855, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(318, 318, 318)
                         .addComponent(btnProcessPayment)
-                        .addGap(61, 61, 61)
+                        .addGap(71, 71, 71)
                         .addComponent(btnCancel))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 685, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(56, Short.MAX_VALUE))
+                        .addGap(284, 284, 284)
+                        .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(497, 497, 497))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(labelTitle)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                .addComponent(jLabel1)
+                .addGap(5, 5, 5)
+                .addComponent(labelTitle)
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel)
                     .addComponent(btnProcessPayment))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -174,7 +181,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(800, 600));
+        setSize(new java.awt.Dimension(918, 623));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -194,7 +201,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             return;
         }
 
-        String status = paymentTable.getValueAt(row, 7).toString();
+        String status = paymentTable.getValueAt(row, 9).toString();
         if (!status.equalsIgnoreCase("Verified")) {
             JOptionPane.showMessageDialog(this, "Only POs with status 'Verified' can be paid.");
             return;
@@ -204,9 +211,9 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
             return;
         }
 
-        String supplier = paymentTable.getValueAt(row, 1).toString();
-        double unitPrice = Double.parseDouble(paymentTable.getValueAt(row, 4).toString());
-        int quantity = Integer.parseInt(paymentTable.getValueAt(row, 3).toString());
+        String supplier = paymentTable.getValueAt(row, 3).toString();
+        double unitPrice = Double.parseDouble(paymentTable.getValueAt(row, 6).toString());
+        int quantity = Integer.parseInt(paymentTable.getValueAt(row, 5).toString());
         double totalAmount = quantity * unitPrice;
         
         PaymentConfirmation dialog = new PaymentConfirmation(this, true);
@@ -216,7 +223,7 @@ public class ProcessPaymentPanel extends javax.swing.JFrame {
 
         // Check if confirmed
         if (dialog.isConfirmed()) {
-            paymentTable.setValueAt("Paid", row, 7);
+            paymentTable.setValueAt("Paid", row, 9);
             JOptionPane.showMessageDialog(this, "Payment successful.");
             
             String poID = paymentTable.getValueAt(row, 0).toString();

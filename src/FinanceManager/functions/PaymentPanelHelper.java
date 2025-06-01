@@ -27,6 +27,7 @@ public class PaymentPanelHelper {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(", ");
                 String poID = fields[0].split(": ")[1];
+                String itemID = fields[1].split(": ")[1];
                 String supplierID = fields[1].split(": ")[1];
                 String item = fields[3].split(": ")[1];
                 String quantity = fields[4].split(": ")[1];
@@ -37,7 +38,7 @@ public class PaymentPanelHelper {
 
                 if ("Verified".equalsIgnoreCase(status)) {
                     String supplierName = supplierMap.getOrDefault(supplierID, "Unknown");
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, item, quantity, unitPrice, totalPrice, date, status, "-");
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, supplierName, itemID, item, quantity, unitPrice, totalPrice, date, status, "-");
                     poList.add(po);
                 }
             }

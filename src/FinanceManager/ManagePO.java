@@ -29,7 +29,7 @@ public class ManagePO extends javax.swing.JFrame {
         this.previousComponent = previousComponent;
         initComponents();
         loadPOData();
-        poTable.getColumnModel().getColumn(7).setCellRenderer(new StatusCellRenderer());
+        poTable.getColumnModel().getColumn(9).setCellRenderer(new StatusCellRenderer());
         TableStyle.styleTableHeader(poTable, new Color(166, 214, 214), Color.BLACK);
         
         comboFilter.addItem("All Statuses");
@@ -60,6 +60,8 @@ public class ManagePO extends javax.swing.JFrame {
         for (PurchaseOrder po : poList) {
             model.addRow(new Object[] {
                 po.getPoID(),
+                po.getItemID(),
+                po.getSupplierID(),
                 po.getSupplierName(),
                 po.getItem(),
                 po.getQuantity(),
@@ -94,6 +96,8 @@ public class ManagePO extends javax.swing.JFrame {
             if (statusFilter.equals("All Statuses") || po.getStatus().equalsIgnoreCase(statusFilter)) {
                 model.addRow(new Object[] {
                     po.getPoID(),
+                    po.getItemID(),
+                    po.getSupplierID(),
                     po.getSupplierName(),
                     po.getItem(),
                     po.getQuantity(),
@@ -147,18 +151,18 @@ public class ManagePO extends javax.swing.JFrame {
 
         poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO_ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status", "Flag Reason"
+                "PO_ID", "Item ID", "Supplier ID", "Supplier Name", "Item", "Quantity", "Unit Price", "Total Price", "Date", "Status", "Flag Reason"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -215,33 +219,30 @@ public class ManagePO extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 35, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 945, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(179, 179, 179)
-                                .addComponent(btnApprove)
-                                .addGap(45, 45, 45)
-                                .addComponent(btnReject)
-                                .addGap(44, 44, 44)
-                                .addComponent(btnEdit)
-                                .addGap(53, 53, 53)
-                                .addComponent(btnBack))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(215, 215, 215)
-                                .addComponent(labelTitle)))
-                        .addGap(0, 239, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28))
+                                .addComponent(labelTitle)
+                                .addGap(223, 223, 223)
+                                .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(282, 282, 282)
+                .addComponent(btnApprove)
+                .addGap(45, 45, 45)
+                .addComponent(btnReject)
+                .addGap(44, 44, 44)
+                .addComponent(btnEdit)
+                .addGap(53, 53, 53)
+                .addComponent(btnBack)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,14 +253,14 @@ public class ManagePO extends javax.swing.JFrame {
                     .addComponent(labelTitle)
                     .addComponent(comboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnApprove)
                     .addComponent(btnReject)
                     .addComponent(btnEdit)
                     .addComponent(btnBack))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -273,7 +274,7 @@ public class ManagePO extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(862, 608));
+        setSize(new java.awt.Dimension(1012, 620));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -297,10 +298,10 @@ public class ManagePO extends javax.swing.JFrame {
         }
 
         // Extract PO data
-        String item = poTable.getValueAt(row, 2).toString();
-        String quantity = poTable.getValueAt(row, 3).toString();
-        String unitPrice = poTable.getValueAt(row, 4).toString();
-        String supplier = poTable.getValueAt(row, 1).toString();
+        String item = poTable.getValueAt(row, 4).toString();
+        String quantity = poTable.getValueAt(row, 5).toString();
+        String unitPrice = poTable.getValueAt(row, 6).toString();
+        String supplier = poTable.getValueAt(row, 3).toString();
 
         // Load valid suppliers for this item
         List<String> filteredSuppliers = ManagePOHelper.loadActiveSuppliersForItem(item);
@@ -320,9 +321,9 @@ public class ManagePO extends javax.swing.JFrame {
 
         // Update table if user confirms edit
         if (dialog.isConfirmed()) {
-            poTable.setValueAt(dialog.getSelectedSupplier(), row, 1);
-            poTable.setValueAt(dialog.getUpdatedQuantity(), row, 3);
-            poTable.setValueAt(dialog.getUpdatedTotalPrice(), row, 5);
+            poTable.setValueAt(dialog.getSelectedSupplier(), row, 3);
+            poTable.setValueAt(dialog.getUpdatedQuantity(), row, 5);
+            poTable.setValueAt(dialog.getUpdatedTotalPrice(), row, 7);
             saveTableToFile();
             JOptionPane.showMessageDialog(this, "Purchase Order updated successfully.");
 

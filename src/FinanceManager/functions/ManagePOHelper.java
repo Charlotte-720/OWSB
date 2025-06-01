@@ -32,6 +32,7 @@ public class ManagePOHelper {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(", ");
                 String poID = fields[0].split(": ")[1];
+                String itemID = fields[1].split(": ")[1];
                 String supplierID  = fields[2].split(": ")[1]; 
                 String item = fields[3].split(": ")[1];
                 String quantity = fields[4].split(": ")[1];
@@ -43,7 +44,7 @@ public class ManagePOHelper {
                 String supplierName = supplierMap.getOrDefault(supplierID, "Unknown");
                 String flagReason = flaggedReasons.getOrDefault(poID, "-");
 
-                poList.add(new PurchaseOrder(poID, supplierName, item, quantity,
+                poList.add(new PurchaseOrder(poID, supplierID, supplierName, itemID, item, quantity,
                                              unitPrice, totalPrice, date, status, flagReason));
             }
         } catch (IOException e) {
@@ -119,8 +120,9 @@ public class ManagePOHelper {
     public static void savePOData(List<List<Object>> tableData, String filePath) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (List<Object> row : tableData) {
-                String line = String.format("PO_ID: %s, Supplier Name: %s, Item: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: %s",
-                        row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7));
+                
+                String line = String.format("PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: %s",
+                        row.get(0), row.get(1), row.get(2), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9));
                 bw.write(line);
                 bw.newLine();
             }
