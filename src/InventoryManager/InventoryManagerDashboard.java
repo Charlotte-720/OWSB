@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package InventoryManager;
+import Admin.Loginpage1;
 import javax.swing.JFrame;
 
 import InventoryManager.functions.InventoryService;
@@ -12,6 +13,7 @@ import model.PurchaseOrder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,6 +43,8 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         
         setUndecorated(true);
         initComponents();
+        // Update the label to show the actual user ID
+        jLabel1.setText("Inventory Manager, " + this.employeeID);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         updateInventorySnapshot();
@@ -101,9 +105,8 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         generateStockButton = new javax.swing.JButton();
         logoutButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        closeButton = new javax.swing.JLabel();
         welcomeLabel = new javax.swing.JLabel();
-        userIdLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         snapshotTitleLabel = new javax.swing.JLabel();
         totalItemsLabel = new javax.swing.JLabel();
@@ -188,21 +191,13 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(232, 249, 255));
 
-        closeButton.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        closeButton.setText("X");
-        closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                closeButtonMouseClicked(evt);
-            }
-        });
-
         welcomeLabel.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         welcomeLabel.setText("WELCOME BACK!");
 
-        userIdLabel.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
-        userIdLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        userIdLabel.setText("Inventory Manager, <userid>");
+        jLabel1.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Inventory Manager, <userid>");
 
         jPanel1.setBackground(new java.awt.Color(196, 217, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -268,28 +263,20 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 70, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(closeButton)
-                .addGap(29, 29, 29)
+                .addGap(76, 76, 76)
                 .addComponent(welcomeLabel)
                 .addGap(18, 18, 18)
-                .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(85, Short.MAX_VALUE))
@@ -316,7 +303,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
 
     private void viewItemsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewItemsButtonActionPerformed
         new ViewItems().setVisible(true);
-        dispose();
+        
     }//GEN-LAST:event_viewItemsButtonActionPerformed
 
     private void poVerificationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poVerificationButtonActionPerformed
@@ -327,29 +314,42 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
 
     private void lowStockAlertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lowStockAlertButtonActionPerformed
         new LowStockAlert().setVisible(true);
-        dispose();
+        
     }//GEN-LAST:event_lowStockAlertButtonActionPerformed
 
     private void generateStockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStockButtonActionPerformed
         new GenerateStockReport().setVisible(true);
-        dispose();
+        
     }//GEN-LAST:event_generateStockButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+        int response = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to log out?", 
+        "Logout Confirmation", 
+        JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE);
 
-    private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-        System.exit(0);
-    }//GEN-LAST:event_closeButtonMouseClicked
+        // Check the user's response
+        if (response == JOptionPane.YES_OPTION) {
+            // Dispose the AdminTest frame
+            this.dispose();
+
+            // Open Loginpage1 frame
+            Loginpage1 loginPage = new Loginpage1();
+            loginPage.setVisible(true);
+            loginPage.pack();
+            loginPage.setLocationRelativeTo(null);
+            loginPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel closeButton;
     private javax.swing.JButton generateStockButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -362,7 +362,6 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel snapshotTitleLabel;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JLabel totalItemsLabel;
-    private javax.swing.JLabel userIdLabel;
     private javax.swing.JButton viewItemsButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables

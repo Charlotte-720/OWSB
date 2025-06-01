@@ -86,25 +86,25 @@ Job Title: Finance Manager
 Overview: Maternity leave
 Status: Active
 
-EmployeeID: 1007
-Username: Coco12
-Fullname: Coco
-MyKad(NRIC): 901003101660
-Phone No: 0111222222
-Emergency: 09111119999
-Address Line 1: 12, Jln serene 3/4
-Address Line 2: serene heights
-Address Line 3: Semenyih, Kajang
-Address Line 4: Selangor
-Bank Account: 0009902222
+EmployeeID: 1111
+Username: lolo
+Fullname: hhj
+MyKad(NRIC): sbnma
+Phone No: 7282
+Emergency: 378822
+Address Line 1: nxdhsjs
+Address Line 2: jdhsjss
+Address Line 3: hgsfss
+Address Line 4: shahaja
+Bank Account: 009876
 Position: Inventory Manager
 Department: IT
-Gross Salary: RM 8600
+Gross Salary: RM7900
 Gender: Male
-Company: Jelly Belly Sdn. Bhd.
-Start Date: 23/03/2023
-End Date: 30/02/2025
-Job Title: Inventory Manager
+Company: djss
+Start Date: shsjs
+End Date: sbsnm
+Job Title: shss
 Overview: sick leave
 Status: Active
 

@@ -4,18 +4,6 @@
  */
 package InventoryManager;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-import javax.swing.JOptionPane;
-import model.Item;
-import InventoryManager.functions.InventoryService;
-import InventoryManager.functions.ReportExporter;
-
 /**
  *
  * @author reymy

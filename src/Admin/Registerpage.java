@@ -4,23 +4,23 @@
  */
 package Admin;
 
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import Admin.functions.RegisterManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import model.Employee;
 /**
  *
  * @author ELYSHA SOPHIA
  */
-public class Registerpage1 extends javax.swing.JFrame {
+public class Registerpage extends javax.swing.JFrame {
     
+    private RegisterManager registerManager;
     private String employeeID;
     private String position;
-    
-    public Registerpage1(String identifier) {
+
+    public Registerpage(String identifier) {
+        registerManager = new RegisterManager(); // Initialize backend
+
         String[] parts = identifier.split(":");
         if (parts.length == 2) {
             this.employeeID = parts[0];
@@ -31,9 +31,6 @@ public class Registerpage1 extends javax.swing.JFrame {
             System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
         }
 
-        System.out.println("EmployeeID: " + employeeID);
-        System.out.println("Position: " + position);
-        
         initComponents();
     }
 
@@ -88,6 +85,7 @@ public class Registerpage1 extends javax.swing.JFrame {
         txtGender = new javax.swing.JTextField();
         lblUsername = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
+        lblWorkExperinced = new javax.swing.JLabel();
         btnRegister = new javax.swing.JButton();
         btnClear1 = new javax.swing.JButton();
 
@@ -367,6 +365,10 @@ public class Registerpage1 extends javax.swing.JFrame {
             }
         });
 
+        lblWorkExperinced.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblWorkExperinced.setForeground(new java.awt.Color(72, 89, 4));
+        lblWorkExperinced.setText("Work Experinced : ");
+
         btnRegister.setBackground(new java.awt.Color(89, 116, 69));
         btnRegister.setFont(new java.awt.Font("Bookman Old Style", 1, 16)); // NOI18N
         btnRegister.setForeground(new java.awt.Color(231, 240, 220));
@@ -433,54 +435,56 @@ public class Registerpage1 extends javax.swing.JFrame {
                         .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txtBankAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtDepartment, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                            .addComponent(txtGender, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblGrossSalary, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblGender, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtGrossSalary)))
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(lblBankAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(40, 40, 40)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addComponent(lblOverview)
+                                        .addGap(0, 117, Short.MAX_VALUE))
+                                    .addComponent(txtJobTitle)
+                                    .addComponent(txtOverview)))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(lblPosition)
                                         .addComponent(txtPosition, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                                         .addComponent(lblDepartment)
                                         .addComponent(txtMyKad))
-                                    .addGap(40, 40, 40)
-                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                                            .addComponent(lblJobTitle)
-                                            .addGap(0, 260, Short.MAX_VALUE))
-                                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(lblStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(txtStartDate))
-                                            .addGap(18, 18, 18)
-                                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(mainPanelLayout.createSequentialGroup()
-                                                    .addGap(0, 3, Short.MAX_VALUE)
-                                                    .addComponent(lblEndDate))
-                                                .addComponent(txtEndDate)))
-                                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                            .addComponent(lblCompany)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtCompany))))
-                                .addGroup(mainPanelLayout.createSequentialGroup()
-                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtBankAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(txtDepartment, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                                                .addComponent(txtGender, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblGrossSalary, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblGender, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(txtGrossSalary)))
-                                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                            .addGap(6, 6, 6)
-                                            .addComponent(lblBankAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(40, 40, 40)
-                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                            .addComponent(lblOverview)
-                                            .addGap(0, 0, Short.MAX_VALUE))
-                                        .addComponent(txtJobTitle)
-                                        .addComponent(txtOverview))))
-                            .addComponent(lblMyKad))
+                                    .addComponent(lblMyKad))
+                                .addGap(40, 40, 40)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(lblStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtStartDate))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                                .addGap(0, 3, Short.MAX_VALUE)
+                                                .addComponent(lblEndDate))
+                                            .addComponent(txtEndDate)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                        .addComponent(lblCompany)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtCompany))
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblWorkExperinced)
+                                            .addComponent(lblJobTitle))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         mainPanelLayout.setVerticalGroup(
@@ -490,7 +494,8 @@ public class Registerpage1 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFullname)
-                    .addComponent(lblMyKad))
+                    .addComponent(lblMyKad)
+                    .addComponent(lblWorkExperinced))
                 .addGap(5, 5, 5)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtFullname, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -601,21 +606,7 @@ public class Registerpage1 extends javax.swing.JFrame {
         txtJobTitle.setText("");
         txtOverview.setText("");
         txtUsername.setText("");
-        }
 
-        /**
-        * @param args the command line arguments
-        */
-        public static void main(String args[]) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    //new Loginpage1().setVisible(true);
-                    //new registerForm().setVisible(true);
-                    //new EmployeePage().setVisible(true);
-                    //new HRPage().setVisible(true);
-                    //new EditEmployeeForm().setVisible(true);
-                }
-            });
     }//GEN-LAST:event_btnClear1ActionPerformed
 
     private void btnClear1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClear1MouseClicked
@@ -628,112 +619,67 @@ public class Registerpage1 extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegisterMouseClicked
-        String employeeID = txtEmployeeID.getText();
-        String fullname = txtFullname.getText();
-        String mykad = txtMyKad.getText();
-        String phoneno = txtPhoneNo.getText();
-        String emergency = txtEmergency.getText();
-        String addline1 = txtAddLine1.getText();
-        String addline2 = txtAddLine2.getText();
-        String addline3 = txtAddLine3.getText();
-        String addline4 = txtAddLine4.getText();
-        String bankacc = txtBankAcc.getText();
-        String position = txtPosition.getText();
-        String department = txtDepartment.getText();
-        String grosssalary = txtGrossSalary.getText();
-        String gender = txtGender.getText();
-        String company = txtCompany.getText();
-        String startdate = txtStartDate.getText();
-        String enddate = txtEndDate.getText();
-        String jobtitle = txtJobTitle.getText();
-        String overview = txtOverview.getText();
-        String username = txtUsername.getText();
+        // Validate all required fields
+        if (txtEmployeeID.getText().isEmpty() || 
+            txtUsername.getText().isEmpty() || 
+            txtFullname.getText().isEmpty() || 
+            txtMyKad.getText().isEmpty() || 
+            txtPhoneNo.getText().isEmpty() || 
+            txtEmergency.getText().isEmpty() || 
+            txtAddLine1.getText().isEmpty() || 
+            txtAddLine2.getText().isEmpty() || 
+            txtAddLine3.getText().isEmpty() || 
+            txtAddLine4.getText().isEmpty() || 
+            txtBankAcc.getText().isEmpty() || 
+            txtPosition.getText().isEmpty() || 
+            txtDepartment.getText().isEmpty() || 
+            txtGrossSalary.getText().isEmpty() || 
+            txtGender.getText().isEmpty() || 
+            txtCompany.getText().isEmpty() || 
+            txtStartDate.getText().isEmpty() || 
+            txtEndDate.getText().isEmpty() || 
+            txtJobTitle.getText().isEmpty() || 
+            txtOverview.getText().isEmpty()) {
 
-        // Validation logic
-        if (fullname.equals("")) {
-            JOptionPane.showMessageDialog(null, "Full name field is empty");
-        } else if (mykad.equals("")) {
-            JOptionPane.showMessageDialog(null, "MyKad field is empty");
-        } else if (username.equals("")) {
-            JOptionPane.showMessageDialog(null, "Username field is empty");
-        } else if (employeeID.equals("")) {
-            JOptionPane.showMessageDialog(null, "EmployeeID field is empty");
-        } else if (phoneno.equals("")) {
-            JOptionPane.showMessageDialog(null, "Phone number field is empty");
-        } else if (emergency.equals("")) {
-            JOptionPane.showMessageDialog(null, "Emergency contact field is empty");
-        } else if (addline1.equals("")) {
-            JOptionPane.showMessageDialog(null, "Address line 1 field is empty");
-        } else if (bankacc.equals("")) {
-            JOptionPane.showMessageDialog(null, "Bank account field is empty");
-        } else if (position.equals("")) {
-            JOptionPane.showMessageDialog(null, "Position field is empty");
-        } else if (department.equals("")) {
-            JOptionPane.showMessageDialog(null, "Department field is empty");
-        } else if (grosssalary.equals("")) {
-            JOptionPane.showMessageDialog(null, "Gross salary field is empty");
-        } else if (gender.equals("")) {
-            JOptionPane.showMessageDialog(null, "Gender field is empty");
-        } else if (company.equals("")) {
-            JOptionPane.showMessageDialog(null, "Company field is empty");
-        } else if (startdate.equals("")) {
-            JOptionPane.showMessageDialog(null, "Start date field is empty");
-        } else if (jobtitle.equals("")) {
-            JOptionPane.showMessageDialog(null, "Job title field is empty");
-        } else if (overview.equals("")) {
-            JOptionPane.showMessageDialog(null, "Overview field is empty");
+            JOptionPane.showMessageDialog(null, "Please fill in all required fields before proceeding.");
+            return; // Stop execution if any field is empty
+        }
+
+        // Generate password using RegisterManager
+        String password = registerManager.generateNextPassword();
+
+        Employee employee = new Employee();
+        employee.setEmployeeID(txtEmployeeID.getText());
+        employee.setUsername(txtUsername.getText());
+        employee.setFullname(txtFullname.getText());
+        employee.setMyKad(txtMyKad.getText());
+        employee.setPhoneno(txtPhoneNo.getText());
+        employee.setEmergency(txtEmergency.getText());
+        employee.setAddLine1(txtAddLine1.getText());
+        employee.setAddLine2(txtAddLine2.getText());
+        employee.setAddLine3(txtAddLine3.getText());
+        employee.setAddLine4(txtAddLine4.getText());
+        employee.setBankAcc(txtBankAcc.getText());
+        employee.setPosition(txtPosition.getText());
+        employee.setDepartment(txtDepartment.getText());
+        employee.setGrossSalary(txtGrossSalary.getText());
+        employee.setGender(txtGender.getText());
+        employee.setCompany(txtCompany.getText());
+        employee.setStartDate(txtStartDate.getText());
+        employee.setEndDate(txtEndDate.getText());
+        employee.setJobTitle(txtJobTitle.getText());
+        employee.setOverview(txtOverview.getText());
+
+        boolean success = registerManager.registerEmployee(employee, password);
+
+        if (success) {
+            JOptionPane.showMessageDialog(null, "Registration successful");
+            this.dispose();
+
+            AdminPage adminPage = new AdminPage(employee.getEmployeeID());
+            adminPage.setVisible(true);
         } else {
-            // Prepare the data to be written to the file
-            String userData = String.format(
-                "EmployeeID: %s\nUsername: %s\nFullname: %s\nMyKad(NRIC): %s\nPhone No: %s\nEmergency: %s\nAddress Line 1: %s\nAddress Line 2: %s\nAddress Line 3: %s\nAddress Line 4: %s\nBank Account: %s\nPosition: %s\nDepartment: %s\nGross Salary: %s\nGender: %s\nCompany: %s\nStart Date: %s\nEnd Date: %s\nJob Title: %s\nOverview: %s\nStatus: %s\n\n",
-                employeeID, username, fullname, mykad, phoneno, emergency, addline1, addline2, addline3, addline4, bankacc, position, department, grosssalary, gender, company, startdate, enddate, jobtitle, overview, "Active"
-            );
-
-            // Write the employee data to the Employee_data.txt file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/Employee_data.txt", true))) {
-                writer.write(userData);
-                writer.flush();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
-                return;
-            }
-
-            // Generate a password starting from 000000
-            String password = generateNextPassword();
-
-            // Write the credentials to the user credentials file
-            String credentials = String.format(
-                "EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\nFailedAttempts: %d\n\n",
-                employeeID, username, password, position, "Active", 0 // Set FailedAttempts to 0
-            ); 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/user_credentials.txt", true))) {
-                writer.write(credentials);
-                writer.flush();
-                JOptionPane.showMessageDialog(null, "Registration successful");
-
-                // Update AdminPage table and navigate to AdminPage
-                AdminPage.AddRowToJTable(new Object[]{
-                    employeeID,
-                    username,
-                    password,
-                    fullname,
-                    phoneno,
-                    gender,
-                    position,
-                    department
-                });
-
-                AdminPage adminPage = new AdminPage(employeeID); // Pass employeeID if necessary
-                adminPage.setVisible(true);
-                adminPage.pack();
-                adminPage.setLocationRelativeTo(null);
-                adminPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-                // Close the registration form
-                this.dispose();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
-            }
+            JOptionPane.showMessageDialog(null, "Error registering employee.");
         }
     }//GEN-LAST:event_btnRegisterMouseClicked
 
@@ -830,29 +776,7 @@ public class Registerpage1 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsernameActionPerformed
 
-    private String generateNextPassword() {
-    int maxPassword = 0;
-    try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.startsWith("Password: ")) {
-                int currentPassword = Integer.parseInt(line.substring(10));
-                if (currentPassword > maxPassword) {
-                    maxPassword = currentPassword;
-                }
-            }
-        }
-    } catch (IOException | NumberFormatException ex) {
-        // Handle exception if needed
-    }
-    return String.format("%06d", maxPassword + 1);
-}
-
-  
-
-    
-    
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear1;
     private javax.swing.JButton btnRegister;
@@ -877,6 +801,7 @@ public class Registerpage1 extends javax.swing.JFrame {
     private javax.swing.JLabel lblPosition;
     private javax.swing.JLabel lblStartDate;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblWorkExperinced;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField txtAddLine1;
     private javax.swing.JTextField txtAddLine2;

@@ -416,63 +416,63 @@ public class Loginpage1 extends javax.swing.JFrame {
     private void handleLoginFailure(String inputIDOrUsername) {
     JOptionPane.showMessageDialog(null, "Invalid login attempt for: " + inputIDOrUsername);
 
-    // Increment failed attempts in the credentials file
-    try {
-        File inputFile = new File("src/txtFile/user_credentials.txt");
-        File tempFile = new File("src/txtFile/user_credentials_temp.txt");
+        // Increment failed attempts in the credentials file
+        try {
+            File inputFile = new File("src/txtFile/user_credentials.txt");
+            File tempFile = new File("src/txtFile/user_credentials_temp.txt");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-            String line;
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+                String line;
 
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    writer.newLine();
-                    continue;
-                }
-
-                if ((line.startsWith("EmployeeID: ") && line.substring(12).trim().equals(inputIDOrUsername)) ||
-                    (line.startsWith("Username: ") && line.substring(10).trim().equalsIgnoreCase(inputIDOrUsername))) {
-                    
-                    writer.write(line); // Write EmployeeID or Username line
-                    writer.newLine();
-                    writer.write(reader.readLine()); // Username line
-                    writer.newLine();
-                    writer.write(reader.readLine()); // Password line
-                    writer.newLine();
-                    writer.write(reader.readLine()); // Position line
-                    writer.newLine();
-
-                    String statusLine = reader.readLine(); // Status line
-                    String failedAttemptsLine = reader.readLine(); // FailedAttempts line
-
-                    int failedAttempts = Integer.parseInt(failedAttemptsLine.substring(15).trim());
-                    failedAttempts++; // Increment failed attempts
-                    
-                    if (failedAttempts >= 3) {
-                        writer.write("Status: Locked");
-                        JOptionPane.showMessageDialog(null, "Account locked due to too many failed attempts.");
-                    } else {
-                        writer.write(statusLine); // Write Status line
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        writer.newLine();
+                        continue;
                     }
-                    writer.newLine();
-                    writer.write("FailedAttempts: " + failedAttempts); // Update FailedAttempts
-                    writer.newLine();
-                } else {
-                    writer.write(line); // Preserve other lines
-                    writer.newLine();
+
+                    if ((line.startsWith("EmployeeID: ") && line.substring(12).trim().equals(inputIDOrUsername)) ||
+                        (line.startsWith("Username: ") && line.substring(10).trim().equalsIgnoreCase(inputIDOrUsername))) {
+
+                        writer.write(line); // Write EmployeeID or Username line
+                        writer.newLine();
+                        writer.write(reader.readLine()); // Username line
+                        writer.newLine();
+                        writer.write(reader.readLine()); // Password line
+                        writer.newLine();
+                        writer.write(reader.readLine()); // Position line
+                        writer.newLine();
+
+                        String statusLine = reader.readLine(); // Status line
+                        String failedAttemptsLine = reader.readLine(); // FailedAttempts line
+
+                        int failedAttempts = Integer.parseInt(failedAttemptsLine.substring(15).trim());
+                        failedAttempts++; // Increment failed attempts
+
+                        if (failedAttempts >= 3) {
+                            writer.write("Status: Locked");
+                            JOptionPane.showMessageDialog(null, "Account locked due to too many failed attempts.");
+                        } else {
+                            writer.write(statusLine); // Write Status line
+                        }
+                        writer.newLine();
+                        writer.write("FailedAttempts: " + failedAttempts); // Update FailedAttempts
+                        writer.newLine();
+                    } else {
+                        writer.write(line); // Preserve other lines
+                        writer.newLine();
+                    }
                 }
             }
-        }
 
-        // Replace the original file with the updated file
-        if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
-            JOptionPane.showMessageDialog(null, "File update error.");
+            // Replace the original file with the updated file
+            if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
+                JOptionPane.showMessageDialog(null, "File update error.");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
         }
-    } catch (IOException ex) {
-        JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
     }
-}
 
     
         private void updateUserAccount(String identifier, int failedAttempts, String status) {
@@ -561,59 +561,18 @@ public class Loginpage1 extends javax.swing.JFrame {
     private void txtPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusGained
         // TODO add your handling code here:
         if (txtPassword.getText().equals("Enter Password")) {
-        txtPassword.setText(""); // Clear the placeholder
-        txtPassword.setForeground(Color.black); // Normal text color
-    }
+            txtPassword.setText(""); // Clear the placeholder
+            txtPassword.setForeground(Color.black); // Normal text color
+        }
     }//GEN-LAST:event_txtPasswordFocusGained
 
     private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
         // TODO add your handling code here:
         if (txtPassword.getText().isEmpty()) {
-        txtPassword.setText("Enter Password"); // Restore placeholder
-        txtPassword.setForeground(Color.gray); // Placeholder color
-    }
-    }//GEN-LAST:event_txtPasswordFocusLost
-
-   
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Loginpage1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Loginpage1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Loginpage1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Loginpage1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            txtPassword.setText("Enter Password"); // Restore placeholder
+            txtPassword.setForeground(Color.gray); // Placeholder color
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Loginpage1().setVisible(true);
-                //new Registerpage1().setVisible(true);
-                //new AdminPage().setVisible(true);
-                //new AdminPage("Lily123").setVisible(true);
-                //new AdminTest().setVisible(true);
-                //new userAccForm().setVisible(true);
-            }
-        });
-    }
+    }//GEN-LAST:event_txtPasswordFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnClear;
@@ -632,9 +591,7 @@ public class Loginpage1 extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 
-    private void processUserInfo(String[] userInfo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
 
     
 }

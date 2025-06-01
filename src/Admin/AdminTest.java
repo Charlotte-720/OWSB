@@ -48,7 +48,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu06.setBackground(DefaultColor);
         Menu05.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+        
         
     }
 
@@ -87,9 +87,6 @@ public class AdminTest extends javax.swing.JFrame {
         Menu07 = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        Menu08 = new javax.swing.JPanel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
         jDesktopPanel = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
@@ -358,42 +355,6 @@ public class AdminTest extends javax.swing.JFrame {
                 .addComponent(jLabel31))
         );
 
-        Menu08.setBackground(new java.awt.Color(255, 204, 102));
-        Menu08.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
-        Menu08.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Menu08MouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                Menu08MousePressed(evt);
-            }
-        });
-
-        jLabel33.setFont(new java.awt.Font("Bookman Old Style", 1, 10)); // NOI18N
-        jLabel33.setForeground(new java.awt.Color(32, 52, 15));
-        jLabel33.setText("Daily Item-Wise Sales");
-
-        jLabel34.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-sales-30.png"))); // NOI18N
-
-        javax.swing.GroupLayout Menu08Layout = new javax.swing.GroupLayout(Menu08);
-        Menu08.setLayout(Menu08Layout);
-        Menu08Layout.setHorizontalGroup(
-            Menu08Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Menu08Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel34)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel33)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        Menu08Layout.setVerticalGroup(
-            Menu08Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel34)
-            .addGroup(Menu08Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel33))
-        );
-
         logoutButton.setBackground(new java.awt.Color(204, 221, 204));
         logoutButton.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
         logoutButton.setForeground(new java.awt.Color(32, 52, 15));
@@ -423,7 +384,6 @@ public class AdminTest extends javax.swing.JFrame {
                     .addComponent(Menu05, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu06, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu07, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Menu08, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Menu01, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18))
         );
@@ -446,9 +406,7 @@ public class AdminTest extends javax.swing.JFrame {
                 .addComponent(Menu06, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Menu07, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Menu08, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                 .addComponent(logoutButton)
                 .addGap(33, 33, 33))
         );
@@ -507,7 +465,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+       
         
         MenuName.setText("Items Management");
     }//GEN-LAST:event_Menu02MousePressed
@@ -521,7 +479,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+        
         
         MenuName.setText("Supplier Management");
     }//GEN-LAST:event_Menu03MousePressed
@@ -535,7 +493,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+        
         
         MenuName.setText("Purchase Requition");
     }//GEN-LAST:event_Menu04MousePressed
@@ -549,7 +507,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(ClickedColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+     
         
         MenuName.setText("Purchase Order");
     }//GEN-LAST:event_Menu05MousePressed
@@ -563,7 +521,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(ClickedColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+        
         
         MenuName.setText("Stock Management");
     }//GEN-LAST:event_Menu06MousePressed
@@ -624,7 +582,7 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(DefaultColor);
+        
         
         MenuName.setText("Employee Management");
     }//GEN-LAST:event_Menu01MousePressed
@@ -645,31 +603,10 @@ public class AdminTest extends javax.swing.JFrame {
         Menu05.setBackground(DefaultColor); 
         Menu06.setBackground(DefaultColor);
         Menu07.setBackground(ClickedColor);
-        Menu08.setBackground(DefaultColor);
+
         
         MenuName.setText("Generate Reports");
     }//GEN-LAST:event_Menu07MousePressed
-
-    private void Menu08MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu08MouseClicked
-        // TODO add your handling code here:
-        Menu8 menu8=new Menu8();
-        jDesktopPanel.removeAll();
-        jDesktopPanel.add(menu8).setVisible(true);
-    }//GEN-LAST:event_Menu08MouseClicked
-
-    private void Menu08MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu08MousePressed
-        // TODO add your handling code here:
-        Menu01.setBackground(DefaultColor); 
-        Menu02.setBackground(DefaultColor); 
-        Menu03.setBackground(DefaultColor); 
-        Menu04.setBackground(DefaultColor); 
-        Menu05.setBackground(DefaultColor); 
-        Menu06.setBackground(DefaultColor);
-        Menu07.setBackground(DefaultColor);
-        Menu08.setBackground(ClickedColor);
-        
-        MenuName.setText("Daily Item-Wise Sales");
-    }//GEN-LAST:event_Menu08MousePressed
 
     
     
@@ -720,6 +657,7 @@ public class AdminTest extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(AdminTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -737,7 +675,6 @@ public class AdminTest extends javax.swing.JFrame {
     private javax.swing.JPanel Menu05;
     private javax.swing.JPanel Menu06;
     private javax.swing.JPanel Menu07;
-    private javax.swing.JPanel Menu08;
     private javax.swing.JLabel MenuName;
     private javax.swing.JDesktopPane jDesktopPanel;
     private javax.swing.JLabel jLabel18;
@@ -755,8 +692,6 @@ public class AdminTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JButton logoutButton;

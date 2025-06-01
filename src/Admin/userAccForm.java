@@ -4,12 +4,7 @@
  */
 package Admin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import Admin.functions.userAccManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -20,11 +15,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class userAccForm extends javax.swing.JFrame {
 
-    
-    private String employeeID;
+    private userAccManager accountManager;
     private String position;
-    
+    private String employeeID;
+
     public userAccForm(String identifier) {
+        accountManager = new userAccManager(); // Initialize backend
+
         String[] parts = identifier.split(":");
         if (parts.length == 2) {
             this.employeeID = parts[0];
@@ -32,13 +29,11 @@ public class userAccForm extends javax.swing.JFrame {
         } else {
             this.employeeID = "Unknown";
             this.position = "Unknown";
-            System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
         }
-        System.out.println("EmployeeID: " + employeeID);
-        System.out.println("Position: " + position);
+
         initComponents();
         loadUserData();
-    }
+}
 
     
     /**
@@ -214,207 +209,14 @@ public class userAccForm extends javax.swing.JFrame {
         adminPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    // Method to load user data from text file and populate the JTable
-        private void loadUserData() {
-            String credentialsFilePath = "src/txtFile/user_credentials.txt";
-            String employeeDataFilePath = "src/txtFile/Employee_data.txt";
+    // Populate JTable with user account details
+    public void loadUserData() {
+        DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
+        String[] columnNames = {"Employee ID", "Username", "Password", "Fullname", "Phone No.", "Gender", "Position", "Department", "Status"};
+        model.setColumnIdentifiers(columnNames);
 
-            try (BufferedReader credentialsReader = new BufferedReader(new FileReader(credentialsFilePath))) {
-                String line;
-                DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
-
-                // Ensure table columns are set
-                String[] columnNames = {"Employee ID", "Username", "Password", "Fullname", "Phone No.", "Gender", "Position", "Department", "Status"};
-                model.setColumnIdentifiers(columnNames);
-
-                while ((line = credentialsReader.readLine()) != null) {
-                    if (line.startsWith("EmployeeID: ")) {
-                        String employeeID = line.substring(12).trim();
-                        System.out.println("Processing EmployeeID: " + employeeID);
-
-                        // Read username
-                        line = credentialsReader.readLine();
-                        String username = line != null && line.startsWith("Username: ") ? line.substring(10).trim() : "";
-
-                        // Read password
-                        line = credentialsReader.readLine();
-                        String password = line != null && line.startsWith("Password: ") ? line.substring(10).trim() : "";
-
-                        // Read position
-                        line = credentialsReader.readLine();
-                        String position = line != null && line.startsWith("Position: ") ? line.substring(10).trim() : "";
-
-                        // Read status
-                        line = credentialsReader.readLine();
-                        String status = line != null && line.startsWith("Status: ") ? line.substring(8).trim() : "";
-
-                        // Read failed attempts
-                        line = credentialsReader.readLine();
-                        int failedAttempts = line != null && line.startsWith("FailedAttempts: ") 
-                                             ? Integer.parseInt(line.substring(15).trim()) 
-                                             : 0;
-
-                        // Compute the status dynamically based on failed attempts
-                        if (failedAttempts >= 3) {
-                            status = "Locked";
-                        }
-
-                        // Retrieve employee data from Employee_data.txt
-                        Employee employee = getEmployeeData(employeeID, employeeDataFilePath);
-
-                        if (employee != null) {
-                            System.out.println("Adding row for EmployeeID: " + employeeID);
-                            model.addRow(new Object[]{
-                                employeeID,
-                                username,
-                                password,
-                                employee.getFullname(),
-                                employee.getPhoneno(),
-                                employee.getGender(),
-                                employee.getPosition(),
-                                employee.getDepartment(),
-                                status // Use dynamic status
-                            });
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: No employee data found for EmployeeID: " + employeeID);
-                            System.out.println("No employee data found for EmployeeID: " + employeeID);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error loading user data: " + ex.getMessage());
-            }
-        }
-
-
-        // Method to parse employee data from the formatted string
-        private Employee parseEmployeeData(String employeeBlock) {
-        String[] lines = employeeBlock.split("\n");
-        String employeeID = "", fullname = "", phoneNo = "", gender = "", position = "", department = "", password = "", username = "", status = "";
-
-        for (String line : lines) {
-            if (line.startsWith("EmployeeID: ")) {
-                employeeID = line.substring(12).trim();
-            } else if (line.startsWith("Fullname: ")) {
-                fullname = line.substring(9).trim();
-            } else if (line.startsWith("Password: ")) {
-                password = line.substring(10).trim();
-            } else if (line.startsWith("Username: ")) {
-                username = line.substring(10).trim();
-            } else if (line.startsWith("Phone No: ")) {
-                phoneNo = line.substring(10).trim();
-            } else if (line.startsWith("Gender: ")) {
-                gender = line.substring(8).trim();
-            } else if (line.startsWith("Position: ")) {
-                position = line.substring(10).trim();
-            } else if (line.startsWith("Department: ")) {
-                department = line.substring(12).trim();
-            } else if (line.startsWith("Status: ")) {
-                status = line.substring(8).trim();
-            }
-        }
-
-        // Return an Employee object with the parsed data
-        return new Employee(employeeID, password, fullname, username, phoneNo, gender, position, department, status); // Set default status as "Active"
+        accountManager.loadUserData(model);
     }
-
-
-
-    private Employee getEmployeeData(String identifier, String employeeDataFilePath) {
-        try (BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDataFilePath))) {
-        String line;
-        StringBuilder sb = new StringBuilder();
-        boolean found = false;
-
-        while ((line = employeeReader.readLine()) != null) {
-            // Check for matching EmployeeID or Username
-            if (line.startsWith("EmployeeID: ")) {
-                String employeeID = line.substring(12).trim();
-                if (employeeID.equals(identifier)) {
-                    found = true;
-                } else {
-                    found = false;
-                    sb.setLength(0); // Clear buffer if no match
-                }
-            } else if (line.startsWith("Username: ")) {
-                String username = line.substring(10).trim();
-                if (username.equals(identifier)) {
-                    found = true;
-                } else if (!found) {
-                    sb.setLength(0); // Clear buffer if no match
-                }
-            }
-
-            // Append lines from a matching block
-            if (found) {
-                sb.append(line).append("\n");
-                if (line.isEmpty()) { // End of block
-                    break;
-                }
-            }
-        }
-
-        if (found) {
-            System.out.println("Employee data found for identifier: " + identifier);
-            return parseEmployeeData(sb.toString()); // Parse and return the employee object
-        }
-    } catch (IOException ex) {
-        JOptionPane.showMessageDialog(null, "Error reading employee data: " + ex.getMessage());
-    }
-
-    return null; // Return null if no match is found
-    }
-
-    
-
-    // Employee class to hold employee data
-    class Employee {
-        private String fullname;
-        private String phoneno;
-        private String gender;
-        private String position;
-        private String department;
-        private String status;
-        private String username; // Add Username field
-        private String employeeID; // Add EmployeeID field for clarity
-        private String password;
-
-        private Employee(String employeeID,String password, String fullname, String username, String phoneNo, String gender, String position, String department, String status) {
-            this.employeeID = employeeID;
-            this.username = username;
-            this.password = password;
-            this.fullname = fullname;
-            this.phoneno = phoneNo;
-            this.gender = gender;
-            this.position = position;
-            this.department = department;
-            this.status = status;
-        }
-
-        
-
-        // Getters and Setters
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-        public String getEmployeeID() { return employeeID; }
-        public void setEmployeeID(String employeeID) { this.employeeID = employeeID; }
-        public String getFullname() { return fullname; }
-        public void setFullname(String fullname) { this.fullname = fullname; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
-        public String getPhoneno() { return phoneno; }
-        public void setPhoneno(String phoneno) { this.phoneno = phoneno; }
-        public String getGender() { return gender; }
-        public void setGender(String gender) { this.gender = gender; }
-        public String getPosition() { return position; }
-        public void setPosition(String position) { this.position = position; }
-        public String getDepartment() { return department; }
-        public void setDepartment(String department) { this.department = department; }
-        public String getStatus() { return status; }
-        public void setStatus(String status) { this.status = status; }
-    }
-
-    
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
@@ -433,11 +235,16 @@ public class userAccForm extends javax.swing.JFrame {
             if ("Active".equalsIgnoreCase(status)) {
                 JOptionPane.showMessageDialog(null, "The account is already active. No need to unlock.");
             } else {
-                updateUserAccount(employeeID, 0, "Active");
-                JOptionPane.showMessageDialog(null, "Account unlocked successfully.");
+                userAccManager accountManager = new userAccManager();
+                boolean success = accountManager.updateUserAccount(employeeID, 0, "Active", this); // Pass reference to form
 
-                // Refresh table data
-                loadUserData();
+                if (success) {
+                    JOptionPane.showMessageDialog(null, "Account unlocked successfully."); 
+                    // Automatically load updated data
+                    btnRefreshActionPerformed(null);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error unlocking account.");
+                }
             }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a row to unlock.");
@@ -458,101 +265,8 @@ public class userAccForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     
-        private void updateUserAccount(String identifier, int failedAttempts, String status) {
-            File inputFile = new File("src/txtFile/user_credentials.txt");
-            File tempFile = new File("src/txtFile/user_credentials_temp.txt");
+        
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-                String line;
-                boolean isMatched = false;
-
-                while ((line = reader.readLine()) != null) {
-                    if (line.trim().isEmpty()) {
-                        writer.newLine();
-                        continue;
-                    }
-
-                    // Check for matching EmployeeID or Username
-                    if ((line.startsWith("EmployeeID: ") && line.substring(12).trim().equals(identifier)) ||
-                        (line.startsWith("Username: ") && line.substring(10).trim().equals(identifier))) {
-
-                        isMatched = true; // Found matching block
-
-                        // Write updated block
-                        writer.write(line); // Write EmployeeID or Username
-                        writer.newLine();
-                        writer.write(reader.readLine()); // Write Username
-                        writer.newLine();
-                        writer.write(reader.readLine()); // Write Password
-                        writer.newLine();
-                        writer.write(reader.readLine()); // Write Position
-                        writer.newLine();
-                        writer.write("Status: " + status); // Update Status
-                        writer.newLine();
-                        writer.write("FailedAttempts: " + failedAttempts); // Update FailedAttempts
-                        writer.newLine();
-                        writer.newLine();
-
-                        // Skip remaining lines in the current block
-                        reader.readLine(); // Skip original Status
-                        reader.readLine(); // Skip original FailedAttempts
-                    } else {
-                        writer.write(line); // Write non-matching line
-                        writer.newLine();
-                    }
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "File write error: " + ex.getMessage());
-            }
-            // Refresh table data
-                loadUserData();
-                
-            // Replace the old file with the updated file
-            if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
-                JOptionPane.showMessageDialog(null, "File update error.");
-            }
-        }
-
-    
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(userAccForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(userAccForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(userAccForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(userAccForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new userAccForm().setVisible(true);
-                //new Loginpage1().setVisible(true);
-                //new Registerpage1().setVisible(true);
-                //new AdminPage().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMenu;

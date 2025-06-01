@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import InventoryManager.functions.InventoryService;
 import model.PurchaseOrder;
 import model.Item;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -222,11 +221,7 @@ public class POVerification extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeButtonMouseClicked
-
         this.dispose();
-        if (previousFrame != null) {
-            previousFrame.setVisible(true);
-        }
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
@@ -268,9 +263,6 @@ public class POVerification extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.dispose();
-        if (previousFrame != null) {
-            previousFrame.setVisible(true);
-        }
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**

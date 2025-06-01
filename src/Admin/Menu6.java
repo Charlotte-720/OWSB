@@ -4,6 +4,8 @@
  */
 package Admin;
 
+import InventoryManager.LowStockAlert;
+import InventoryManager.ViewItems;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -53,7 +55,7 @@ public class Menu6 extends javax.swing.JInternalFrame {
 
         jButton2.setBackground(new java.awt.Color(255, 204, 102));
         jButton2.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
-        jButton2.setText("Stock Management");
+        jButton2.setText("Low Stock Alert");
         jButton2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 2, 1, new java.awt.Color(0, 0, 0)));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,10 +99,12 @@ public class Menu6 extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        new ViewItems().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        new LowStockAlert().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

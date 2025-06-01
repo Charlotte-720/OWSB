@@ -4,12 +4,7 @@
  */
 package Admin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import Admin.functions.AdminManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AdminPage extends javax.swing.JFrame {
 
-    
+    private final AdminManager adminManager = new AdminManager();
     private String employeeID;
     private String position;
 
@@ -34,13 +29,10 @@ public class AdminPage extends javax.swing.JFrame {
             this.position = "Unknown";
             System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
         }
-        System.out.println("EmployeeID: " + employeeID);
-        System.out.println("Position: " + position);
-        
+
         initComponents();
         loadUserData();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,11 +199,11 @@ public class AdminPage extends javax.swing.JFrame {
 
             },
             new String [] {
-                "EmployeeID", "Username", "Password", "Fullname", "Phone No.", "Gender", "Position", "Department"
+                "EmployeeID", "Username", "Fullname", "Phone No.", "Gender", "Position", "Department"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -317,7 +309,7 @@ public class AdminPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
         
-        Registerpage1 frameText = new Registerpage1("exampleIdentifier:Position");
+        Registerpage frameText = new Registerpage("exampleIdentifier:Position");
         frameText.setVisible(true);
         frameText.pack();
         frameText.setLocationRelativeTo(null);
@@ -327,156 +319,13 @@ public class AdminPage extends javax.swing.JFrame {
     
     
     // Method to load user data from text file and populate the JTable
-        private void loadUserData() {
-            String credentialsFilePath = "src/txtFile/user_credentials.txt";
-            String employeeDataFilePath = "src/txtFile/Employee_data.txt";
+    private void loadUserData() {
+        DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
+        model.setColumnIdentifiers(new String[]{"Employee ID", "Username", "Fullname", "Position", "Department"});
 
-            try (BufferedReader credentialsReader = new BufferedReader(new FileReader(credentialsFilePath))) {
-                String line;
-                DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
-
-                // Ensure table columns are set
-                String[] columnNames = {"Employee ID", "Username", "Password", "Fullname", "Phone", "Gender", "Position", "Department"};
-                model.setColumnIdentifiers(columnNames);
-
-                while ((line = credentialsReader.readLine()) != null) {
-                    if (line.startsWith("EmployeeID: ")) {
-                        String employeeID = line.substring(12).trim();
-                        System.out.println("Processing EmployeeID: " + employeeID);
-
-                        // Read username
-                        line = credentialsReader.readLine(); 
-                        String username = line != null && line.startsWith("Username: ") ? line.substring(10).trim() : "";
-
-                        // Read password
-                        line = credentialsReader.readLine();
-                        String password = line != null && line.startsWith("Password: ") ? line.substring(10).trim() : "";
-
-                        // Retrieve employee data from Employee_data.txt
-                        Employee employee = getEmployeeData(employeeID, employeeDataFilePath);
-
-                        if (employee != null) {
-                            System.out.println("Adding row for EmployeeID: " + employeeID);
-                            model.addRow(new Object[]{
-                                employeeID,
-                                username,
-                                password,
-                                employee.getFullname(),
-                                employee.getPhoneno(),
-                                employee.getGender(),
-                                employee.getPosition(),
-                                employee.getDepartment()
-                            });
-                        } else {
-                            System.out.println("No employee data found for EmployeeID: " + employeeID);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error loading user data: " + ex.getMessage());
-            }
-        }
-
-        // Method to parse employee data from the formatted string
-        private Employee parseEmployeeData(String employeeBlock) {
-        String[] lines = employeeBlock.split("\n");
-        String employeeID = "", fullname = "", phoneNo = "", gender = "", position = "", department = "";
-
-        for (String line : lines) {
-            if (line.startsWith("EmployeeID: ")) {
-                employeeID = line.substring(12).trim();
-            } else if (line.startsWith("Fullname: ")) {
-                fullname = line.substring(9).trim();
-            } else if (line.startsWith("Phone No: ")) {
-                phoneNo = line.substring(10).trim();
-            } else if (line.startsWith("Gender: ")) {
-                gender = line.substring(8).trim();
-            } else if (line.startsWith("Position: ")) {
-                position = line.substring(10).trim();
-            } else if (line.startsWith("Department: ")) {
-                department = line.substring(12).trim();
-            }
-        }
-
-        // Return an Employee object with the parsed data
-        return new Employee(employeeID, fullname, phoneNo, gender, position, department);
+        adminManager.populateUserTable(model);// Delegate data loading to AdminManager
     }
 
-    private Employee getEmployeeData(String identifier, String employeeDataFilePath) {
-        try (BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDataFilePath))) {
-        String line;
-        StringBuilder sb = new StringBuilder();
-        boolean found = false;
-
-        while ((line = employeeReader.readLine()) != null) {
-            // Check for matching EmployeeID or Username
-            if (line.startsWith("EmployeeID: ")) {
-                String employeeID = line.substring(12).trim();
-                if (employeeID.equals(identifier)) {
-                    found = true;
-                } else {
-                    found = false;
-                    sb.setLength(0); // Clear buffer if no match
-                }
-            } else if (line.startsWith("Username: ")) {
-                String username = line.substring(10).trim();
-                if (username.equals(identifier)) {
-                    found = true;
-                } else if (!found) {
-                    sb.setLength(0); // Clear buffer if no match
-                }
-            }
-
-            // Append lines from a matching block
-            if (found) {
-                sb.append(line).append("\n");
-                if (line.isEmpty()) { // End of block
-                    break;
-                }
-            }
-        }
-
-        if (found) {
-            System.out.println("Employee data found for identifier: " + identifier);
-            return parseEmployeeData(sb.toString()); // Parse and return the employee object
-        }
-    } catch (IOException ex) {
-        JOptionPane.showMessageDialog(null, "Error reading employee data: " + ex.getMessage());
-    }
-
-    return null; // Return null if no match is found
-    }
-
-
-    // Employee class to hold employee data
-        class Employee {
-        private String employeeID;
-        private String fullname;
-        private String phoneno;
-        private String gender;
-        private String position;
-        private String department;
-
-        // Constructor
-        public Employee(String employeeID, String fullname, String phoneno, String gender, String position, String department) {
-            this.employeeID = employeeID;
-            this.fullname = fullname;
-            this.phoneno = phoneno;
-            this.gender = gender;
-            this.position = position;
-            this.department = department;
-        }
-
-        // Getters
-        public String getEmployeeID() { return employeeID; }
-        public String getFullname() { return fullname; }
-        public String getPhoneno() { return phoneno; }
-        public String getGender() { return gender; }
-        public String getPosition() { return position; }
-        public String getDepartment() { return department; }
-    }
-    
-    
     public static void AddRowToJTable(Object[] dataRow){
         DefaultTableModel model = (DefaultTableModel)tblUserData.getModel();
         model.addRow(dataRow);
@@ -503,15 +352,11 @@ public class AdminPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
-        // Get the selected row index
         int selectedRow = tblUserData.getSelectedRow();
 
         if (selectedRow >= 0) {
-            // Assuming Identifier (EmployeeID or Username) is in the first column (index 0)
             String identifier = (String) tblUserData.getValueAt(selectedRow, 0);
 
-            // Confirm deletion
             int response = JOptionPane.showConfirmDialog(null, 
                 "Are you sure you want to delete user with Identifier: " + identifier + "?", 
                 "Confirm Deletion", 
@@ -519,14 +364,12 @@ public class AdminPage extends javax.swing.JFrame {
                 JOptionPane.WARNING_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
-                // Remove the user from the data source
-                boolean success = removeUserFromDataSource(identifier);
+                boolean success = adminManager.removeUser(identifier);
 
                 if (success) {
-                    // Remove the row from the table
                     DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
                     model.removeRow(selectedRow);
-                    JOptionPane.showMessageDialog(null, "A user was deleted successfully.");
+                    JOptionPane.showMessageDialog(null, "User deleted successfully.");
                 } else {
                     JOptionPane.showMessageDialog(null, "Error deleting user. Please try again.");
                 }
@@ -536,64 +379,6 @@ public class AdminPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    // This function removes the user from the underlying data source, e.g., a text file or database
-    private boolean removeUserFromDataSource(String identifier) {
-        boolean userFoundInEmployeeData = removeUserFromFile(identifier, "src/txtFile/Employee_data.txt");
-        boolean userFoundInCredentials = removeUserFromFile(identifier, "src/txtFile/user_credentials.txt");
-
-        return userFoundInEmployeeData && userFoundInCredentials;
-    }
-
-    private boolean removeUserFromFile(String identifier, String fileName) {
-        File inputFile = new File(fileName);
-        File tempFile = new File("temp_" + fileName);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String currentLine;
-            boolean userFound = false;
-
-            while ((currentLine = reader.readLine()) != null) {
-                String trimmedLine = currentLine.trim();
-
-                // Check if this is the user's data based on Identifier (EmployeeID or Username)
-                if (trimmedLine.startsWith("EmployeeID: " + identifier) || trimmedLine.startsWith("Username: " + identifier)) {
-                    userFound = true;
-                    // Skip lines related to this user
-                    while ((currentLine = reader.readLine()) != null && !currentLine.trim().isEmpty()) {
-                        // Continue skipping this user’s information
-                    }
-                } else {
-                    writer.write(currentLine + System.lineSeparator());
-                }
-            }
-
-            writer.close();
-            reader.close();
-
-            if (userFound) {
-                // Delete the original file and rename the temp file to the original file's name
-                if (!inputFile.delete()) {
-                    System.out.println("Could not delete file: " + inputFile.getName());
-                }
-                if (!tempFile.renameTo(inputFile)) {
-                    System.out.println("Could not rename file to: " + inputFile.getName());
-                }
-            } else {
-                // If the user wasn't found, delete the temp file
-                if (!tempFile.delete()) {
-                    System.out.println("Could not delete temporary file: " + tempFile.getName());
-                }
-            }
-
-            return userFound;
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
     private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -627,50 +412,6 @@ public class AdminPage extends javax.swing.JFrame {
         adminTest.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }//GEN-LAST:event_btnMenuActionPerformed
 
-    
-   
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new Loginpage1().setVisible(true);
-                //new registerForm().setVisible(true);
-                //new EmployeePage().setVisible(true);
-                //new HRPage().setVisible(true);
-                //new EditEmployeeForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

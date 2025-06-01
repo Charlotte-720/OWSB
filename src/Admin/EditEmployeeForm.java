@@ -4,15 +4,10 @@
  */
 package Admin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
+import Admin.functions.EditEmployeeManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import model.Employee;
 
 /**
  *
@@ -20,7 +15,8 @@ import javax.swing.JOptionPane;
  */
 public class EditEmployeeForm extends javax.swing.JFrame {
     
-    private String employeeID; 
+    private final EditEmployeeManager employeeManager;
+    private String employeeID;
     private String position;
 
     public EditEmployeeForm(String identifier) {
@@ -34,34 +30,20 @@ public class EditEmployeeForm extends javax.swing.JFrame {
             System.out.println("Error: LoggedInIdentifier has an unexpected format: [" + identifier + "]");
         }
 
-        System.out.println("EmployeeID: " + employeeID);
-        System.out.println("Position: " + position);
-        
+        employeeManager = new EditEmployeeManager();
         initComponents();
-        
-        System.out.println("Loading employee with identifier: " + identifier);
-        System.out.println("Identifier passed to EditEmployeeForm: [" + identifier + "]");
-
-        
-        // Attempt to load employee data
-        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
-        if (employee != null) {
-            loadEmployeeData(identifier); // Load data into the form
-        } else {
-            // Show error message and stop form initialization
-            JOptionPane.showMessageDialog(null, "Employee not found for identifier: " + identifier, "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose(); // Close the form to prevent display
-        }
-
+        loadEmployeeData(identifier);
     }
-    
+
     private void loadEmployeeData(String identifier) {
         System.out.println("Loading employee data for: " + identifier);
-        Employee employee = getEmployeeData(identifier, "src/txtFile/Employee_data.txt");
+        Employee employee = employeeManager.getEmployeeData(identifier);
+
         if (employee != null) {
             txtFullname.setText(employee.getFullname());
             txtUsername.setText(employee.getUsername());
             txtEmployeeID.setText(employee.getEmployeeID());
+            txtEmployeeID.setEditable(false); // Prevents text editing
             txtMyKad.setText(employee.getMyKad());
             txtPhoneNo.setText(employee.getPhoneno());
             txtEmergency.setText(employee.getEmergency());
@@ -80,143 +62,13 @@ public class EditEmployeeForm extends javax.swing.JFrame {
             txtJobTitle.setText(employee.getJobTitle());
             txtOverview.setText(employee.getOverview());
             
-            String password = loadCredentialsData(identifier);
+            String password = employeeManager.loadCredentialsData(identifier);
             txtPass.setText(password);
-        } 
-    }
-    
-        private String loadCredentialsData(String identifier) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/txtFile/user_credentials.txt"))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                // Check if the current line matches the EmployeeID
-                if (line.startsWith("EmployeeID: " + identifier)) {
-                    // Read and process lines within the matching block
-                    String nextLine;
-                    while ((nextLine = reader.readLine()) != null) {
-                        if (nextLine.startsWith("Password: ")) {
-                            return nextLine.substring(10).trim(); // Extract password after "Password: "
-                        }
-
-                        // Stop reading the block if a new EmployeeID begins
-                        if (nextLine.startsWith("EmployeeID: ")) {
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error reading credentials data: " + ex.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(null, "Employee not found for identifier: " + identifier, "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         }
-        return ""; // Return empty if no match found
     }
-
-
-
-        private Employee getEmployeeData(String identifier, String employeeDataFilePath) {
-        try (BufferedReader employeeReader = new BufferedReader(new FileReader(employeeDataFilePath))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            boolean isMatchingBlock = false;
-
-            while ((line = employeeReader.readLine()) != null) {
-                System.out.println("Reading line: [" + line + "]");
-
-                // Check if the line starts a new employee block
-                if (line.startsWith("EmployeeID: ")) {
-                    String employeeID = line.substring(12).trim();
-                    System.out.println("Comparing identifier: [" + identifier + "] with EmployeeID: [" + employeeID + "]");
-
-                    if (employeeID.equals(identifier)) {
-                        isMatchingBlock = true; // Found matching block
-                        sb.setLength(0); // Clear any previous block data
-                    } else if (isMatchingBlock) {
-                        break; // End of the matching block
-                    }
-                }
-
-                // Append all lines within the matching block
-                if (isMatchingBlock) {
-                    sb.append(line).append("\n");
-                }
-            }
-
-            // Parse and return the employee if a block was found
-            if (isMatchingBlock && sb.length() > 0) {
-                System.out.println("Final employee block to parse:\n" + sb.toString());
-                return parseEmployeeData(sb.toString());
-            } else {
-                System.out.println("No matching employee found for identifier: [" + identifier + "]");
-            }
-        } catch (IOException ex) {
-            System.out.println("Error reading employee data: " + ex.getMessage());
-        }
-
-        return null; // Return null if no match was found
-    }
-
-
-    
-        private Employee parseEmployeeData(String data) {
-        System.out.println("Parsing employee block:\n" + data);
-        String[] lines = data.split("\n");
-        Employee employee = new Employee();
-
-        for (String line : lines) {
-            line = line.trim(); // Remove leading/trailing spaces
-            System.out.println("Parsing line: [" + line + "]");
-
-            if (line.startsWith("EmployeeID: ")) {
-                employee.setEmployeeID(line.substring(12).trim());
-            } else if (line.startsWith("Username: ")) {
-                employee.setUsername(line.substring(10).trim());
-            } else if (line.startsWith("Fullname: ")) {
-                employee.setFullname(line.substring(9).trim()); // Correct substring to extract "Fullname"
-            } else if (line.startsWith("MyKad(NRIC): ")) {
-                employee.setMyKad(line.substring(12).trim());
-            } else if (line.startsWith("Phone No: ")) {
-                employee.setPhoneno(line.substring(10).trim());
-            } else if (line.startsWith("Emergency: ")) {
-                employee.setEmergency(line.substring(10).trim());
-            } else if (line.startsWith("Address Line 1: ")) {
-                employee.setAddLine1(line.substring(16).trim());
-            } else if (line.startsWith("Address Line 2: ")) {
-                employee.setAddLine2(line.substring(16).trim());
-            } else if (line.startsWith("Address Line 3: ")) {
-                employee.setAddLine3(line.substring(16).trim());
-            } else if (line.startsWith("Address Line 4: ")) {
-                employee.setAddLine4(line.substring(16).trim());
-            } else if (line.startsWith("Bank Account: ")) {
-                employee.setBankAcc(line.substring(14).trim());
-            } else if (line.startsWith("Position: ")) {
-                employee.setPosition(line.substring(10).trim());
-            } else if (line.startsWith("Department: ")) {
-                employee.setDepartment(line.substring(12).trim());
-            } else if (line.startsWith("Gross Salary: ")) {
-                employee.setGrossSalary(line.substring(14).trim());
-            } else if (line.startsWith("Gender: ")) {
-                employee.setGender(line.substring(8).trim());
-            } else if (line.startsWith("Company: ")) {
-                employee.setCompany(line.substring(9).trim());
-            } else if (line.startsWith("Start Date: ")) {
-                employee.setStartDate(line.substring(12).trim());
-            } else if (line.startsWith("End Date: ")) {
-                employee.setEndDate(line.substring(10).trim());
-            } else if (line.startsWith("Job Title: ")) {
-                employee.setJobTitle(line.substring(11).trim());
-            } else if (line.startsWith("Overview: ")) {
-                employee.setOverview(line.substring(10).trim());
-            }
-        }
-
-        System.out.println("Parsed Employee Data: ID = [" + employee.getEmployeeID() + "], Fullname = [" + employee.getFullname() + "]");
-        return employee;
-    }
-
-
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -880,12 +732,10 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClear1MouseClicked
 
     private void btnClear1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClear1ActionPerformed
-        // TODO add your handling code here:
-        // Clear all text fields
+        // Clear all text fields 
         txtFullname.setText("");
         txtMyKad.setText("");
-        txtUsername.setText("");
-        txtEmployeeID.setText("");
+        txtEmployeeID.setEditable(false);
         txtPhoneNo.setText("");
         txtEmergency.setText("");
         txtAddLine1.setText("");
@@ -902,84 +752,9 @@ public class EditEmployeeForm extends javax.swing.JFrame {
         txtEndDate.setText("");
         txtJobTitle.setText("");
         txtOverview.setText("");
+        txtUsername.setText("");
         txtPass.setText("");
-    }
 
-        // Employee class to hold employee data
-        class Employee {
-        private String employeeID;
-        private String username;
-        private String fullname;
-        private String myKad;
-        private String phoneno;
-        private String emergency;
-        private String addLine1, addLine2, addLine3, addLine4;
-        private String bankAcc;
-        private String position;
-        private String department;
-        private String grossSalary;
-        private String gender;
-        private String company;
-        private String startDate;
-        private String endDate;
-        private String jobTitle;
-        private String overview;
-
-        // Getters and Setters for each field
-        public String getEmployeeID() { return employeeID; }
-        public void setEmployeeID(String employeeID) { this.employeeID = employeeID; }
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-        public String getFullname() { return fullname; }
-        public void setFullname(String fullname) { this.fullname = fullname; }
-        public String getMyKad() { return myKad; }
-        public void setMyKad(String myKad) { this.myKad = myKad; }
-        public String getPhoneno() { return phoneno; }
-        public void setPhoneno(String phoneno) { this.phoneno = phoneno; }
-        public String getEmergency() { return emergency; }
-        public void setEmergency(String emergency) { this.emergency = emergency; }
-        public String getAddLine1() { return addLine1; }
-        public void setAddLine1(String addLine1) { this.addLine1 = addLine1; }
-        public String getAddLine2() { return addLine2; }
-        public void setAddLine2(String addLine2) { this.addLine2 = addLine2; }
-        public String getAddLine3() { return addLine3; }
-        public void setAddLine3(String addLine3) { this.addLine3 = addLine3; }
-        public String getAddLine4() { return addLine4; }
-        public void setAddLine4(String addLine4) { this.addLine4 = addLine4; }
-        public String getBankAcc() { return bankAcc; }
-        public void setBankAcc(String bankAcc) { this.bankAcc = bankAcc; }
-        public String getPosition() { return position; }
-        public void setPosition(String position) { this.position = position; }
-        public String getDepartment() { return department; }
-        public void setDepartment(String department) { this.department = department; }
-        public String getGrossSalary() { return grossSalary; }
-        public void setGrossSalary(String grossSalary) { this.grossSalary = grossSalary; }
-        public String getGender() { return gender; }
-        public void setGender(String gender) { this.gender = gender; }
-        public String getCompany() { return company; }
-        public void setCompany(String company) { this.company = company; }
-        public String getStartDate() { return startDate; }
-        public void setStartDate(String startDate) { this.startDate = startDate; }
-        public String getEndDate() { return endDate; }
-        public void setEndDate(String endDate) { this.endDate = endDate; }
-        public String getJobTitle() { return jobTitle; }
-        public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
-        public String getOverview() { return overview; }
-        public void setOverview(String overview) { this.overview = overview; }
-    }
-
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new Loginpage1().setVisible(true);
-                //new Registerpage1().setVisible(true);
-                //new AdminPage().setVisible(true);
-            }
-        });
     }//GEN-LAST:event_btnClear1ActionPerformed
 
     private void txtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassActionPerformed
@@ -991,178 +766,48 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateMouseClicked
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // TODO add your handling code here:
-        // Collect updated data from form fields
-        String currentEmployeeID = txtEmployeeID.getText(); // Get the current email (if you need to identify the employee)
-        String employeeID = txtEmployeeID.getText();
-        String username = txtUsername.getText();
-        
+        // Validate inputs
         if (txtEmployeeID.getText().isEmpty() || txtUsername.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "EmployeeID or Username field is empty.");
             return;
         }
 
-        String fullname = txtFullname.getText();
-        String mykad = txtMyKad.getText();
-        String phoneno = txtPhoneNo.getText();
-        String emergency = txtEmergency.getText();
-        String addline1 = txtAddLine1.getText();
-        String addline2 = txtAddLine2.getText();
-        String addline3 = txtAddLine3.getText();
-        String addline4 = txtAddLine4.getText();
-        String bankacc = txtBankAcc.getText();
-        String position = txtPosition.getText();
-        String department = txtDepartment.getText();
-        String grosssalary = txtGrossSalary.getText();
-        String gender = txtGender.getText();
-        String company = txtCompany.getText();
-        String startdate = txtStartDate.getText();
-        String enddate = txtEndDate.getText();
-        String jobtitle = txtJobTitle.getText();
-        String overview = txtOverview.getText();
-        String password = txtPass.getText();
+        // Create employee object from form data
+        Employee employee = new Employee();
+        employee.setEmployeeID(txtEmployeeID.getText());
+        employee.setUsername(txtUsername.getText());
+        employee.setFullname(txtFullname.getText());
+        employee.setMyKad(txtMyKad.getText());
+        employee.setPhoneno(txtPhoneNo.getText());
+        employee.setEmergency(txtEmergency.getText());
+        employee.setAddLine1(txtAddLine1.getText());
+        employee.setAddLine2(txtAddLine2.getText());
+        employee.setAddLine3(txtAddLine3.getText());
+        employee.setAddLine4(txtAddLine4.getText());
+        employee.setBankAcc(txtBankAcc.getText());
+        employee.setPosition(txtPosition.getText());
+        employee.setDepartment(txtDepartment.getText());
+        employee.setGrossSalary(txtGrossSalary.getText());
+        employee.setGender(txtGender.getText());
+        employee.setCompany(txtCompany.getText());
+        employee.setStartDate(txtStartDate.getText());
+        employee.setEndDate(txtEndDate.getText());
+        employee.setJobTitle(txtJobTitle.getText());
+        employee.setOverview(txtOverview.getText());
 
-        // Validate all fields are filled
-        if (fullname.isEmpty() || username.isEmpty() || mykad.isEmpty() || employeeID.isEmpty() || phoneno.isEmpty() || emergency.isEmpty() ||
-            addline1.isEmpty() || bankacc.isEmpty() || position.isEmpty() ||
-            department.isEmpty() || grosssalary.isEmpty() || gender.isEmpty() || company.isEmpty() ||
-            startdate.isEmpty() || jobtitle.isEmpty() || overview.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
-            return;
-        }
+        // Call backend method to update data
+        boolean success = employeeManager.updateEmployeeData(employee);
 
-        // Prepare the updated employee data string
-        String updatedEmployeeData = String.format("""
-                                                   EmployeeID: %s
-                                                   Username: %s
-                                                   Fullname: %s
-                                                   MyKad(NRIC): %s
-                                                   Phone No: %s
-                                                   Emergency: %s
-                                                   Address Line 1: %s
-                                                   Address Line 2: %s
-                                                   Address Line 3: %s
-                                                   Address Line 4: %s
-                                                   Bank Account: %s
-                                                   Position: %s
-                                                   Department: %s
-                                                   Gross Salary: %s
-                                                   Gender: %s
-                                                   Company: %s
-                                                   Start Date: %s
-                                                   End Date: %s
-                                                   Job Title: %s
-                                                   Overview: %s
-                                                   Status: %s
-                                                   """,
-            employeeID, username, fullname, mykad, phoneno, emergency, addline1, addline2, addline3, addline4,
-            bankacc, position, department, grosssalary, gender, company, startdate, enddate, jobtitle, overview, "Active"
-        );
+        if (success) {
+            JOptionPane.showMessageDialog(null, "Employee data updated successfully.");
 
-        // Update Employee_data.txt
-        File employeeDataFile = new File("src/txtFile/Employee_data.txt");
-        File tempEmployeeFile = new File("src/txtFile/Employee_data_temp.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(employeeDataFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempEmployeeFile))) {
-
-            String line;
-            boolean employeeFound = false;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("EmployeeID: " + currentEmployeeID) || line.startsWith("Username: " + txtUsername.getText())) {
-                // Match found, replace existing employee data
-                writer.write(updatedEmployeeData); // Write updated data
-                writer.flush();
-                // Skip lines of the existing employee data
-                for (int i = 0; i < 21; i++) {
-                    reader.readLine(); // skip the next 18 lines after the match line
-                }
-                employeeFound = true;
-                } else {
-                    // Preserve other employee data
-                    writer.write(line + "\n");
-                }
-            }
-
-            if (!employeeFound) {
-                JOptionPane.showMessageDialog(null, "Employee not found.");
-                return;
-            }
-
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error updating employee data: " + ex.getMessage());
-            ex.printStackTrace(); // Log the exception for debugging
-            return;
-        }
-
-        // Delete the original Employee_data.txt file and rename the temporary file
-        try {
-            Files.deleteIfExists(employeeDataFile.toPath()); // Delete original file if exists
-            if (!tempEmployeeFile.renameTo(employeeDataFile)) {
-                throw new IOException("Could not rename temporary file to original file.");
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error renaming temporary file: " + ex.getMessage());
-            ex.printStackTrace(); // Log the exception for debugging
-            return;
-        }
-
-        // Update user credentials in user_credentials.txt
-        File credentialsFile = new File("src/txtFile/user_credentials.txt");
-        File tempCredentialsFile = new File("src/txtFile/user_credentials_temp.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(credentialsFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempCredentialsFile))) {
-
-            String line;
-            boolean userFound = false;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("EmployeeID: " + currentEmployeeID)) {
-                    writer.write(String.format("EmployeeID: %s\nUsername: %s\nPassword: %s\nPosition: %s\nStatus: %s\nFailedAttempts: %s\n\n",
-                        employeeID, txtUsername.getText(), password, position, "Active", "0"));
-                    writer.flush();
-                    reader.readLine(); // skip username line
-                    reader.readLine(); // skip password line
-                    reader.readLine(); // skip role line
-                    reader.readLine(); // skip status line
-                    reader.readLine(); // skip failed attempts line
-                    userFound = true;
-                } else {
-                    // Preserve other user credentials
-                    writer.write(line + "\n");
-                }
-            }
-
-            if (!userFound) {
-                JOptionPane.showMessageDialog(null, "User not found.");
-                return;
-            }
-
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error updating user credentials: " + ex.getMessage());
-            ex.printStackTrace(); // Log the exception for debugging
-            return;
-        }
-
-        // Delete the original user_credentials.txt file and rename the temporary file
-        try {
-            Files.deleteIfExists(credentialsFile.toPath()); // Delete original file if exists
-            if (!tempCredentialsFile.renameTo(credentialsFile)) {
-                throw new IOException("Could not rename temporary file to original file.");
-            }
-            JOptionPane.showMessageDialog(null, "Employee data and credentials updated successfully.");
-            
-            // Close the registration form
-                this.dispose();
-                
-            // Navigate back to AdminPage
-            AdminPage adminPage = new AdminPage(txtUsername.getText()); // Pass identifier if needed
+            // Open AdminPage after closing current frame
+            AdminPage adminPage = new AdminPage(employee.getEmployeeID());
             adminPage.setVisible(true);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error renaming temporary credentials file: " + ex.getMessage());
-            ex.printStackTrace(); // Log the exception for debugging
+
+            this.dispose(); // Close current window after opening AdminPage
+        } else {
+            JOptionPane.showMessageDialog(null, "Error updating employee.");
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -1220,4 +865,5 @@ public class EditEmployeeForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtStartDate;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+
 }

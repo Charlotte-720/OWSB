@@ -36,7 +36,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         
         initComponents();
         populateMonthComboBox();
-        labelRole.setText("Finance Manager, " + this.employeeID);
+        jLabel1.setText("Finance Manager, " + this.employeeID);
 
         comboMonth.addActionListener(e -> {
             String selected = (String) comboMonth.getSelectedItem();
@@ -88,7 +88,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         btnLogout = new javax.swing.JButton();
         btnViewProductRequisition = new javax.swing.JButton();
         labelWelcome = new javax.swing.JLabel();
-        labelRole = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         summaryPanel = new javax.swing.JPanel();
         labelFinancialSummary = new javax.swing.JLabel();
         labelTotalPO = new javax.swing.JLabel();
@@ -213,11 +213,11 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         maincontentPanel.add(labelWelcome);
         labelWelcome.setBounds(280, 90, 280, 40);
 
-        labelRole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        labelRole.setForeground(new java.awt.Color(102, 102, 102));
-        labelRole.setText("Finance Manager, <employeeID>");
-        maincontentPanel.add(labelRole);
-        labelRole.setBounds(280, 130, 220, 20);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("Finance Manager, <employeeID>");
+        maincontentPanel.add(jLabel1);
+        jLabel1.setBounds(280, 130, 220, 20);
 
         summaryPanel.setBackground(new java.awt.Color(255, 226, 226));
 
@@ -378,9 +378,9 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     private javax.swing.JLabel displayPending;
     private javax.swing.JLabel displayTotalPO;
     private javax.swing.JLabel displayTotalPayment;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelFinancialSummary;
     private javax.swing.JLabel labelPending;
-    private javax.swing.JLabel labelRole;
     private javax.swing.JLabel labelTotalPO;
     private javax.swing.JLabel labelTotalPayment;
     private javax.swing.JLabel labelWelcome;

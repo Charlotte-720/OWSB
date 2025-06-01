@@ -92,10 +92,8 @@
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="thresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="thresholdInputField" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="thresholdInputField" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
                       <Component id="updateThresholdButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="27" max="32767" attributes="0"/>

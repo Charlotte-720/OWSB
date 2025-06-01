@@ -5,6 +5,7 @@
 package Admin;
 
 import PurchaseManager.viewrequisition;
+import SalesManager.PROperations;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -12,6 +13,8 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  * @author ELYSHA SOPHIA
  */
 public class Menu4 extends javax.swing.JInternalFrame {
+
+    private String employeeID;
 
     /**
      * Creates new form Menu1
@@ -98,14 +101,14 @@ public class Menu4 extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
         viewrequisition view = new viewrequisition(this);
         view.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-
+        PROperations pr = new PROperations(this.employeeID, this);
+        pr.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

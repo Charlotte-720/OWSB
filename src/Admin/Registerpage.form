@@ -88,71 +88,74 @@
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="txtBankAcc" min="-2" pref="240" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="txtDepartment" pref="240" max="32767" attributes="0"/>
+                                              <Component id="txtGender" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="lblGrossSalary" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblGender" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="txtGrossSalary" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                          <Component id="lblBankAcc" min="-2" pref="140" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="lblOverview" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="117" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Component id="txtJobTitle" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtOverview" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="lblPosition" min="-2" max="-2" attributes="0"/>
                                           <Component id="txtPosition" pref="240" max="32767" attributes="0"/>
                                           <Component id="lblDepartment" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="txtMyKad" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="lblJobTitle" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="lblStartDate" max="32767" attributes="0"/>
-                                                  <Component id="txtStartDate" max="32767" attributes="0"/>
-                                              </Group>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" attributes="0">
-                                                      <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
-                                                      <Component id="lblEndDate" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Component id="txtEndDate" max="32767" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                          <Group type="102" attributes="0">
-                                              <Component id="lblCompany" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="txtCompany" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <Component id="lblMyKad" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="txtBankAcc" min="-2" pref="240" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="txtDepartment" pref="240" max="32767" attributes="0"/>
-                                                  <Component id="txtGender" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="lblGrossSalary" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="lblGender" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="txtGrossSalary" max="32767" attributes="0"/>
-                                              </Group>
+                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="lblStartDate" max="32767" attributes="0"/>
+                                              <Component id="txtStartDate" max="32767" attributes="0"/>
                                           </Group>
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                              <Component id="lblBankAcc" min="-2" pref="140" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
+                                                  <Component id="lblEndDate" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Component id="txtEndDate" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <Component id="lblOverview" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="lblCompany" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="txtCompany" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="lblWorkExperinced" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblJobTitle" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="txtJobTitle" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="txtOverview" alignment="0" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
-                              <Component id="lblMyKad" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -168,6 +171,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblFullname" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblMyKad" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblWorkExperinced" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -897,6 +901,17 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtUsernameActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblWorkExperinced">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="4" green="59" red="48" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Work Experinced : "/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnRegister">
           <Properties>

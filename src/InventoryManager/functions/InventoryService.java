@@ -9,6 +9,7 @@ import model.Item;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,32 +78,34 @@ public class InventoryService {
 
     
     
+    
     // Load POs from txtFile/po.txt
     public static List<PurchaseOrder> loadPOsFromFile(String filePath) {
         List<PurchaseOrder> poList = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            List<Item> allItems = loadItemsFromFile("src/txtFile/items.txt"); 
+            List<Item> allItems = loadItemsFromFile("src/txtFile/items.txt");
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 8) {
+                String[] parts = line.split(", ");
+                if (parts.length == 9) {
                     String poID = parts[0].split(": ")[1].trim();
-                    String supplierName = parts[1].split(": ")[1].trim();
-                    String itemName = parts[2].split(": ")[1].trim();
-                    String quantity = parts[3].split(": ")[1].trim();
-                    String unitPrice = parts[4].split(": ")[1].trim();
-                    String totalPrice = parts[5].split(": ")[1].trim();
-                    String date = parts[6].split(": ")[1].trim();
-                    String status = parts[7].split(": ")[1].trim();
+                    String itemID = parts[1].split(": ")[1].trim();
+                    String supplierID = parts[2].split(": ")[1].trim();
+                    String itemName = parts[3].split(": ")[1].trim();
+                    int quantity = Integer.parseInt(parts[4].split(": ")[1].trim());
+                    double unitPrice = Double.parseDouble(parts[5].split(": ")[1].trim());
+                    double totalPrice = Double.parseDouble(parts[6].split(": ")[1].trim());
+                    LocalDate date = LocalDate.parse(parts[7].split(": ")[1].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    String status = parts[8].split(": ")[1].trim();
 
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierName, itemName, quantity, unitPrice, totalPrice, date, status, "-");
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, "UNKNOWN", itemID, itemName, String.valueOf(quantity), String.valueOf(unitPrice), String.valueOf(totalPrice), date.toString(), status, "-");
 
-                    // ✅ Find and attach matching item by name
+                    // ✅ Match items by Item ID instead of Item Name
                     List<Item> matchedItems = new ArrayList<>();
                     for (Item item : allItems) {
-                        if (item.getItemName().equalsIgnoreCase(itemName)) {
+                        if (item.getItemID().equals(itemID)) {
                             matchedItems.add(item);
                             break;
                         }
@@ -112,12 +115,13 @@ public class InventoryService {
                     poList.add(po);
                 }
             }
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException | NullPointerException | NumberFormatException e) {
             e.printStackTrace();
         }
 
         return poList;
     }
+
 
 
 
