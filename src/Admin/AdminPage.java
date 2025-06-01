@@ -298,7 +298,7 @@ public class AdminPage extends javax.swing.JFrame {
         this.dispose();
 
         // Open AdminTest frame
-        AdminTest adminTest = new AdminTest("exampleIdentifier:Position"); // Pass identifier to AdminTest
+        AdminTest adminTest = new AdminTest("1001"); // Pass identifier to AdminTest
         adminTest.setVisible(true);
         adminTest.pack();
         adminTest.setLocationRelativeTo(null);
@@ -405,7 +405,7 @@ public class AdminPage extends javax.swing.JFrame {
         this.dispose();
 
         // Open AdminTest frame
-        AdminTest adminTest = new AdminTest("exampleIdentifier:Position"); // Pass identifier to AdminTest
+        AdminTest adminTest = new AdminTest("1001"); // Pass identifier to AdminTest
         adminTest.setVisible(true);
         adminTest.pack();
         adminTest.setLocationRelativeTo(null);

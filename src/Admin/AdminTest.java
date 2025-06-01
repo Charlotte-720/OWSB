@@ -36,7 +36,7 @@ public class AdminTest extends javax.swing.JFrame {
         System.out.println("EmployeeID: " + employeeID);
         System.out.println("Position: " + position);
        
-        jLabel3.setText("Admin, " + this.employeeID);
+        jLabel3.setText("Admin, 1001");
         
         DefaultColor=new Color(255,204,102);
         ClickedColor=new Color(255,204,51);
