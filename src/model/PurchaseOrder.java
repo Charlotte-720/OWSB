@@ -2,10 +2,11 @@ package model;
 
 import java.util.List;
 
-
 public class PurchaseOrder {
     private String poID;
+    private String supplierID;
     private String supplierName;
+    private String itemID;
     private String item;
     private String quantity;
     private String unitPrice;
@@ -14,10 +15,12 @@ public class PurchaseOrder {
     private String status;  
     private List<Item> items; // for inventory manager role
     private String flagReason;
-    
-    public PurchaseOrder(String poID, String supplierName, String item, String quantity, String unitPrice, String totalPrice, String date, String status, String flagReason) {
+
+    public PurchaseOrder(String poID, String supplierID, String supplierName, String itemID, String item, String quantity, String unitPrice, String totalPrice, String date, String status, String flagReason) {
         this.poID = poID;
+        this.supplierID = supplierID;
         this.supplierName = supplierName;
+        this.itemID = itemID;
         this.item = item;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -26,18 +29,31 @@ public class PurchaseOrder {
         this.status = status;
         this.flagReason = flagReason;
     }
-    
-    //setter for IM
+
+    // Setters
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    // Getters
     public String getPoID() {
         return poID;
     }
 
+    public String getSupplierID() {
+        return supplierID;
+    }
+
     public String getSupplierName() {
         return supplierName;
+    }
+
+    public String getItemID() {
+        return itemID;
     }
 
     public String getItem() {
@@ -51,11 +67,11 @@ public class PurchaseOrder {
     public String getUnitPrice() {
         return unitPrice;
     }
-    
+
     public String getTotalPrice() {
         return totalPrice;
     }
-    
+
     public String getDate() {
         return date;
     }
@@ -63,18 +79,12 @@ public class PurchaseOrder {
     public String getStatus() {
         return status;
     }
-    
+
     public String getFlagReason() {
         return flagReason;
     }
-    
-    // Add getters and setters for items
+
     public List<Item> getItems() {
         return items;
     }
-    
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-    
 }
