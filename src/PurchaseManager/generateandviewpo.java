@@ -1,5 +1,7 @@
 package PurchaseManager;
 
+
+
 import PurchaseManager.Function.deletefc;
 import PurchaseManager.addPO;
 import java.awt.Color;
@@ -28,10 +30,10 @@ public class generateandviewpo extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        edit = new PurchaseManager.button();
-        delete = new PurchaseManager.button();
-        add = new PurchaseManager.button();
-        back = new PurchaseManager.button();
+        back1 = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        edit = new javax.swing.JButton();
+        add = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(225, 230, 245));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -86,47 +88,43 @@ public class generateandviewpo extends javax.swing.JPanel {
         jTable1.setRowHeight(25);
         jScrollPane1.setViewportView(jTable1);
 
-        edit.setBackground(new java.awt.Color(85, 85, 110));
-        edit.setForeground(new java.awt.Color(220, 220, 220));
-        edit.setText("Edit");
-        edit.setRound(20);
-        edit.setShadowColor(new java.awt.Color(0, 0, 0));
-        edit.addActionListener(new java.awt.event.ActionListener() {
+        back1.setBackground(new java.awt.Color(85, 85, 110));
+        back1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        back1.setForeground(new java.awt.Color(220, 220, 220));
+        back1.setText("Back");
+        back1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editActionPerformed(evt);
+                back1ActionPerformed(evt);
             }
         });
 
         delete.setBackground(new java.awt.Color(85, 85, 110));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         delete.setForeground(new java.awt.Color(220, 220, 220));
         delete.setText("Delete");
-        delete.setRound(20);
-        delete.setShadowColor(new java.awt.Color(0, 0, 0));
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteActionPerformed(evt);
             }
         });
 
-        add.setBackground(new java.awt.Color(85, 85, 110));
-        add.setForeground(new java.awt.Color(220, 220, 220));
-        add.setText("Add");
-        add.setRound(20);
-        add.setShadowColor(new java.awt.Color(0, 0, 0));
-        add.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                addMouseClicked(evt);
+        edit.setBackground(new java.awt.Color(85, 85, 110));
+        edit.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        edit.setForeground(new java.awt.Color(220, 220, 220));
+        edit.setText("Edit");
+        edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editActionPerformed(evt);
             }
         });
 
-        back.setBackground(new java.awt.Color(85, 85, 110));
-        back.setForeground(new java.awt.Color(220, 220, 220));
-        back.setText("Back");
-        back.setRound(20);
-        back.setShadowColor(new java.awt.Color(0, 0, 0));
-        back.addActionListener(new java.awt.event.ActionListener() {
+        add.setBackground(new java.awt.Color(85, 85, 110));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        add.setForeground(new java.awt.Color(220, 220, 220));
+        add.setText("Add");
+        add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backActionPerformed(evt);
+                addActionPerformed(evt);
             }
         });
 
@@ -135,21 +133,24 @@ public class generateandviewpo extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cancel))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancel))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(92, 92, 92)
-                        .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(84, 84, 84)
-                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                        .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 38, Short.MAX_VALUE)
+                        .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(back1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
@@ -159,18 +160,18 @@ public class generateandviewpo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(29, 29, 29)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                    .addComponent(back1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -183,32 +184,14 @@ public class generateandviewpo extends javax.swing.JPanel {
     pmFrame.setLocationRelativeTo(null); 
     }//GEN-LAST:event_cancelMouseClicked
 
-    // go to add panel
-    private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-       addPO addPO = new addPO(this); // Opens the Add Purchase Order JFrame
-    }//GEN-LAST:event_addMouseClicked
+    private void back1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back1ActionPerformed
+        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        currentFrame.dispose();
+        PM pmFrame = new PM("exampleFinanceManager"); 
+        pmFrame.setVisible(true);
+        pmFrame.setLocationRelativeTo(null);
+    }//GEN-LAST:event_back1ActionPerformed
 
-    //edit funcation 
-    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
-        int selectedRow = jTable1.getSelectedRow();
-            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Please select a row to edit.");
-                return;
-            }
-
-            // Assume first column is PO_ID
-            String poId = jTable1.getValueAt(selectedRow, 0).toString();
-            String filePath = "src/txtFile/po.txt";
-            
-            boolean success = editPO.editPO(parentFrame, poId, filePath);
-
-            if (success) {
-                loadPOData(); // refresh the table
-            }
-    }//GEN-LAST:event_editActionPerformed
-
-    // delete funcation
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         int selectedRow = jTable1.getSelectedRow();
 
@@ -236,15 +219,30 @@ public class generateandviewpo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteActionPerformed
 
-    // back function
-    private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
-        JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        currentFrame.dispose();
-        PM pmFrame = new PM("exampleFinanceManager"); 
-        pmFrame.setVisible(true);
-        pmFrame.setLocationRelativeTo(null);
-    }//GEN-LAST:event_backActionPerformed
-    
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Please select a row to edit.");
+                return;
+            }
+
+            // Assume first column is PO_ID
+            String poId = jTable1.getValueAt(selectedRow, 0).toString();
+            String filePath = "src/txtFile/po.txt";
+            
+            boolean success = editPO.editPO(parentFrame, poId, filePath);
+
+            if (success) {
+                loadPOData(); // refresh the table
+            }
+    }//GEN-LAST:event_editActionPerformed
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        addPO addPO = new addPO(this); // Opens the Add Purchase Order JFrame
+    }//GEN-LAST:event_addActionPerformed
+
+   
     
     // read the txt file and show it (read function)
     public void loadPOData() {
@@ -398,11 +396,13 @@ public class generateandviewpo extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PurchaseManager.button add;
-    private PurchaseManager.button back;
+    private javax.swing.JButton add;
+    private javax.swing.JButton back1;
+    private javax.swing.JButton back3;
+    private javax.swing.JButton back4;
     private javax.swing.JLabel cancel;
-    private PurchaseManager.button delete;
-    private PurchaseManager.button edit;
+    private javax.swing.JButton delete;
+    private javax.swing.JButton edit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

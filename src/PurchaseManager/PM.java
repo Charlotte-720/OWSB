@@ -33,6 +33,8 @@ public class PM extends javax.swing.JFrame {
         System.out.println("Position: " + position);
         
         initComponents();
+        // Update the label to show the actual user ID
+        jLabel1.setText("Purchase Manager, " + this.employeeID);
         this.setLocationRelativeTo(null);
         
         updatedata.loadstatusPOData(jTable1);
@@ -45,11 +47,11 @@ public class PM extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         logout = new javax.swing.JLabel();
-        ViewItem = new PurchaseManager.button();
-        ViewSuppliers = new PurchaseManager.button();
-        ViewRequisition = new PurchaseManager.button();
-        GenerateViewPO = new PurchaseManager.button();
         home1 = new javax.swing.JLabel();
+        ViewItem = new javax.swing.JButton();
+        ViewSuppliers = new javax.swing.JButton();
+        ViewRequisition = new javax.swing.JButton();
+        GenerateViewPO = new javax.swing.JButton();
         wlc = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -61,10 +63,10 @@ public class PM extends javax.swing.JFrame {
         Approve = new javax.swing.JLabel();
         Pending = new javax.swing.JLabel();
         Paid = new javax.swing.JLabel();
-        moredetail = new PurchaseManager.button();
         Received = new javax.swing.JLabel();
         Verified = new javax.swing.JLabel();
         Flagged = new javax.swing.JLabel();
+        moredetail = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -82,13 +84,16 @@ public class PM extends javax.swing.JFrame {
             }
         });
 
+        home1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        home1.setForeground(new java.awt.Color(220, 220, 220));
+        home1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        home1.setText("Dashboard");
+
         ViewItem.setBackground(new java.awt.Color(85, 85, 110));
+        ViewItem.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         ViewItem.setForeground(new java.awt.Color(220, 220, 220));
         ViewItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-items-30.png"))); // NOI18N
         ViewItem.setText("View Item");
-        ViewItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        ViewItem.setRound(20);
-        ViewItem.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewItemActionPerformed(evt);
@@ -96,12 +101,10 @@ public class PM extends javax.swing.JFrame {
         });
 
         ViewSuppliers.setBackground(new java.awt.Color(85, 85, 110));
+        ViewSuppliers.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         ViewSuppliers.setForeground(new java.awt.Color(220, 220, 220));
-        ViewSuppliers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-supplier-30.png"))); // NOI18N
+        ViewSuppliers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon- supplier.png"))); // NOI18N
         ViewSuppliers.setText("View Suppliers");
-        ViewSuppliers.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        ViewSuppliers.setRound(20);
-        ViewSuppliers.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewSuppliers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewSuppliersActionPerformed(evt);
@@ -109,12 +112,10 @@ public class PM extends javax.swing.JFrame {
         });
 
         ViewRequisition.setBackground(new java.awt.Color(85, 85, 110));
+        ViewRequisition.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         ViewRequisition.setForeground(new java.awt.Color(220, 220, 220));
-        ViewRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - inventory.png"))); // NOI18N
+        ViewRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - pr.png"))); // NOI18N
         ViewRequisition.setText("View Requisition");
-        ViewRequisition.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        ViewRequisition.setRound(20);
-        ViewRequisition.setShadowColor(new java.awt.Color(0, 0, 0));
         ViewRequisition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewRequisitionActionPerformed(evt);
@@ -122,22 +123,15 @@ public class PM extends javax.swing.JFrame {
         });
 
         GenerateViewPO.setBackground(new java.awt.Color(85, 85, 110));
+        GenerateViewPO.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         GenerateViewPO.setForeground(new java.awt.Color(220, 220, 220));
-        GenerateViewPO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
-        GenerateViewPO.setText("Generate PO and View");
-        GenerateViewPO.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        GenerateViewPO.setRound(20);
-        GenerateViewPO.setShadowColor(new java.awt.Color(0, 0, 0));
+        GenerateViewPO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - ManagePO btn.png"))); // NOI18N
+        GenerateViewPO.setText("Generate and View PO");
         GenerateViewPO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GenerateViewPOActionPerformed(evt);
             }
         });
-
-        home1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        home1.setForeground(new java.awt.Color(220, 220, 220));
-        home1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        home1.setText("Dashboard");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -147,14 +141,11 @@ public class PM extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(GenerateViewPO, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                            .addComponent(ViewRequisition, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ViewSuppliers, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ViewItem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(home1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(ViewItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ViewSuppliers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ViewRequisition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(GenerateViewPO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -162,15 +153,15 @@ public class PM extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addComponent(home1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addComponent(ViewItem, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(ViewSuppliers, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(ViewRequisition, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(GenerateViewPO, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
+                .addGap(83, 83, 83)
+                .addComponent(ViewItem, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(ViewSuppliers, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(ViewRequisition, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(GenerateViewPO, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(logout)
                 .addGap(46, 46, 46))
         );
@@ -250,17 +241,6 @@ public class PM extends javax.swing.JFrame {
         Paid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Paid.setText("Paid            :");
 
-        moredetail.setBackground(new java.awt.Color(85, 85, 110));
-        moredetail.setForeground(new java.awt.Color(220, 220, 220));
-        moredetail.setText("More Detail");
-        moredetail.setRound(20);
-        moredetail.setShadowColor(new java.awt.Color(0, 0, 0));
-        moredetail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moredetailActionPerformed(evt);
-            }
-        });
-
         Received.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         Received.setForeground(new java.awt.Color(220, 220, 220));
         Received.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -275,6 +255,16 @@ public class PM extends javax.swing.JFrame {
         Flagged.setForeground(new java.awt.Color(220, 220, 220));
         Flagged.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Flagged.setText("Flagged      :");
+
+        moredetail.setBackground(new java.awt.Color(85, 85, 110));
+        moredetail.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        moredetail.setForeground(new java.awt.Color(220, 220, 220));
+        moredetail.setText("More Detail");
+        moredetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moredetailActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -295,9 +285,9 @@ public class PM extends javax.swing.JFrame {
                     .addComponent(Verified))
                 .addContainerGap(105, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addContainerGap()
+                .addComponent(moredetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,9 +311,9 @@ public class PM extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(Flagged))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(moredetail, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout wlcLayout = new javax.swing.GroupLayout(wlc);
@@ -352,34 +342,13 @@ public class PM extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         getContentPane().add(wlc, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 550, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    // go to other panel
-    private void ViewSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewSuppliersActionPerformed
-        viewsuppliers Viewsuppliers = new viewsuppliers();
-        Viewsuppliers.setVisible(true);
-    }//GEN-LAST:event_ViewSuppliersActionPerformed
-
-    private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
-        viewrequisition view = new viewrequisition(this);
-        view.setVisible(true);
-    }//GEN-LAST:event_ViewRequisitionActionPerformed
-
-    private void GenerateViewPOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPOActionPerformed
-        JFrame frame = new JFrame("Generate and View PO");
-        frame.setContentPane(new generateandviewpo());
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_GenerateViewPOActionPerformed
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
         // TODO add your handling code here:
@@ -409,7 +378,17 @@ public class PM extends javax.swing.JFrame {
         Viewitem.setVisible(true);
     }//GEN-LAST:event_ViewItemActionPerformed
 
-    private void moredetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moredetailActionPerformed
+    private void ViewSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewSuppliersActionPerformed
+        viewsuppliers Viewsuppliers = new viewsuppliers();
+        Viewsuppliers.setVisible(true);
+    }//GEN-LAST:event_ViewSuppliersActionPerformed
+
+    private void ViewRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRequisitionActionPerformed
+        viewrequisition view = new viewrequisition(this);
+        view.setVisible(true);
+    }//GEN-LAST:event_ViewRequisitionActionPerformed
+
+    private void GenerateViewPOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPOActionPerformed
         JFrame frame = new JFrame("Generate and View PO");
         frame.setContentPane(new generateandviewpo());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -417,7 +396,17 @@ public class PM extends javax.swing.JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_moredetailActionPerformed
+    }//GEN-LAST:event_GenerateViewPOActionPerformed
+
+    private void moredetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateViewPO1ActionPerformed
+        JFrame frame = new JFrame("Generate and View PO");
+        frame.setContentPane(new generateandviewpo());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_GenerateViewPO1ActionPerformed
 
     //show the number of how many reject, pendinf ...
     private void readAndCountStatuses() {
@@ -490,16 +479,16 @@ public class PM extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Approve;
     private javax.swing.JLabel Flagged;
-    private PurchaseManager.button GenerateViewPO;
+    private javax.swing.JButton GenerateViewPO;
     private javax.swing.JLabel PO;
     private javax.swing.JLabel Paid;
     private javax.swing.JLabel Pending;
     private javax.swing.JLabel Received;
     private javax.swing.JLabel Reject;
     private javax.swing.JLabel Verified;
-    private PurchaseManager.button ViewItem;
-    private PurchaseManager.button ViewRequisition;
-    private PurchaseManager.button ViewSuppliers;
+    private javax.swing.JButton ViewItem;
+    private javax.swing.JButton ViewRequisition;
+    private javax.swing.JButton ViewSuppliers;
     private javax.swing.JLabel home1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
@@ -508,7 +497,7 @@ public class PM extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel logout;
-    private PurchaseManager.button moredetail;
+    private javax.swing.JButton moredetail;
     private javax.swing.JPanel wlc;
     // End of variables declaration//GEN-END:variables
 }
