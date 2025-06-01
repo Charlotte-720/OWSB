@@ -8,24 +8,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import model.MonthlySummary;
 
 /**
  *
  * @author charl
  */
 public class FinanceSummaryHelper {
-    public static class MonthlySummary {
-        public int totalPO;
-        public double totalPayment;
-        public int pendingPO;
-
-        public MonthlySummary(int totalPO, double totalPayment, int pendingPO) {
-            this.totalPO = totalPO;
-            this.totalPayment = totalPayment;
-            this.pendingPO = pendingPO;
-        }
-    }
-
     public static MonthlySummary loadSummaryFor(String selectedMonthYear) {
         int totalPO = 0;
         double totalPayment = 0;

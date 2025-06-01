@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import model.MonthlySummary;
 
 /**
  *
@@ -61,11 +62,11 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
     }
     
     private void loadSelectedMonthSummary(String selectedMonthYear) {
-        FinanceSummaryHelper.MonthlySummary summary = FinanceSummaryHelper.loadSummaryFor(selectedMonthYear);
+        MonthlySummary summary = FinanceSummaryHelper.loadSummaryFor(selectedMonthYear);
 
-        displayTotalPO.setText(String.valueOf(summary.totalPO));
-        displayTotalPayment.setText("RM " + String.format("%.2f", summary.totalPayment));
-        displayPending.setText(String.valueOf(summary.pendingPO));
+        displayTotalPO.setText(String.valueOf(summary.getTotalPO()));
+        displayTotalPayment.setText("RM " + String.format("%.2f", summary.getTotalPayment()));
+        displayPending.setText(String.valueOf(summary.getPendingPO()));
     }
 
  
