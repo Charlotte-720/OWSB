@@ -36,6 +36,7 @@ public class AdminTest extends javax.swing.JFrame {
         System.out.println("EmployeeID: " + employeeID);
         System.out.println("Position: " + position);
        
+        jLabel3.setText("Admin, " + this.employeeID);
         
         DefaultColor=new Color(255,204,102);
         ClickedColor=new Color(255,204,51);
@@ -90,6 +91,7 @@ public class AdminTest extends javax.swing.JFrame {
         logoutButton = new javax.swing.JButton();
         jDesktopPanel = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 221, 204));
@@ -420,7 +422,12 @@ public class AdminTest extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(32, 52, 15));
         jLabel2.setText("Welcome to Admin Page!");
 
+        jLabel3.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(32, 52, 15));
+        jLabel3.setText("Admin, ");
+
         jDesktopPanel.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPanel.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPanelLayout = new javax.swing.GroupLayout(jDesktopPanel);
         jDesktopPanel.setLayout(jDesktopPanelLayout);
@@ -430,13 +437,19 @@ public class AdminTest extends javax.swing.JFrame {
                 .addGap(160, 160, 160)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(169, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(315, 315, 315))
         );
         jDesktopPanelLayout.setVerticalGroup(
             jDesktopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPanelLayout.createSequentialGroup()
                 .addGap(79, 79, 79)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(366, Short.MAX_VALUE))
         );
 
         jPanel1.add(jDesktopPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 0, 820, 550));
@@ -689,6 +702,7 @@ public class AdminTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
