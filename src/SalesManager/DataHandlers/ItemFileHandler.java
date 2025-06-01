@@ -13,7 +13,6 @@ import java.util.List;
 import model.Item;
 
 public class ItemFileHandler extends BaseFileHandler {
-    
     private static final String ITEM_FILE = "src/txtFile/items.txt";
     private static final String[] ITEM_KEYS = {
         "Item ID", "Item Name", "Price", "Category", 
@@ -152,7 +151,7 @@ public static List<Item> loadAllItems() throws IOException {
         
         // Define the keys for PO file format
         String[] PO_KEYS = {
-            "PO_ID", "Supplier Name", "Item", "Quantity", 
+            "PO_ID", "Item ID","Supplier ID", "Item Name", "Quantity", 
             "Unit Price", "Total Price", "Date", "Status"
         };
         
@@ -165,27 +164,23 @@ public static List<Item> loadAllItems() throws IOException {
                     // Use the inherited parseFormattedLine method
                     String[] values = parseFormattedLine(line, PO_KEYS);
                     
-                    if (values.length >= 8) {
-                        String status = values[7].trim(); // Status is at index 7
+                    if (values.length >= 9) {
+                        String status = values[8].trim(); 
                         
-                        // Only process if status is "Paid" (case insensitive)
                         if (status.equalsIgnoreCase("Paid")) {
-                            String supplierName = values[1].trim(); // Supplier Name
-                            String itemName = values[2].trim();     // Item
-                            int quantity = Integer.parseInt(values[3].trim()); // Quantity
-                            double unitPrice = Double.parseDouble(values[4].trim()); // Unit Price
+                            String supplierID  = values[2].trim(); // Supplier ID
+                            String itemName = values[3].trim();     // Item
+                            int quantity = Integer.parseInt(values[4].trim()); // Quantity
+                            double unitPrice = Double.parseDouble(values[5].trim()); // Unit Price
                             
                             POItem item = new POItem(
                                 itemName,           // itemName
                                 quantity,           // itemQuantity
                                 unitPrice,          // itemPrice
                                 status,             // status
-                                supplierName        // supplierName
+                                supplierID         // supplierID 
                             );
                             paidItems.add(item);
-                            
-                            // Debug output
-                            System.out.println("Loaded PO Item: " + item.toString());
                         }
                     }
                 } catch (Exception e) {
@@ -194,13 +189,14 @@ public static List<Item> loadAllItems() throws IOException {
                 }
             }
         }
+        System.out.println("Loaded " + paidItems.size() + " paid PO items");
         return paidItems;
     }
      
      // ================== PRIVATE HELPER METHODS ==================
     
     private static void ensureDirectoryExists() {
-        File dir = new File("src/txtFile");
+        File dir = new File(ITEM_FILE);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -296,20 +292,20 @@ public static List<Item> loadAllItems() throws IOException {
         public int itemQuantity;
         public double itemPrice;
         public String status;
-        public String supplierName;
+        public String supplierID;
         
-        public POItem(String itemName, int itemQuantity, double itemPrice, String status, String supplierName) {
+        public POItem(String itemName, int itemQuantity, double itemPrice, String status, String supplierID) {
             this.itemName = itemName;
             this.itemQuantity = itemQuantity;
             this.itemPrice = itemPrice;
             this.status = status;
-            this.supplierName = supplierName;
+            this.supplierID = supplierID;
         }
         
         @Override
         public String toString() {
             return String.format("POItem{name='%s', quantity=%d, price=%.2f, status='%s', supplier='%s'}", 
-                               itemName, itemQuantity, itemPrice, status, supplierName);
+                               itemName, itemQuantity, itemPrice, status, supplierID);
         }
     }
      

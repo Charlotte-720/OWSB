@@ -87,7 +87,7 @@ public class EditItem extends javax.swing.JFrame {
         if (poItem != null) {
             itemPrice.setText(String.format("%.2f", poItem.itemPrice));
             itemQuantity.setText(String.valueOf(poItem.itemQuantity));
-            supplierName.setText(poItem.supplierName);
+            supplierID.setText(poItem.supplierID);
         }
     }
     
@@ -129,7 +129,7 @@ public class EditItem extends javax.swing.JFrame {
             String quantityText = itemQuantity.getText();
             String selectedCategory = (String) itemCategory.getSelectedItem();
             String expiredDateText = expiredDate.getText();
-            String supplierText = supplierName.getText();
+            String supplierText = supplierID.getText();
             
             // Validate the input using ItemFileHandler's validation method
             itemFunction.validateItem(selectedItemName, priceText, quantityText, 
@@ -187,7 +187,7 @@ public class EditItem extends javax.swing.JFrame {
             itemCategory.setSelectedIndex(0);
         }
         expiredDate.setText("");
-        supplierName.setText("");
+        supplierID.setText("");
     }
     
     private void showError(String message) {
@@ -222,7 +222,7 @@ public class EditItem extends javax.swing.JFrame {
         expiredDate = new javax.swing.JTextField();
         itemName = new javax.swing.JComboBox<>();
         itemCategory = new javax.swing.JComboBox<>();
-        supplierName = new javax.swing.JLabel();
+        supplierID = new javax.swing.JLabel();
         itemPrice = new javax.swing.JLabel();
         itemQuantity = new javax.swing.JLabel();
 
@@ -242,7 +242,7 @@ public class EditItem extends javax.swing.JFrame {
         ExpiredDateLabel.setText("Expired Date :");
 
         SupplierLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        SupplierLabel.setText("Supplier Name :");
+        SupplierLabel.setText("Supplier ID :");
 
         PriceLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         PriceLabel.setText("Price (RM) :");
@@ -320,7 +320,7 @@ public class EditItem extends javax.swing.JFrame {
             }
         });
 
-        supplierName.setText(" ");
+        supplierID.setText(" ");
 
         itemPrice.setText(" ");
 
@@ -360,7 +360,7 @@ public class EditItem extends javax.swing.JFrame {
                                     .addComponent(ExpiredDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(39, 39, 39)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(supplierName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(supplierID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(expiredDate, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(60, 60, 60)
@@ -398,7 +398,7 @@ public class EditItem extends javax.swing.JFrame {
                     .addComponent(expiredDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(supplierName)
+                    .addComponent(supplierID)
                     .addComponent(SupplierLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -472,6 +472,6 @@ public class EditItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton saveButton;
-    private javax.swing.JLabel supplierName;
+    private javax.swing.JLabel supplierID;
     // End of variables declaration//GEN-END:variables
 }

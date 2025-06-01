@@ -32,7 +32,7 @@ public class itemFunction {
     
 //    validate item iputs
     public static void validateItem(String itemName, String itemPrice, String itemQuantity, 
-                                  String expiredDate, String category, String supplierName) {
+                                  String expiredDate, String category, String supplierID) {
         if (itemName == null || itemName.trim().isEmpty() || itemName.equals("Select Item")) {
             throw new IllegalArgumentException("Please select an item name");
         }
@@ -53,8 +53,8 @@ public class itemFunction {
             throw new IllegalArgumentException("Please select a category");
         }
         
-        if (supplierName == null || supplierName.trim().isEmpty() || supplierName.trim().equals(" ")) {
-            throw new IllegalArgumentException("Supplier name is required");
+        if (supplierID == null || supplierID.trim().isEmpty() || supplierID.trim().equals(" ")) {
+            throw new IllegalArgumentException("Supplier ID is required");
         }
         
         // Validate numeric values

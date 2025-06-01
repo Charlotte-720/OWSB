@@ -73,7 +73,7 @@ public AddItem(ItemEntry entryWindow) {
         if (foundItem != null) {
             itemPrice.setText(String.format("%.2f", foundItem.itemPrice));
             itemQuantity.setText(String.valueOf(foundItem.itemQuantity));
-            supplierName.setText(foundItem.supplierName);
+            supplierName.setText(foundItem.supplierID);
         } else {
             clearPriceAndQuantityLabels();
         }
@@ -183,7 +183,7 @@ public AddItem(ItemEntry entryWindow) {
         });
 
         SupplierLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        SupplierLabel.setText("Supplier Name :");
+        SupplierLabel.setText("Supplier ID :");
 
         ClearButton.setBackground(new java.awt.Color(153, 204, 255));
         ClearButton.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
@@ -235,15 +235,16 @@ public AddItem(ItemEntry entryWindow) {
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)))
                 .addGap(50, 50, 50)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(itemPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(supplierName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(expiredDate)
-                    .addComponent(itemCategory, 0, 104, Short.MAX_VALUE)
-                    .addComponent(itemQuantity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ClearButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(itemPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                        .addComponent(supplierName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(itemName, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(itemQuantity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ClearButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(itemCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(expiredDate))
+                .addGap(44, 44, 44))
             .addComponent(ItemEntryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -445,10 +446,6 @@ public AddItem(ItemEntry entryWindow) {
         // TODO add your handling code here:
     }//GEN-LAST:event_itemNameActionPerformed
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(() -> new AddItem().setVisible(true));
-//    }  
-  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CategoryLabel;
     private javax.swing.JButton ClearButton;
