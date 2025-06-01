@@ -4,7 +4,6 @@
  */
 package FinanceManager.functions;
 
-import static FinanceManager.functions.ManagePOHelper.readSupplierMap;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

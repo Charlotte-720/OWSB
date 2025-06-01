@@ -53,7 +53,7 @@ public class FinancialReportHelper {
 
                 switch (status) {
                     case "Paid" -> summary.totalPayment += totalPrice;
-                    case "Approved" -> summary.outstandingAmount += totalPrice;
+                    case "Verified" -> summary.outstandingAmount += totalPrice;
                     case "Pending" -> summary.pendingApprovals++;
                     case "Rejected" -> summary.rejectedOrders++;
                 }
@@ -195,7 +195,7 @@ public class FinancialReportHelper {
 
                     switch (status) {
                         case "Paid" -> summary.totalPayment += totalPrice;
-                        case "Approved" -> summary.outstandingAmount += totalPrice;
+                        case "Verified" -> summary.outstandingAmount += totalPrice;
                         case "Pending" -> summary.pendingApprovals++;
                         case "Rejected" -> summary.rejectedOrders++;
                     }

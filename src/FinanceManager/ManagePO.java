@@ -127,7 +127,7 @@ public class ManagePO extends javax.swing.JFrame {
         btnApprove = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        exit = new javax.swing.JLabel();
         comboFilter = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -201,11 +201,11 @@ public class ManagePO extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel1.setText("X");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        exit.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        exit.setText("X");
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                exitMouseClicked(evt);
             }
         });
 
@@ -223,7 +223,7 @@ public class ManagePO extends javax.swing.JFrame {
                 .addGap(0, 35, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(exit)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -247,7 +247,7 @@ public class ManagePO extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(exit)
                 .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelTitle)
@@ -339,7 +339,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
         
-        String currentStatus = poTable.getValueAt(row, 7).toString(); 
+        String currentStatus = poTable.getValueAt(row, 9).toString(); 
         if (currentStatus.equalsIgnoreCase("Approved")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order is already approved.");
             return;
@@ -366,7 +366,7 @@ public class ManagePO extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            poTable.setValueAt("Approved", row, 7);
+            poTable.setValueAt("Approved", row, 9);
             saveTableToFile();
         }
     
@@ -380,7 +380,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
         
-        String currentStatus = poTable.getValueAt(row, 7).toString();
+        String currentStatus = poTable.getValueAt(row, 9).toString();
         if (currentStatus.equalsIgnoreCase("Rejected")) {
             JOptionPane.showMessageDialog(this, "This Purchase Order is already rejected.");
             return;
@@ -407,7 +407,7 @@ public class ManagePO extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            poTable.setValueAt("Rejected", row, 7);
+            poTable.setValueAt("Rejected", row, 9);
             saveTableToFile();
         }
     }//GEN-LAST:event_btnRejectActionPerformed
@@ -421,13 +421,13 @@ public class ManagePO extends javax.swing.JFrame {
          
     }//GEN-LAST:event_btnBackActionPerformed
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+    private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
         // TODO add your handling code here:
         this.dispose();
         if (previousComponent != null) {
             previousComponent.setVisible(true);
         }
-    }//GEN-LAST:event_jLabel1MouseClicked
+    }//GEN-LAST:event_exitMouseClicked
 
     private void comboFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFilterActionPerformed
         // TODO add your handling code here:
@@ -444,7 +444,7 @@ public class ManagePO extends javax.swing.JFrame {
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnReject;
     private javax.swing.JComboBox<String> comboFilter;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel exit;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelTitle;

@@ -35,7 +35,7 @@ public class FlagReason extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         labelTitle = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        exit = new javax.swing.JLabel();
         labelPOID = new javax.swing.JLabel();
         labelReason = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -53,11 +53,11 @@ public class FlagReason extends javax.swing.JDialog {
         labelTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         labelTitle.setText("Flag PO Reason");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel1.setText("X");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        exit.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        exit.setText("X");
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                exitMouseClicked(evt);
             }
         });
 
@@ -96,7 +96,7 @@ public class FlagReason extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1))
+                        .addComponent(exit))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -121,7 +121,7 @@ public class FlagReason extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(exit)
                 .addGap(4, 4, 4)
                 .addComponent(labelTitle)
                 .addGap(37, 37, 37)
@@ -177,10 +177,10 @@ public class FlagReason extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+    private void exitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitMouseClicked
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_jLabel1MouseClicked
+    }//GEN-LAST:event_exitMouseClicked
 
     /**
      * @param args the command line arguments
@@ -189,8 +189,8 @@ public class FlagReason extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSubmit;
+    private javax.swing.JLabel exit;
     private javax.swing.JTextArea inputReason;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelPOID;
