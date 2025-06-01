@@ -77,10 +77,24 @@ public class FinancialReportHelper {
                 if (line.trim().isEmpty()) continue;
 
                 String[] fields = line.split(", ");
+                String item = "";
+                int quantity = 0;
+                String status = "";
+
                 try {
-                    String item = fields[3].split(": ")[1];
-                    int quantity = Integer.parseInt(fields[4].split(": ")[1]);
-                    itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
+                    for (String field : fields) {
+                        if (field.startsWith("Item Name:")) {
+                            item = field.split(": ")[1].trim();
+                        } else if (field.startsWith("Quantity:")) {
+                            quantity = Integer.parseInt(field.split(": ")[1].trim());
+                        } else if (field.startsWith("Status:")) {
+                            status = field.split(": ")[1].trim();
+                        }
+                    }
+
+                    if (status.equalsIgnoreCase("Paid")) {
+                        itemQuantities.put(item, itemQuantities.getOrDefault(item, 0) + quantity);
+                    }
 
                 } catch (Exception e) {
                     System.out.println("Error, can't fetch the data.");
@@ -102,6 +116,7 @@ public class FinancialReportHelper {
                         LinkedHashMap::new
                 ));
     }
+
 
     public static Set<String> extractMonths(String filePath) {
         Set<String> months = new TreeSet<>(Comparator.reverseOrder());
@@ -173,7 +188,10 @@ public class FinancialReportHelper {
 
                 if (selectedMonth.equals("All Months") || poMonth.equals(selectedMonth)) {
                     summary.totalPO++;
-                    summary.topItems.put(item, summary.topItems.getOrDefault(item, 0) + quantity);
+                    if (status.equalsIgnoreCase("Paid")) {
+                        summary.topItems.put(item, summary.topItems.getOrDefault(item, 0) + quantity);
+                    }
+
 
                     switch (status) {
                         case "Paid" -> summary.totalPayment += totalPrice;
