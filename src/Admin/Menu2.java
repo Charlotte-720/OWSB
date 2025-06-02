@@ -4,6 +4,7 @@
  */
 package Admin;
 
+import FinanceManager.VerifyInventoryUpdates;
 import PurchaseManager.viewitem;
 import SalesManager.ItemEntry;
 import javax.swing.plaf.basic.BasicInternalFrameUI;

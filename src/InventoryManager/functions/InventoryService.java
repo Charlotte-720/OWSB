@@ -10,6 +10,7 @@ import model.Item;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +128,18 @@ public class InventoryService {
                     int quantity = Integer.parseInt(parts[4].split(": ")[1].trim());
                     double unitPrice = Double.parseDouble(parts[5].split(": ")[1].trim());
                     double totalPrice = Double.parseDouble(parts[6].split(": ")[1].trim());
-                    LocalDate date = LocalDate.parse(parts[7].split(": ")[1].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                    String dateString = parts[7].split(": ")[1].trim();
+                    LocalDate date;
+
+                    try {
+                        date = LocalDate.parse(dateString, formatter1); // Try yyyy-MM-dd
+                    } catch (DateTimeParseException e) {
+                        date = LocalDate.parse(dateString, formatter2); // Fall back to dd-MM-yyyy
+                    }
+
                     String status = parts[8].split(": ")[1].trim();
 
                     // ✅ Fetch supplier name dynamically from suppliers.txt

@@ -226,7 +226,7 @@ public class AdminTest extends javax.swing.JFrame {
 
         jLabel24.setFont(new java.awt.Font("Bookman Old Style", 1, 10)); // NOI18N
         jLabel24.setForeground(new java.awt.Color(32, 52, 15));
-        jLabel24.setText("Purchase Requition");
+        jLabel24.setText("Purchase Requisition");
 
         jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-for-euro-30.png"))); // NOI18N
 
