@@ -22,10 +22,102 @@ import java.util.Map;
  */
 public class InventoryService {
     
-    
+                
     // threshold for low stock alert
     public static int LOW_STOCK_THRESHOLD = 10;
     
+    // Get Item By ID
+    public static Item getItemByID(String itemID, String filePath) {
+        List<Item> items = loadItemsFromFile(filePath);
+        for (Item item : items) {
+            if (item.getItemID().equals(itemID)) {
+                return item;
+            }
+        }
+        return null; // Not found
+    }
+    
+    //Update Item Stock by ID
+    public static boolean updateItemStock(String itemID, int newStock, String filePath) {
+        if (newStock < 0) return false;
+        List<Item> items = loadItemsFromFile(filePath);
+        boolean updated = false;
+        for (Item item : items) {
+            if (item.getItemID().equals(itemID)) {
+                item.setTotalStock(newStock);
+                item.setUpdatedDate(java.time.LocalDate.now());
+                updated = true;
+                break;
+            }
+        }
+        if (updated) {
+            saveItemsToFile(items, filePath);
+        }
+        return updated;
+    }
+    
+    // Get Count of Items Below Threshold
+    public static int getLowStockCount(List<Item> items) {
+        int count = 0;
+        for (Item item : items) {
+            if (item.getTotalStock() < LOW_STOCK_THRESHOLD) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    //Get Count of Pending POs
+    public static int getPendingPOCount(List<PurchaseOrder> poList) {
+        int count = 0;
+        for (PurchaseOrder po : poList) {
+            if ("Pending".equalsIgnoreCase(po.getStatus())) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    //Confirm/Receive a PO (and Update Stock)
+    public static boolean confirmAndReceivePO(String poID, String poFilePath, String itemFilePath) {
+        List<PurchaseOrder> poList = loadPOsFromFile(poFilePath);
+        List<Item> items = loadItemsFromFile(itemFilePath);
+        boolean foundPO = false;
+        for (PurchaseOrder po : poList) {
+            if (po.getPoID().equals(poID) && "Approved".equalsIgnoreCase(po.getStatus())) {
+                // Find item by ID and update stock
+                for (Item item : items) {
+                    if (item.getItemID().equals(po.getItemID())) {
+                        int qtyToAdd = Integer.parseInt(po.getQuantity());
+                        item.increaseStock(qtyToAdd);
+                        item.setUpdatedDate(java.time.LocalDate.now());
+                        break;
+                    }
+                }
+                po.setStatus("Received");
+                foundPO = true;
+                break;
+            }
+        }
+        if (foundPO) {
+            saveItemsToFile(items, itemFilePath);
+            savePOsToFile(poList, poFilePath);
+        }
+        return foundPO;
+    }
+    
+    //Get Summary
+    public static InventorySummary getInventorySummary(String itemFilePath, String poFilePath) {
+        InventorySummary summary = new InventorySummary();
+        List<Item> items = loadItemsFromFile(itemFilePath);
+        List<PurchaseOrder> poList = loadPOsFromFile(poFilePath);
+        summary.totalItems = items.size();
+        summary.lowStockItems = getLowStockCount(items);
+        summary.pendingPOs = getPendingPOCount(poList);
+        summary.lastUpdated = java.time.LocalDateTime.now().toString();
+        summary.currentThreshold = LOW_STOCK_THRESHOLD;
+        return summary;
+    }
     
     // Load Items from txtFile/items.txt
     public static List<Item> loadItemsFromFile(String filePath) {
