@@ -1,5 +1,6 @@
 Item ID: ITM07, Item Name: Apple, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-05-20, Supplier ID: S04, Total Stock: 10, Updated Date: 2025-05-29
-Item ID: ITM08, Item Name: Melon, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-02-05, Supplier ID: S04, Total Stock: 0, Updated Date: 2025-05-26
-Item ID: ITM10, Item Name: Candy, Price: 1.00, Category: Groceries, Expired Date: 2025-06-03, Supplier ID: S02, Total Stock: 500, Updated Date: 2025-06-01
-Item ID: ITM11, Item Name: Bread, Price: 4.00, Category: Fresh Produce, Expired Date: 2025-05-31, Supplier ID: S02, Total Stock: 0, Updated Date: 2025-05-27
-Item ID: ITM12, Item Name: Orange, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-06-03, Supplier ID: S14, Total Stock: 60, Updated Date: 2025-05-29
+Item ID: ITM08, Item Name: Melon, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-02-05, Supplier ID: S04, Total Stock: 10, Updated Date: 2025-06-02
+Item ID: ITM10, Item Name: Candy, Price: 1.00, Category: Groceries, Expired Date: 2025-06-03, Supplier ID: S02, Total Stock: 200, Updated Date: 2025-06-01
+Item ID: ITM11, Item Name: Bread, Price: 4.00, Category: Fresh Produce, Expired Date: 2025-05-31, Supplier ID: S02, Total Stock: 10, Updated Date: 2025-06-02
+Item ID: ITM12, Item Name: Orange, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-06-03, Supplier ID: S14, Total Stock: 30, Updated Date: 2025-05-29
+Item ID: ITM13, Item Name: Papaya, Price: 10.00, Category: Fresh Produce, Expired Date: 2025-06-05, Supplier ID: S02, Total Stock: 15, Updated Date: 2025-06-02

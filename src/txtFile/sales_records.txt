@@ -8,3 +8,6 @@ Sale ID: SAL005, Item ID: ITM12, Quantity Sold: 20, Sale Date: 2025-05-31, Total
 Sale ID: SAL006, Item ID: ITM07, Quantity Sold: 20, Sale Date: 2025-05-31, Total Amount: 200.00
 Sale ID: SAL007, Item ID: ITM10, Quantity Sold: 20, Sale Date: 2025-05-31, Total Amount: 20.00
 Sale ID: SAL008, Item ID: ITM07, Quantity Sold: 10, Sale Date: 2025-05-31, Total Amount: 100.00
+Sale ID: SAL009, Item ID: ITM12, Quantity Sold: 30, Sale Date: 2025-06-01, Total Amount: 300.00
+Sale ID: SAL010, Item ID: ITM10, Quantity Sold: 300, Sale Date: 2025-06-02, Total Amount: 300.00
+Sale ID: SAL011, Item ID: ITM13, Quantity Sold: 5, Sale Date: 2025-06-02, Total Amount: 50.00

@@ -9,7 +9,7 @@ import java.util.List;
 public class PurchaseRequisition {
     private String prID;
     private String prType;
-    private String raisedBySMID; // Reference to a User object instead of just ID
+    private String raisedBySMID; 
     private LocalDate requestDate; 
     private LocalDate requiredDeliveryDate;
     private String status;

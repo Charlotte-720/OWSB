@@ -4,10 +4,10 @@ import java.time.LocalDate;
 
 public class SalesRecord {
     private String saleID;
-    private String itemID;       // Links to Item.itemID
+    private String itemID;
     private int quantitySold;
     private LocalDate saleDate;
-    private double totalAmount;  // quantitySold * itemPrice
+    private double totalAmount;  
 
     // Constructor
     public SalesRecord(String saleID, String itemID, int quantitySold, LocalDate saleDate, double itemPrice) {
