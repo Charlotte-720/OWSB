@@ -32,25 +32,42 @@ public class AdminManager {
 
             while ((line = employeeReader.readLine()) != null) {
                 if (line.trim().isEmpty()) {
-                    Employee employee = parseEmployeeData(employeeBlock.toString());
-                    if (employee != null) {
-                        model.addRow(new Object[]{
+                    if (employeeBlock.length() > 0) { // Process only if data exists
+                        Employee employee = parseEmployeeData(employeeBlock.toString());
+                        if (employee != null) {
+                            model.addRow(new Object[]{
                                 employee.getEmployeeID(),
                                 employee.getUsername(),
                                 employee.getFullname(),
                                 employee.getPosition(),
                                 employee.getDepartment()
-                        });
+                            });
+                        }
+                        employeeBlock.setLength(0); // Reset buffer for next employee
                     }
-                    employeeBlock.setLength(0); // Reset buffer for the next employee
                 } else {
                     employeeBlock.append(line).append("\n");
+                }
+            }
+
+            // Process the final block (if file does not end with an empty line)
+            if (employeeBlock.length() > 0) {
+                Employee employee = parseEmployeeData(employeeBlock.toString());
+                if (employee != null) {
+                    model.addRow(new Object[]{
+                        employee.getEmployeeID(),
+                        employee.getUsername(),
+                        employee.getFullname(),
+                        employee.getPosition(),
+                        employee.getDepartment()
+                    });
                 }
             }
         } catch (IOException ex) {
             System.out.println("Error loading employee data: " + ex.getMessage());
         }
     }
+
 
     private Employee parseEmployeeData(String employeeBlock) {
         String[] lines = employeeBlock.split("\n");

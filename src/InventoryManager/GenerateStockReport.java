@@ -90,7 +90,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
         model.setRowCount(0);
 
         for (Item item : filteredItems) {
-            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK";
+            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "Sufficient";
             Object[] row = {
                 item.getItemID(),
                 item.getItemName(),
@@ -109,7 +109,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
         model.setRowCount(0);
 
         for (Item item : items) {
-            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK";
+            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "Sufficient";
             Object[] row = {
                 item.getItemID(),
                 item.getItemName(),
@@ -166,6 +166,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(232, 249, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         titleLabel.setFont(new java.awt.Font("Sylfaen", 3, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -247,7 +248,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
                 .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43)
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 88, Short.MAX_VALUE))
+                .addGap(0, 86, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,7 +276,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(closeButton)
                     .addComponent(titleLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(filterTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
@@ -341,7 +342,7 @@ public class GenerateStockReport extends javax.swing.JFrame {
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        new InventoryManagerDashboard("exampleEmployeeID:InventoryManager").setVisible(true);
+        this.dispose();
         
     }//GEN-LAST:event_backButtonActionPerformed
 

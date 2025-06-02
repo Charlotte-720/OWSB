@@ -108,3 +108,24 @@ Job Title: shss
 Overview: sick leave
 Status: Active
 
+EmployeeID: 1113
+Username: tazuu_
+Fullname: Tazrian Quadir
+MyKad(NRIC): 990625106579
+Phone No: 000083632
+Emergency: 632477739921
+Address Line 1: 25, Serenia 2/2
+Address Line 2: Serenia Heights
+Address Line 3: 43000, Kajang
+Address Line 4: Selangor
+Bank Account: 12345678
+Position: Sales Manager
+Department: Sales
+Gross Salary: RM10000
+Gender: Male
+Company: Megah Holdings
+Start Date: 02/07/2020
+End Date: 25/08/2024
+Job Title: Sales
+Overview: Sick Leaves
+Status: Active

@@ -226,7 +226,7 @@ public class Loginpage1 extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         // TODO add your handling code here:
-        dispose();
+        System.exit(0); // ✅ Close the application
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void txtEmployeeIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmployeeIDActionPerformed

@@ -11,7 +11,9 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -57,6 +59,13 @@ public class InventoryService {
     public static void saveItemsToFile(List<Item> items, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Item item : items) {
+                // ✅ Keep the original stock value
+                int originalStock = item.getTotalStock();
+                int updatedStock = Math.max(originalStock, InventoryService.LOW_STOCK_THRESHOLD);
+
+                // ✅ Only update the date if stock was changed
+                LocalDate updatedDate = (updatedStock > originalStock) ? LocalDate.now() : item.getUpdatedDate();
+
                 String line = String.format(
                     "Item ID: %s, Item Name: %s, Price: %.2f, Category: %s, Expired Date: %s, Supplier ID: %s, Total Stock: %d, Updated Date: %s",
                     item.getItemID(),
@@ -65,8 +74,8 @@ public class InventoryService {
                     item.getCategory(),
                     item.getExpiredDate(),
                     item.getSupplierID(),
-                    item.getTotalStock(),
-                    item.getUpdatedDate()
+                    updatedStock, // ✅ Only update stock if needed
+                    updatedDate // ✅ Only update date if stock changed
                 );
                 writer.write(line);
                 writer.newLine();
@@ -77,11 +86,32 @@ public class InventoryService {
     }
 
     
-    
+    public static Map<String, String> loadSupplierNames(String filePath) {
+        Map<String, String> supplierMap = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(", ");
+                if (parts.length >= 2) { // Ensure we get at least Supplier ID & Name
+                    String supplierID = parts[0].split(": ")[1].trim();
+                    String supplierName = parts[1].split(": ")[1].trim();
+                    supplierMap.put(supplierID, supplierName); // Store Supplier ID -> Supplier Name
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return supplierMap;
+    }
+
+
     
     // Load POs from txtFile/po.txt
     public static List<PurchaseOrder> loadPOsFromFile(String filePath) {
         List<PurchaseOrder> poList = new ArrayList<>();
+        Map<String, String> supplierNames = loadSupplierNames("src/txtFile/suppliers.txt"); // Load supplier names
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<Item> allItems = loadItemsFromFile("src/txtFile/items.txt");
@@ -100,7 +130,11 @@ public class InventoryService {
                     LocalDate date = LocalDate.parse(parts[7].split(": ")[1].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     String status = parts[8].split(": ")[1].trim();
 
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, "UNKNOWN", itemID, itemName, String.valueOf(quantity), String.valueOf(unitPrice), String.valueOf(totalPrice), date.toString(), status, "-");
+                    // ✅ Fetch supplier name dynamically from suppliers.txt
+                    String supplierName = supplierNames.getOrDefault(supplierID, "Unknown Supplier");
+
+                    // Fetch supplier name dynamically
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, supplierName, itemID, itemName, String.valueOf(quantity), String.valueOf(unitPrice), String.valueOf(totalPrice), date.toString(), status, "-");
 
                     // ✅ Match items by Item ID instead of Item Name
                     List<Item> matchedItems = new ArrayList<>();
@@ -121,6 +155,7 @@ public class InventoryService {
 
         return poList;
     }
+
 
 
 

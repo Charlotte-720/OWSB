@@ -58,7 +58,7 @@ public class ReportExporter {
         }
 
         for (Item item : items) {
-            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK";
+            String status = item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "Sufficient";
 
             table.addCell(item.getItemID());
             table.addCell(item.getItemName());
@@ -127,7 +127,7 @@ public class ReportExporter {
                 item.getCategory(),
                 String.valueOf(item.getTotalStock()),
                 String.valueOf(InventoryService.LOW_STOCK_THRESHOLD),
-                item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "OK"
+                item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD ? "LOW" : "Sufficient"
             };
             for (int i = 0; i < values.length; i++) {
                 g.drawString(values[i], x, y);

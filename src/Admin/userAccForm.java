@@ -226,6 +226,13 @@ public class userAccForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnRefreshActionPerformed
 
+    public void refreshUserTable() {
+        DefaultTableModel model = (DefaultTableModel) tblUserData.getModel();
+        model.setRowCount(0); // Clear existing rows
+        loadUserData(); // Reload updated data
+    }
+
+    
     private void btnUnlockedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnlockedActionPerformed
         int selectedRow = tblUserData.getSelectedRow();
         if (selectedRow != -1) {
@@ -265,7 +272,7 @@ public class userAccForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     
-        
+         
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

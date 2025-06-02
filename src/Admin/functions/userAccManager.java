@@ -111,6 +111,8 @@ public class userAccManager {
         return null;
     }
     
+    
+    
     public boolean updateUserAccount(String identifier, int failedAttempts, String status, userAccForm form) {
         File inputFile = new File("src/txtFile/user_credentials.txt");
         File tempFile = new File("src/txtFile/user_credentials_temp.txt");
@@ -127,24 +129,23 @@ public class userAccManager {
                     continue;
                 }
 
-                // Check for matching EmployeeID or Username
                 if ((line.startsWith("EmployeeID: ") && line.substring(12).trim().equals(identifier)) ||
                     (line.startsWith("Username: ") && line.substring(10).trim().equals(identifier))) {
 
                     isMatched = true;
 
-                    // Write EmployeeID or Username
+                    // Preserve existing data
                     writer.write(line + "\n");
 
-                    // Read Username
+                    // Read and write Username
                     line = reader.readLine();
                     if (line.startsWith("Username: ")) writer.write(line + "\n");
 
-                    // Read Password
+                    // Read and write Password
                     line = reader.readLine();
                     if (line.startsWith("Password: ")) writer.write(line + "\n");
 
-                    // Read Position
+                    // Read and write Position
                     line = reader.readLine();
                     if (line.startsWith("Position: ")) writer.write(line + "\n");
 
@@ -154,10 +155,9 @@ public class userAccManager {
                     // Update FailedAttempts
                     writer.write("FailedAttempts: " + failedAttempts + "\n\n");
 
-                    // Skip original status and failed attempts
-                    reader.readLine(); 
-                    reader.readLine(); 
-
+                    // Skip original status and failed attempts in the old file
+                    reader.readLine();
+                    reader.readLine();
                 } else {
                     writer.write(line + "\n");
                 }
@@ -168,25 +168,23 @@ public class userAccManager {
             return false;
         }
 
-        if (!isMatched) {
-            JOptionPane.showMessageDialog(null, "User not found: " + identifier);
-            return false;
-        }
+        if (isMatched) {
+            try {
+                Files.deleteIfExists(inputFile.toPath());
+                Files.move(tempFile.toPath(), inputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        // Replace the old file with the updated file
-        try {
-            Files.deleteIfExists(inputFile.toPath()); 
-            Files.move(tempFile.toPath(), inputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            JOptionPane.showMessageDialog(null, "Account updated successfully!");
+                // Ensure the table refreshes in the UI
+                form.refreshUserTable(); // Calls the method in userAccForm
 
-            // Only refresh data if the update was successful
-            form.loadUserData();
-            return true;
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "File update error: " + ex.getMessage());
-            return false;
+                JOptionPane.showMessageDialog(null, "Account updated successfully!");
+                return true;
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "File update error: " + ex.getMessage());
+                return false;
+            }
         }
-    }
+        return false;
+    }   
 } 
 
     

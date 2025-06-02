@@ -6,6 +6,7 @@ package InventoryManager;
 import javax.swing.JFrame;
 import model.Item;
 import InventoryManager.functions.InventoryService;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -32,6 +33,7 @@ public class LowStockAlert extends javax.swing.JFrame {
             }
         }
     }
+    
     
     /**
      * Creates new form LowStockAlert
@@ -71,6 +73,7 @@ public class LowStockAlert extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(232, 249, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         titleLabel.setFont(new java.awt.Font("Sylfaen", 3, 24)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -150,15 +153,15 @@ public class LowStockAlert extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGap(59, 59, 59)
-                            .addComponent(thresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(172, 172, 172)
+                            .addComponent(thresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(111, 111, 111)
                             .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(updateThresholdButton))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGap(40, 40, 40)
                             .addComponent(lowStockScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +179,7 @@ public class LowStockAlert extends javax.swing.JFrame {
                     .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(thresholdLabel)
                     .addComponent(updateThresholdButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -221,9 +224,29 @@ public class LowStockAlert extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Threshold must be a positive number.");
                 return;
             }
+
             InventoryService.LOW_STOCK_THRESHOLD = newThreshold;
             thresholdLabel.setText("Current Threshold: " + newThreshold);
-            loadLowStockItems(); // Refresh list
+
+            // ✅ Load current items and update their stock values
+            List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+
+            // ✅ Ensure items reflect new threshold before saving
+            for (Item item : items) {
+                if (item.getTotalStock() < newThreshold) {
+                    item.setTotalStock(newThreshold); // ✅ Increase stock if below threshold
+                    item.setUpdatedDate(LocalDate.now()); // ✅ Update timestamp for changed items
+                }
+            }
+
+            // ✅ Save updated items to `items.txt`
+            InventoryService.saveItemsToFile(items, "src/txtFile/items.txt");
+
+            // ✅ Refresh the inventory snapshot after updates
+            InventoryManagerDashboard dashboard = new InventoryManagerDashboard("");
+            dashboard.refreshInventorySnapshot(); 
+            loadLowStockItems(); // ✅ Refresh displayed list
+
         } catch (NumberFormatException e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter a valid number.");
         }

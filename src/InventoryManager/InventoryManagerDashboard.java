@@ -51,6 +51,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     }
     
     private void updateInventorySnapshot() {
+        // ✅ Reload latest inventory data after threshold updates
         List<model.Item> items = InventoryManager.functions.InventoryService.loadItemsFromFile("src/txtFile/items.txt");
         List<model.PurchaseOrder> poList = InventoryManager.functions.InventoryService.loadPOsFromFile("src/txtFile/po.txt");
 
@@ -69,15 +70,26 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
             }
         }
 
+        // ✅ Refresh UI Labels
         totalItemsLabel.setText("Total Items in Stock: " + totalItems);
         lowStockLabel.setText("Items Low in Stock: " + lowStockCount);
         pendingPOsLabel.setText("Pending Purchase Orders: " + pendingPOCount);
+
+        // ✅ Update timestamp for latest changes
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss");
         String formattedDate = LocalDateTime.now().format(formatter);
         lastUpdatedLabel.setText("Last Updated: " + formattedDate);
+
+        // ✅ Ensure threshold label reflects new threshold
         thresholdLabel.setText("Current Threshold: " + InventoryService.LOW_STOCK_THRESHOLD);
     }
 
+
+    public void refreshInventorySnapshot() {
+        updateInventorySnapshot(); // ✅ Calls the private method internally
+    }
+
+    
     //Use for testing only, simulate log in
     /*
     public static void main(String[] args) {
@@ -307,7 +319,6 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_viewItemsButtonActionPerformed
 
     private void poVerificationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poVerificationButtonActionPerformed
-        this.setVisible(false);
         POVerification poVerification = new POVerification(this);
         poVerification.setVisible(true);
     }//GEN-LAST:event_poVerificationButtonActionPerformed
