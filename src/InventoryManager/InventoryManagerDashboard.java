@@ -134,6 +134,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(197, 186, 255));
 
         viewItemsButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        viewItemsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icon - item.png"))); // NOI18N
         viewItemsButton.setText("View Items");
         viewItemsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,6 +143,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         });
 
         poVerificationButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        poVerificationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-purchase-order-30 (1).png"))); // NOI18N
         poVerificationButton.setText("Purchase Order Verification");
         poVerificationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,6 +152,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         });
 
         lowStockAlertButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lowStockAlertButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - inventory.png"))); // NOI18N
         lowStockAlertButton.setText("Low Stock Alerts");
         lowStockAlertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,6 +161,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         });
 
         generateStockButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        generateStockButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-report-30.png"))); // NOI18N
         generateStockButton.setText("Generate Stock Report");
         generateStockButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,6 +170,7 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         });
 
         logoutButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8-logout-30.png"))); // NOI18N
         logoutButton.setText("Logout");
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -178,14 +183,14 @@ public class InventoryManagerDashboard extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(viewItemsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(poVerificationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowStockAlertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generateStockButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(viewItemsButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(poVerificationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(lowStockAlertButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(generateStockButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(logoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
