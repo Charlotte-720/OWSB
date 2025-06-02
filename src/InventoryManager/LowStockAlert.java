@@ -17,22 +17,32 @@ import javax.swing.table.DefaultTableModel;
  */
 public class LowStockAlert extends javax.swing.JFrame {
 
-    private void loadLowStockItems() {
-        List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+   private void loadLowStockItemsToTable() {
+        List<Item> lowStockItems = InventoryManager.functions.InventoryService.getLowStockItems(
+            "src/txtFile/items.txt",
+            InventoryManager.functions.InventoryService.LOW_STOCK_THRESHOLD
+        );
         DefaultTableModel model = (DefaultTableModel) lowStockTable.getModel();
-        model.setRowCount(0); // Clear table
+        model.setRowCount(0);
 
-        for (Item item : allItems) {
-            if (item.getTotalStock() < InventoryService.LOW_STOCK_THRESHOLD) {  
+        if (lowStockItems.isEmpty()) {
+            // Fill one row with "None" and blanks for each column
+            model.addRow(new Object[]{"None", "", ""});
+        } else {
+            for (Item item : lowStockItems) {
                 Object[] row = {
-                    item.getItemID(),
-                    item.getItemName(),
-                    item.getTotalStock()
+                    item.getItemID(),      // Item Code
+                    item.getItemName(),    // Item Name
+                    item.getTotalStock()   // Quantity
                 };
                 model.addRow(row);
             }
         }
+        thresholdLabel.setText("Current Threshold: " + InventoryManager.functions.InventoryService.LOW_STOCK_THRESHOLD);
     }
+
+
+
     
     
     /**
@@ -43,9 +53,10 @@ public class LowStockAlert extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        loadLowStockItems();
+        loadLowStockItemsToTable();
         thresholdLabel.setText("Current Threshold: " + InventoryService.LOW_STOCK_THRESHOLD);
-
+        feedbackLabel.setText(""); // Optional: clear feedback
+        
     }
     
     
@@ -69,6 +80,7 @@ public class LowStockAlert extends javax.swing.JFrame {
         thresholdLabel = new javax.swing.JLabel();
         thresholdInputField = new javax.swing.JTextField();
         updateThresholdButton = new javax.swing.JButton();
+        feedbackLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +146,9 @@ public class LowStockAlert extends javax.swing.JFrame {
             }
         });
 
+        feedbackLabel.setForeground(new java.awt.Color(153, 153, 153));
+        feedbackLabel.setText("feedback");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -153,9 +168,12 @@ public class LowStockAlert extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGap(59, 59, 59)
-                            .addComponent(thresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(111, 111, 111)
-                            .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(thresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(111, 111, 111)
+                                    .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(feedbackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(updateThresholdButton))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -176,14 +194,20 @@ public class LowStockAlert extends javax.swing.JFrame {
                         .addComponent(lowStockScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(thresholdLabel)
-                    .addComponent(updateThresholdButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(thresholdInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(updateThresholdButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(thresholdLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(feedbackLabel)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,7 +230,8 @@ public class LowStockAlert extends javax.swing.JFrame {
     }//GEN-LAST:event_closeButtonMouseClicked
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        loadLowStockItems();
+        loadLowStockItemsToTable();
+        feedbackLabel.setText("");
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -221,34 +246,14 @@ public class LowStockAlert extends javax.swing.JFrame {
         try {
             int newThreshold = Integer.parseInt(thresholdInputField.getText().trim());
             if (newThreshold < 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Threshold must be a positive number.");
+                feedbackLabel.setText("Threshold must be positive.");
                 return;
             }
-
-            InventoryService.LOW_STOCK_THRESHOLD = newThreshold;
-            thresholdLabel.setText("Current Threshold: " + newThreshold);
-
-            // ✅ Load current items and update their stock values
-            List<Item> items = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
-
-            // ✅ Ensure items reflect new threshold before saving
-            for (Item item : items) {
-                if (item.getTotalStock() < newThreshold) {
-                    item.setTotalStock(newThreshold); // ✅ Increase stock if below threshold
-                    item.setUpdatedDate(LocalDate.now()); // ✅ Update timestamp for changed items
-                }
-            }
-
-            // ✅ Save updated items to `items.txt`
-            InventoryService.saveItemsToFile(items, "src/txtFile/items.txt");
-
-            // ✅ Refresh the inventory snapshot after updates
-            InventoryManagerDashboard dashboard = new InventoryManagerDashboard("");
-            dashboard.refreshInventorySnapshot(); 
-            loadLowStockItems(); // ✅ Refresh displayed list
-
+            InventoryManager.functions.InventoryService.setLowStockThreshold(newThreshold);
+            loadLowStockItemsToTable();
+            feedbackLabel.setText("Threshold updated.");
         } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter a valid number.");
+            feedbackLabel.setText("Enter a valid number.");
         }
     }//GEN-LAST:event_updateThresholdButtonActionPerformed
 
@@ -259,6 +264,7 @@ public class LowStockAlert extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JLabel closeButton;
+    private javax.swing.JLabel feedbackLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane lowStockScrollPane;
     private javax.swing.JTable lowStockTable;

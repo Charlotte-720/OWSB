@@ -26,6 +26,36 @@ public class InventoryService {
     // threshold for low stock alert
     public static int LOW_STOCK_THRESHOLD = 10;
     
+    private static final String THRESHOLD_FILE = "src/txtFile/low_stock_threshold.txt";
+
+    // Call this at startup (before opening your dashboard)
+    public static int loadThresholdFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(THRESHOLD_FILE))) {
+            String line = reader.readLine();
+            if (line != null) {
+                return Integer.parseInt(line.trim());
+            }
+        } catch (Exception e) {
+            // If file doesn't exist or is invalid, fall back to default
+        }
+        return 10; // default
+    }
+
+    // Save threshold to file (called when updating)
+    public static void saveThresholdToFile(int threshold) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(THRESHOLD_FILE))) {
+            writer.write(String.valueOf(threshold));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Update both field and file
+    public static void setLowStockThreshold(int threshold) {
+        LOW_STOCK_THRESHOLD = threshold;
+        saveThresholdToFile(threshold);
+    }
+    
     // Get Item By ID
     public static Item getItemByID(String itemID, String filePath) {
         List<Item> items = loadItemsFromFile(filePath);
@@ -217,30 +247,17 @@ public class InventoryService {
                     String itemID = parts[1].split(": ")[1].trim();
                     String supplierID = parts[2].split(": ")[1].trim();
                     String itemName = parts[3].split(": ")[1].trim();
-                    int quantity = Integer.parseInt(parts[4].split(": ")[1].trim());
-                    double unitPrice = Double.parseDouble(parts[5].split(": ")[1].trim());
-                    double totalPrice = Double.parseDouble(parts[6].split(": ")[1].trim());
-                    DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-                    String dateString = parts[7].split(": ")[1].trim();
-                    LocalDate date;
-
-                    try {
-                        date = LocalDate.parse(dateString, formatter1); // Try yyyy-MM-dd
-                    } catch (DateTimeParseException e) {
-                        date = LocalDate.parse(dateString, formatter2); // Fall back to dd-MM-yyyy
-                    }
-
+                    String quantity = parts[4].split(": ")[1].trim();
+                    String unitPrice = parts[5].split(": ")[1].trim();
+                    String totalPrice = parts[6].split(": ")[1].trim();
+                    String date = parts[7].split(": ")[1].trim();
                     String status = parts[8].split(": ")[1].trim();
 
-                    // ✅ Fetch supplier name dynamically from suppliers.txt
                     String supplierName = supplierNames.getOrDefault(supplierID, "Unknown Supplier");
 
-                    // Fetch supplier name dynamically
-                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, supplierName, itemID, itemName, String.valueOf(quantity), String.valueOf(unitPrice), String.valueOf(totalPrice), date.toString(), status, "-");
+                    PurchaseOrder po = new PurchaseOrder(poID, supplierID, supplierName, itemID, itemName, quantity, unitPrice, totalPrice, date, status, "");
 
-                    // ✅ Match items by Item ID instead of Item Name
+                    // Attach items by ID
                     List<Item> matchedItems = new ArrayList<>();
                     for (Item item : allItems) {
                         if (item.getItemID().equals(itemID)) {
@@ -248,7 +265,6 @@ public class InventoryService {
                             break;
                         }
                     }
-
                     po.setItems(matchedItems);
                     poList.add(po);
                 }
@@ -263,16 +279,15 @@ public class InventoryService {
 
 
 
-
     // Save POs to src/txtFile/po.txt
     public static void savePOsToFile(List<PurchaseOrder> poList, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (PurchaseOrder po : poList) {
-                // Write PO data in consistent format
                 String line = String.format(
-                    "PO_ID: %s, Supplier Name: %s, Item: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: %s",
+                    "PO_ID: %s, Item ID: %s, Supplier ID: %s, Item Name: %s, Quantity: %s, Unit Price: %s, Total Price: %s, Date: %s, Status: %s",
                     po.getPoID(),
-                    po.getSupplierName(),
+                    po.getItemID(),
+                    po.getSupplierID(),
                     po.getItem(),
                     po.getQuantity(),
                     po.getUnitPrice(),
@@ -287,6 +302,20 @@ public class InventoryService {
             e.printStackTrace();
         }
     }
+
+    
+    // Returns items below the given threshold
+    public static List<Item> getLowStockItems(String filePath, int threshold) {
+        List<Item> allItems = loadItemsFromFile(filePath);
+        List<Item> lowStockItems = new ArrayList<>();
+        for (Item item : allItems) {
+            if (item.getTotalStock() < threshold) {
+                lowStockItems.add(item);
+            }
+        }
+        return lowStockItems;
+    }
+
     
     
 }

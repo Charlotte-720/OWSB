@@ -1,5 +1,8 @@
-Supplier ID: S02, Supplier Name: Goh, Contact No: 0125478523, Active: true
 Supplier ID: S01, Supplier Name: Amanda, Contact No: 0124526322, Active: true
+Supplier ID: S02, Supplier Name: Goh, Contact No: 0125478523, Active: true
+Supplier ID: S03, Supplier Name: Liew, Contact No: 0120000003, Active: true
+Supplier ID: S04, Supplier Name: Lee, Contact No: 0120000004, Active: true
+Supplier ID: S05, Supplier Name: Lim, Contact No: 0120000005, Active: true
 Supplier ID: S07, Supplier Name: How, Contact No: 0145829636, Active: true
 Supplier ID: S08, Supplier Name: Irene, Contact No: 0125468596, Active: true
 Supplier ID: S09, Supplier Name: Charlotte, Contact No: 0172589633, Active: true

@@ -49,7 +49,7 @@ public class POVerification extends javax.swing.JFrame {
             Object[] row = {
                 po.getPoID(),
                 po.getSupplierName(),
-                po.getDate(), // already String in current model
+                po.getDate(),
                 po.getStatus()
             };
             model.addRow(row);
@@ -58,28 +58,36 @@ public class POVerification extends javax.swing.JFrame {
     
     
     private void loadItemsOfSelectedPO(int index) {
+        if (index < 0 || index >= poList.size()) return;
+
         DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
         model.setRowCount(0);
 
         PurchaseOrder po = poList.get(index);
-        String poItemName = po.getItem().trim().toLowerCase();
-        List<Item> allItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+        String itemID = po.getItemID();
 
+        List<Item> allItems = InventoryManager.functions.InventoryService.loadItemsFromFile("src/txtFile/items.txt");
         for (Item item : allItems) {
-            // Exact match preferred since item names can now overlap
-            if (item.getItemName().trim().equalsIgnoreCase(poItemName)) {
+            if (item.getItemID().equals(itemID)) {
                 Object[] row = {
                     item.getItemID(),
                     item.getItemName(),
-                    item.getTotalStock(),
+                    po.getQuantity(),
                     po.getStatus()
                 };
                 model.addRow(row);
+                return;
             }
         }
+        model.addRow(new Object[] {itemID, "Item not found", "", po.getStatus()});
     }
 
-
+    private int findPOIndexByID(List<PurchaseOrder> list, String poID) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getPoID().equals(poID)) return i;
+        }
+        return -1;
+    }
    
     
     
@@ -130,6 +138,11 @@ public class POVerification extends javax.swing.JFrame {
                 "PO ID", "Supplier", "Date", "Status"
             }
         ));
+        poTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                poTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(poTable);
 
         itemTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -228,43 +241,58 @@ public class POVerification extends javax.swing.JFrame {
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         int selectedIndex = poTable.getSelectedRow();
         if (selectedIndex != -1) {
-            PurchaseOrder po = poList.get(selectedIndex);
+            String poID = poList.get(selectedIndex).getPoID();
 
-            if (po.getStatus().equalsIgnoreCase("Approved")) {
-                po.setStatus("Received");
+            boolean success = InventoryManager.functions.InventoryService.confirmAndReceivePO(
+                poID, "src/txtFile/po.txt", "src/txtFile/items.txt"
+            );
 
-                List<Item> inventoryItems = InventoryService.loadItemsFromFile("src/txtFile/items.txt");
-                String poItemName = po.getItem().trim().toLowerCase();
-                int quantityToAdd = Integer.parseInt(po.getQuantity());
-
-                for (Item stockItem : inventoryItems) {
-                    if (stockItem.getItemName().trim().equalsIgnoreCase(poItemName)) {
-                        stockItem.increaseStock(quantityToAdd);
-                        stockItem.setUpdatedDate(java.time.LocalDate.now());
-                        break;
-                    }
-                }
-
-                InventoryService.savePOsToFile(poList, "src/txtFile/po.txt");
-                InventoryService.saveItemsToFile(inventoryItems, "src/txtFile/items.txt");
-
+            if (success) {
+                // Refresh the list after update
+                poList = InventoryManager.functions.InventoryService.loadPOsFromFile("src/txtFile/po.txt");
                 loadPOsToTable();
-                loadItemsOfSelectedPO(selectedIndex);
+                int newIndex = findPOIndexByID(poList, poID);
+                if (newIndex != -1) {
+                    poTable.setRowSelectionInterval(newIndex, newIndex);
+                    loadItemsOfSelectedPO(newIndex);
+                } else {
+                    // PO might be filtered out or gone
+                    DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
+                    model.setRowCount(0);
+}
+
+                // Option 1: Clear the item table after confirmation
+                DefaultTableModel model = (DefaultTableModel) itemTable.getModel();
+                model.setRowCount(0);
+
+                // Option 2: Reselect the same PO by ID if you want (optional)
+                // int newIndex = findPOIndexByID(poList, poID);
+                // if (newIndex != -1) loadItemsOfSelectedPO(newIndex);
 
                 javax.swing.JOptionPane.showMessageDialog(this, "PO confirmed and stock updated.");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
-                "Only Approved POs can be verified.\nThis PO is currently: " + po.getStatus(),
-                "Verification Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    "Only Approved POs can be verified or PO was not found.",
+                    "Verification Not Allowed", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a PO to confirm.");
         }
 
-   
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void poTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_poTableMouseClicked
+        int selectedIndex = poTable.getSelectedRow();
+        if (selectedIndex != -1) {
+            PurchaseOrder po = poList.get(selectedIndex);
+            confirmButton.setEnabled("Approved".equalsIgnoreCase(po.getStatus()));
+            loadItemsOfSelectedPO(selectedIndex);
+        }
+    }//GEN-LAST:event_poTableMouseClicked
 
     /**
      * @param args the command line arguments

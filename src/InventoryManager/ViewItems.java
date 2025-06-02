@@ -67,6 +67,12 @@ public class ViewItems extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         itemTable = new javax.swing.JTable();
         backButton = new javax.swing.JButton();
+        selectedItemLabel = new javax.swing.JLabel();
+        selectedItemIDField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        newStockField = new javax.swing.JTextField();
+        updateStockButton = new javax.swing.JButton();
+        feedbackLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +91,12 @@ public class ViewItems extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
+
         itemTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -96,6 +108,11 @@ public class ViewItems extends javax.swing.JFrame {
                 "ID", "Name", "Category", "Price", "Expired Date", "Supplier ID", "Stock Quantity", "Last Updated"
             }
         ));
+        itemTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(itemTable);
 
         backButton.setBackground(new java.awt.Color(200, 249, 249));
@@ -107,15 +124,58 @@ public class ViewItems extends javax.swing.JFrame {
             }
         });
 
+        selectedItemLabel.setText("Selected Item ID");
+
+        selectedItemIDField.setEditable(false);
+        selectedItemIDField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectedItemIDFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("New Stock Quantity:");
+
+        newStockField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newStockFieldActionPerformed(evt);
+            }
+        });
+
+        updateStockButton.setBackground(new java.awt.Color(204, 204, 255));
+        updateStockButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        updateStockButton.setText("Update Stock");
+        updateStockButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateStockButtonActionPerformed(evt);
+            }
+        });
+
+        feedbackLabel.setForeground(new java.awt.Color(153, 153, 153));
+        feedbackLabel.setText("feedbackLabel");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(selectedItemLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(selectedItemIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(newStockField, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(feedbackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(updateStockButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 24, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -132,10 +192,21 @@ public class ViewItems extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(titleLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(updateStockButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(selectedItemLabel)
+                            .addComponent(selectedItemIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(newStockField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(feedbackLabel)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -161,6 +232,62 @@ public class ViewItems extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    private void selectedItemIDFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedItemIDFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selectedItemIDFieldActionPerformed
+
+    private void newStockFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newStockFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newStockFieldActionPerformed
+
+    private void updateStockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStockButtonActionPerformed
+        String itemID = selectedItemIDField.getText();
+        String newStockText = newStockField.getText().trim();
+
+        if (itemID.isEmpty()) {
+            feedbackLabel.setText("Please select an item from the table.");
+            return;
+        }
+
+        int newStock;
+        try {
+            newStock = Integer.parseInt(newStockText);
+            if (newStock < 0) {
+                feedbackLabel.setText("Stock cannot be negative.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            feedbackLabel.setText("Please enter a valid number for stock.");
+            return;
+        }
+
+        boolean updated = InventoryManager.functions.InventoryService.updateItemStock(
+            itemID, newStock, "src/txtFile/items.txt"
+        );
+
+        if (updated) {
+            feedbackLabel.setText("Stock updated for item " + itemID + ".");
+            // Refresh the table
+            List<model.Item> items = InventoryManager.functions.InventoryService.loadItemsFromFile("src/txtFile/items.txt");
+            loadItemsToTable(items);
+        } else {
+            feedbackLabel.setText("Failed to update stock. Please try again.");
+        }
+    }//GEN-LAST:event_updateStockButtonActionPerformed
+
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
+    private void itemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemTableMouseClicked
+        int selectedRow = itemTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String itemID = itemTable.getValueAt(selectedRow, 0).toString();
+                selectedItemIDField.setText(itemID);
+                feedbackLabel.setText(""); // Clear feedback
+            }
+    }//GEN-LAST:event_itemTableMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -168,9 +295,15 @@ public class ViewItems extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JLabel closeButton;
+    private javax.swing.JLabel feedbackLabel;
     private javax.swing.JTable itemTable;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField newStockField;
+    private javax.swing.JTextField selectedItemIDField;
+    private javax.swing.JLabel selectedItemLabel;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JButton updateStockButton;
     // End of variables declaration//GEN-END:variables
 }
