@@ -86,28 +86,6 @@ Job Title: Finance Manager
 Overview: Maternity leave
 Status: Active
 
-EmployeeID: 1111
-Username: lolo
-Fullname: hhj
-MyKad(NRIC): sbnma
-Phone No: 7282
-Emergency: 378822
-Address Line 1: nxdhsjs
-Address Line 2: jdhsjss
-Address Line 3: hgsfss
-Address Line 4: shahaja
-Bank Account: 009876
-Position: Inventory Manager
-Department: IT
-Gross Salary: RM7900
-Gender: Male
-Company: djss
-Start Date: shsjs
-End Date: sbsnm
-Job Title: shss
-Overview: sick leave
-Status: Active
-
 EmployeeID: 1113
 Username: tazuu_
 Fullname: Tazrian Quadir
@@ -129,3 +107,26 @@ End Date: 25/08/2024
 Job Title: Sales
 Overview: Sick Leaves
 Status: Active
+
+EmployeeID: 1111
+Username: titu
+Fullname: titi
+MyKad(NRIC): dndddm
+Phone No: 53622782
+Emergency: 2728282
+Address Line 1: 2yddnd
+Address Line 2: dndd
+Address Line 3: ndndm
+Address Line 4: dheje
+Bank Account: 646463
+Position: Sales Manager
+Department: IT
+Gross Salary: RM 12000
+Gender: Female
+Company: fbdknfksnf
+Start Date: nrnjejsdf
+End Date: jkndked
+Job Title: bdekdks
+Overview: fewslfni
+Status: Active
+

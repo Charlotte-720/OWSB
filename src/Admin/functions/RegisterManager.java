@@ -21,15 +21,16 @@ public class RegisterManager {
 
     public boolean registerEmployee(Employee employee, String password) {
         if (!validateEmployee(employee)) {
-            return false; // Validation failed
+            System.out.println("Registration failed: Duplicate EmployeeID or Username found.");
+            return false; // ❌ Duplicate entry detected
         }
 
-        // Save employee data
+        // ✅ Save employee data
         if (!writeToFile(EMPLOYEE_FILE, formatEmployeeData(employee))) {
             return false;
         }
 
-        // Save credentials
+        // ✅ Save credentials
         String credentials = String.format("""
             EmployeeID: %s
             Username: %s
@@ -38,16 +39,43 @@ public class RegisterManager {
             Status: Active
             FailedAttempts: 0
 
-                                           
             """, employee.getEmployeeID(), employee.getUsername(), password, employee.getPosition());
 
         return writeToFile(CREDENTIALS_FILE, credentials);
     }
 
     private boolean validateEmployee(Employee employee) {
-        return employee.getEmployeeID() != null && !employee.getEmployeeID().isEmpty()
-               && employee.getUsername() != null && !employee.getUsername().isEmpty();
+        if (employee.getEmployeeID() == null || employee.getEmployeeID().isEmpty() ||
+            employee.getUsername() == null || employee.getUsername().isEmpty()) {
+            return false;
+        }
+
+        // ✅ Check for duplicate EmployeeID or Username
+        try (BufferedReader empReader = new BufferedReader(new FileReader(EMPLOYEE_FILE));
+             BufferedReader credReader = new BufferedReader(new FileReader(CREDENTIALS_FILE))) {
+
+            String line;
+            while ((line = empReader.readLine()) != null) {
+                if (line.contains("EmployeeID: " + employee.getEmployeeID()) || line.contains("Username: " + employee.getUsername())) {
+                    System.out.println("Duplicate EmployeeID or Username found in Employee_data.txt");
+                    return false;
+                }
+            }
+
+            while ((line = credReader.readLine()) != null) {
+                if (line.contains("EmployeeID: " + employee.getEmployeeID()) || line.contains("Username: " + employee.getUsername())) {
+                    System.out.println("Duplicate EmployeeID or Username found in user_credentials.txt");
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading files: " + e.getMessage());
+            return false;
+        }
+
+        return true; // ✅ Employee is unique
     }
+
 
     private boolean writeToFile(String filePath, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
