@@ -1,12 +1,15 @@
 
 package SalesManager;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class ViewPO extends javax.swing.JFrame {
@@ -16,6 +19,7 @@ public class ViewPO extends javax.swing.JFrame {
         this.previousComponent = previousComponent;
         initComponents();
         loadPOData(); 
+        poTable.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
     }
 
     @SuppressWarnings("unchecked")
@@ -24,7 +28,7 @@ public class ViewPO extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        poTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         POLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -36,28 +40,28 @@ public class ViewPO extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(230, 252, 252));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        poTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO ID", "Suppliers Name", "Item Name", "Quantity", "Unit Price", "Total Price", "Date", "Status", "Flag Reason"
+                "PO ID", "Item ID", "Suppliers ID", "Suppliers Name", "Item Name", "Quantity", "Unit Price", "Total Price", "Date", "Status", "Flag Reason"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, true
+                false, true, true, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setEditingColumn(4);
-        jTable1.setRowHeight(40);
-        jScrollPane1.setViewportView(jTable1);
+        poTable.setEditingColumn(4);
+        poTable.setRowHeight(40);
+        jScrollPane1.setViewportView(poTable);
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
 
@@ -134,50 +138,97 @@ public class ViewPO extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    // read the txt file and show it (read function)
     public void loadPOData() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) poTable.getModel();
         model.setRowCount(0); // Clear existing data
 
-        File file = new File("src/txtFile/po.txt");
-        Map<String, String> flaggedReasons = readFlaggedReasons();
+        File poFile = new File("src/txtFile/po.txt");
+        File supplierFile = new File("src/txtFile/suppliers.txt");
+        
+        // Step 1: Build supplier ID -> Name map from suppliers.txt
+        Map<String, String> supplierNameMap = new HashMap<>();
+        if (supplierFile.exists()) {
+            try (Scanner supplierScanner = new Scanner(supplierFile)) {
+                while (supplierScanner.hasNextLine()) {
+                    String line = supplierScanner.nextLine();
+                    String[] parts = line.split(",");
 
-        if (file.exists()) {
-            try (Scanner scanner = new Scanner(file)) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String[] details = line.split(",");
+                    String supplierID = "";
+                    String supplierName = "";
 
-                    // Create a new array to store only the values after ':'
-                    String[] rowData = new String[details.length + 1]; 
-
-                    String poID = ""; // Store PO ID for matching
-
-                    for (int i = 0; i < details.length; i++) {
-                        String[] parts = details[i].split(":");
-                        if (parts.length > 1) {
-                            rowData[i] = parts[1].trim();
-                            if (i == 0) {
-                                poID = parts[1].trim(); // Get PO ID
-                            }
-                        } else {
-                            rowData[i] = "";
+                    for (String part : parts) {
+                        part = part.trim();
+                        if (part.startsWith("Supplier ID:")) {
+                            supplierID = part.split(":", 2)[1].trim();
+                        } else if (part.startsWith("Supplier Name:")) {
+                            supplierName = part.split(":", 2)[1].trim();
                         }
                     }
 
-                    rowData[details.length] = flaggedReasons.getOrDefault(poID, "-");
+                    if (!supplierID.isEmpty() && !supplierName.isEmpty()) {
+                        supplierNameMap.put(supplierID, supplierName);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        // Load flagged reasons
+        Map<String, String> flaggedReasons = readFlaggedReasons();
 
-                    model.addRow(rowData);
+        // Step 2: Read PO file
+        if (poFile.exists()) {
+            try (Scanner scanner = new Scanner(poFile)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] fields = line.split(", ");
+
+                    String poID = "", itemID = "", supplierID = "", supplierName = "", itemName = "";
+                    String quantity = "", unitPrice = "", totalPrice = "";
+                    String date = "", status = "";
+
+                    for (String field : fields) {
+                        String[] parts = field.split(": ", 2);
+                        if (parts.length == 2) {
+                            String key = parts[0].trim();
+                            String value = parts[1].trim();
+
+                            switch (key) {
+                                case "PO_ID": poID = value; break;
+                                case "Item ID": itemID = value; break;
+                                case "Supplier ID": supplierID = value; break;
+                                case "Supplier Name": supplierName = value; break;  // Direct from po.txt
+                                case "Item Name": itemName = value; break;
+                                case "Quantity": quantity = value; break;
+                                case "Unit Price": unitPrice = value; break;
+                                case "Total Price": totalPrice = value; break;
+                                case "Date": date = value; break;
+                                case "Status": status = value; break;
+                            }
+                        }
+                    }
+
+                    // If supplier name not found in po.txt, look it up from suppliers.txt
+                    if (supplierName.isEmpty() && !supplierID.isEmpty()) {
+                        supplierName = supplierNameMap.getOrDefault(supplierID, "Unknown");
+                    }
+
+                    String flagReason = flaggedReasons.getOrDefault(poID, "-");
+
+                    model.addRow(new Object[]{
+                        poID, itemID, supplierID, supplierName, itemName,
+                        quantity, unitPrice, totalPrice, date, status, flagReason
+                    });
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File not found at: " + file.getAbsolutePath());
+            System.out.println("File not found: " + poFile.getAbsolutePath());
         }
     }
 
-    
     public Map<String, String> readFlaggedReasons() {
         Map<String, String> flaggedMap = new HashMap<>();
         File reasonFile = new File("src/txtFile/flagReason.txt");
@@ -200,13 +251,56 @@ public class ViewPO extends javax.swing.JFrame {
         return flaggedMap;
     }
 
-    
+    // Status column renderer with colors (copied from generateandviewpo)
+    class StatusColumnCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, 
+               boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            if (value != null) {
+                String status = value.toString().toLowerCase();
+
+                switch (status) {
+                    case "rejected":
+                        c.setForeground(Color.RED);
+                        break;
+                    case "pending":
+                        c.setForeground(new Color(255, 165, 0)); // Orange
+                        break;
+                    case "approved":
+                        c.setForeground(new Color(0, 128, 0)); // Green
+                        break;
+                    case "received":
+                        c.setForeground(new Color(0,102,255)); // Blue
+                        break;
+                    case "verified":
+                        c.setForeground(new Color(255,0,255)); // Magenta
+                        break;
+                    case "flagged":
+                        c.setForeground(new Color(0,153,153)); // Teal
+                        break;
+                    case "paid":
+                        c.setForeground(new Color(0, 100, 0)); // Dark Green
+                        break;
+                    default:
+                        c.setForeground(Color.BLACK);
+                        break;
+                }
+            } else {
+                c.setForeground(Color.BLACK);
+            }
+
+            return c;
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel POLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable poTable;
     // End of variables declaration//GEN-END:variables
-}
+    }

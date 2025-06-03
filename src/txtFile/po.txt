@@ -7,3 +7,5 @@ PO_ID: 0006, Item ID: ITM06, Supplier ID: S02, Item Name: Melon, Quantity: 50, U
 PO_ID: 0007, Item ID: ITM07, Supplier ID: S04, Item Name: Apple, Quantity: 20, Unit Price: 10.00, Total Price: 200.00, Date: 08-06-2025, Status: Verified
 PO_ID: 0008, Item ID: ITM08, Supplier ID: S04, Item Name: Orange, Quantity: 40, Unit Price: 10.00, Total Price: 300.00, Date: 09-06-2025, Status: Flagged
 PO_ID: 0009, Item ID: ITM09, Supplier ID: S04, Item Name: Bread, Quantity: 70, Unit Price: 4.00, Total Price: 280.00, Date: 11-06-2025, Status: Flagged
+PO_ID: 0010, Item ID: ITM10, Supplier ID: S03, Item Name: Eggs, Quantity: 40, Unit Price: 13.00, Total Price: 1300.00, Date: 2025-06-04, Status: Paid
+PO_ID: 0011, Item ID: ITM11, Supplier ID: S03, Item Name: Hup Seng Biscuit, Quantity: 70, Unit Price: 4.00, Total Price: 280.00, Date: 2025-06-04, Status: Paid
