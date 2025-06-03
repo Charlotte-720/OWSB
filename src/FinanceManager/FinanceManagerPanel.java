@@ -165,7 +165,7 @@ public class FinanceManagerPanel extends javax.swing.JFrame {
         });
 
         btnViewProductRequisition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Icon - shopping-cart.png"))); // NOI18N
-        btnViewProductRequisition.setText("View Product Requisition");
+        btnViewProductRequisition.setText("View Purchase Requisition");
         btnViewProductRequisition.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnViewProductRequisition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

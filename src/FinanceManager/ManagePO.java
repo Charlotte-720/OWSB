@@ -286,7 +286,7 @@ public class ManagePO extends javax.swing.JFrame {
             return;
         }
 
-        String currentStatus = poTable.getValueAt(row, 7).toString();
+        String currentStatus = poTable.getValueAt(row, 9).toString();
         if (currentStatus.equalsIgnoreCase("Approved") || 
             currentStatus.equalsIgnoreCase("Rejected") || 
             currentStatus.equalsIgnoreCase("Verified") ||

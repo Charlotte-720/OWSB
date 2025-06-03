@@ -186,7 +186,7 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/Icons/Icon - shopping-cart.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="View Product Requisition"/>
+                    <Property name="text" type="java.lang.String" value="View Purchase Requisition"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                   </Properties>
                   <Events>
