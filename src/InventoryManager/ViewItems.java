@@ -151,7 +151,7 @@ public class ViewItems extends javax.swing.JFrame {
         });
 
         feedbackLabel.setForeground(new java.awt.Color(153, 153, 153));
-        feedbackLabel.setText("feedbackLabel");
+        feedbackLabel.setText("Feedback");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

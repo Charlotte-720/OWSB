@@ -147,7 +147,7 @@ public class LowStockAlert extends javax.swing.JFrame {
         });
 
         feedbackLabel.setForeground(new java.awt.Color(153, 153, 153));
-        feedbackLabel.setText("feedback");
+        feedbackLabel.setText("Feedback");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
