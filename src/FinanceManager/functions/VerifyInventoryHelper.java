@@ -107,10 +107,9 @@ public class VerifyInventoryHelper {
     }
     
     public static void logFlaggedPO(String poID, String reason) {
-        String logEntry = "PO_ID: " + poID + ", Reason: " + reason;
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/txtFile/flagReason.txt", true))) {
-            writer.write(logEntry);
+        writer.write("PO_ID: " + poID + ", Reason: " + reason);
+        writer.newLine(); 
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to log flagged PO reason.");
